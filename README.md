@@ -42,6 +42,29 @@ a message will sent out to the subscribers.
 If all communication methods are available the user's preferred communication is the preferred
 communication method.
 
+#Planning V2
+- **General**
+  - `enum CommunicationType`
+    - `SMS`
+    - `XMPP`
+- **Reflect Contact**
+  - `class ReflectCombinedContact`
+    - `List<String> reflectSMSContactIds`
+    - `List<String> reflectXMPPContactIds`
+  - `class ReflectContact`
+    - `String id`
+    - `String uri`
+      - For SMS the uri is just the cellphone number
+      - For XMPP the uri is in the form of `xmppUserId@hostId`
+    - `CommunicationType communicationType`
+    - `String firstName`
+    - `String lastName`
+    - `String avatarUrl`
+  - `class XMPPHost`
+    - `String id`
+    - `String url`
+    - `int port`
+
 
 
 #Planning
