@@ -1,4 +1,4 @@
-#![Reflect](https://github.com/Noah-Huppert/Reflect/raw/master/app/src/main/res/mipmap-xxhdpi/ic_launcher.png) Reflect
+#![Reflect](/app/src/main/res/mipmap-xxhdpi/ic_launcher.png) Reflect
 A basic texting app
 
 #Features
@@ -11,36 +11,9 @@ A basic texting app
 - Plan a database wrapper
 
 #Screens
-- First time setup screen
- - Multiple pages
-  - SMS Setup
-   - Prompt: "Set as SMS app"
-   - Buttons: "Yes" and "No"
-  - Hangouts Setup
-   - Prompt: "Connect Google Hangouts account"
-   - Button: "Why?"
-    - Prompt: "If Reflect detects that contact does not have Cellphone coverage it will send them a Hangouts message seamlessly"
-   - Button: "Connect" and "No"
-  - XMPP Setup
-   - Prompt: "Add Jabber/XMPP accounts"
-   - List: Connected XMPP accounts
-   - Button: "Add" and "Continue"
+- First Time Setup
+  -
 
-#Storage
-Reflect will use SQLite on Android to store data. To store lists just
-concatenate the data with spaces.
-
-EX:  
-The data is a series of User Ids
-- 34
-- 546
-- 78
-- 65
-
-In the database this would be stored as
-```
-userIds => "34 546 78 65"
-```
 
 #Preferred Communication Method
 Each Reflect client keeps track of the available communication methods. These communication methods
@@ -53,7 +26,7 @@ a message will sent out to the subscribers.
 If all communication methods are available the user's preferred communication is the preferred
 communication method.
 
-#Planning V2
+#Planning
 - **General**
   - `enum CommunicationType`
     - `SMS`
@@ -105,3 +78,20 @@ communication method.
     - `public abtract String sendMessage(String conversationId, String contactId, String content)`
       - Returns id of newly created and stored(in database) message
       - Communicates with source then send message and stores in database
+  - `class XMPPChatProvider extends ChatProvider`
+    - Implements all methods using XMPP
+  - `class SMSChatProvider extends ChatProvider`
+    - Implements all methods using SMS
+- **Database**
+  - Use [DBFlow](https://github.com/Raizlabs/DBFlow)
+  - `class ReflectDatabase`
+    - Stores basic database information
+    - `public static final String NAME`
+    - `public static final int VERSION`
+  - `class ListConverter extends TypeConverter<String, List>`
+    - `public String getDBValue(List list)`
+      - Converts to string in form of `<ListType>:1 2 3 4`
+      - Example data: `List<String> foo = new ArrayList<String>(){"1", "2", "3"}`
+      - Converted to `String:1 2 3`
+    - `public List getModelValue(String data)`
+      - Returns `List` from data
