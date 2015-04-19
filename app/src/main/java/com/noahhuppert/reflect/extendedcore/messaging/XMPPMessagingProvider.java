@@ -1,10 +1,10 @@
-package com.noahhuppert.reflect.extendedcore.chatproviders;
+package com.noahhuppert.reflect.extendedcore.messaging;
 
-import com.noahhuppert.reflect.core.ChatProvider;
+import com.noahhuppert.reflect.core.messaging.MessagingProvider;
 
 import java.util.List;
 
-public class XMPPChatProvider extends ChatProvider {
+public class XMPPMessagingProvider extends MessagingProvider {
     @Override
     public List<String> fetchConversations() {
         return null;

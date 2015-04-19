@@ -3,6 +3,7 @@ package com.noahhuppert.reflect.database.converters;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.raizlabs.android.dbflow.converter.TypeConverter;
+
 import java.util.List;
 
 /**

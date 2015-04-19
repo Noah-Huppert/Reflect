@@ -1,5 +1,7 @@
-package com.noahhuppert.reflect.core;
+package com.noahhuppert.reflect.core.contacts;
 
+import com.noahhuppert.reflect.core.messaging.CommunicationType;
+import com.noahhuppert.reflect.core.uri.ReflectUri;
 import com.noahhuppert.reflect.database.ReflectDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -25,7 +27,7 @@ public class ReflectContact extends BaseModel {
      * If the contact type is CommunicationType.SMS then it will follow the format of:
      *      "rawGoogleContactId"
      */
-    String uri;
+    ReflectUri uri;
 
     /**
      * The communication type of the contact. This describes if the contact is an XMPP or SMS contact
@@ -52,7 +54,7 @@ public class ReflectContact extends BaseModel {
         return id;
     }
 
-    public String getUri() {
+    public ReflectUri getUri() {
         return uri;
     }
 
@@ -77,7 +79,7 @@ public class ReflectContact extends BaseModel {
         this.id = id;
     }
 
-    public void setUri(String uri) {
+    public void ReflectUri(ReflectUri uri) {
         this.uri = uri;
     }
 

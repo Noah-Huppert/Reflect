@@ -1,5 +1,6 @@
-package com.noahhuppert.reflect.core;
+package com.noahhuppert.reflect.core.contacts;
 
+import com.noahhuppert.reflect.core.messaging.CommunicationType;
 import com.noahhuppert.reflect.database.ReflectDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.Table;

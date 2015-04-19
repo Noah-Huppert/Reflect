@@ -62,7 +62,7 @@ public class XMPPReflectUri {
      * Constructor that parses a Uri string
      * @param uri Uri string to be parsed
      */
-    public XMPPReflectUri(String uri){
+    public XMPPReflectUri(String uri) throws InvalidXMPPUriException {
         this(Parse(uri));
     }
 
@@ -74,7 +74,7 @@ public class XMPPReflectUri {
         return getUsername() + outPassword + "@" + getHost() + ":" + getPort();
     }
 
-    public static XMPPReflectUri Parse(String uri){
+    public static XMPPReflectUri Parse(String uri) throws InvalidXMPPUriException{
         XMPPReflectUri xmppReflectUri = new XMPPReflectUri(null, null, null, null);
 
         String[] uriPartsArray = uri.split("((?<=[:@])|(?=[:@]))");//Splits into [username, :, password, @, host, :, port]
@@ -91,7 +91,7 @@ public class XMPPReflectUri {
         int colinCount = StringUtils.countMatches(uri, ":");
         int atCount = StringUtils.countMatches(uri, "@");
         if(atCount != 1 || (partsSize < 2 || partsSize > 6) || colinCount > 1){
-            throw new RuntimeException("Invalid XMPP uri");
+            throw new InvalidXMPPUriException("Invalid XMPP uri");
         }
 
         String prevPart = "";

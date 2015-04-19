@@ -1,4 +1,4 @@
-package com.noahhuppert.reflect.extendedcore;
+package com.noahhuppert.reflect.extendedcore.contacts;
 
 /**
  * Class for storing information about users XMPP account

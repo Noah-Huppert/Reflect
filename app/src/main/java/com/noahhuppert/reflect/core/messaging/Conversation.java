@@ -1,4 +1,4 @@
-package com.noahhuppert.reflect.core;
+package com.noahhuppert.reflect.core.messaging;
 
 import com.noahhuppert.reflect.database.ReflectDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;

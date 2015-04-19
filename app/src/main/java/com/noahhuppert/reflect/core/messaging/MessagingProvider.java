@@ -1,11 +1,11 @@
-package com.noahhuppert.reflect.core;
+package com.noahhuppert.reflect.core.messaging;
 
 import java.util.List;
 
 /**
  * An abstract class that handles getting messages from messaging providers
  */
-public abstract class ChatProvider {
+public abstract class MessagingProvider {
     /**
      * Retrieves conversations from source and makes sure they are stored in the database
      * @return List of conversation ids that are stored in the database

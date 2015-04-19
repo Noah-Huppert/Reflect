@@ -1,6 +1,6 @@
 package com.noahhuppert.reflect.core.uri;
 
-import com.noahhuppert.reflect.core.CommunicationType;
+import com.noahhuppert.reflect.core.messaging.CommunicationType;
 
 /**
  * Stores information about contacting a person.
@@ -26,12 +26,21 @@ public class ReflectUri {
     }
 
     /* Actions */
-    public XMPPReflectUri parseAsXMPP(){
-        try {
-            return XMPPReflectUri.Parse(getUri());
-        } catch(RuntimeException e){
-            return null;
+    @Override
+    public String toString() {
+        try{
+            return asXMPPUri().toString();
+        } catch (InvalidXMPPUriException e){
+            return getUri();
         }
+    }
+
+    public CommunicationType getUriType(){
+        return null;
+    }
+
+    public XMPPReflectUri asXMPPUri() throws InvalidXMPPUriException{
+        return XMPPReflectUri.Parse(getUri());
     }
 
     /* Getters */

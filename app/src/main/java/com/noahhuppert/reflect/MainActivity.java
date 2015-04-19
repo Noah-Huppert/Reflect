@@ -1,16 +1,13 @@
 package com.noahhuppert.reflect;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.crashlytics.android.Crashlytics;
-import com.noahhuppert.reflect.core.CommunicationType;
-import com.noahhuppert.reflect.core.uri.XMPPReflectUri;
-import com.noahhuppert.reflect.database.converters.CommunicationTypeConverter;
 
-import java.lang.reflect.Field;
+import com.crashlytics.android.Crashlytics;
+import com.noahhuppert.reflect.core.settings.UserSetting;
+import com.noahhuppert.reflect.core.settings.UserSettings;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -25,7 +22,12 @@ public class MainActivity extends ActionBarActivity {
             Fabric.with(this, new Crashlytics());
         }
 
+        UserSettings.SetDefaults();
+
         setContentView(R.layout.activity_main);
+
+        UserSetting defaultIso = UserSettings.GetSettingSync(UserSettings.SETTING_DEFAULT_COUNTRY_CODE);
+        System.out.println(defaultIso.getKey() + " => " + defaultIso.getValue() + " " + UserSettings.ValueAsBoolean(defaultIso.getValue()));
     }
 
 

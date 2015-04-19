@@ -1,6 +1,6 @@
 package com.noahhuppert.reflect.database.converters;
 
-import com.noahhuppert.reflect.core.CommunicationType;
+import com.noahhuppert.reflect.core.messaging.CommunicationType;
 import com.raizlabs.android.dbflow.converter.TypeConverter;
 
 /**
