@@ -2,9 +2,16 @@ package com.noahhuppert.reflect;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.crashlytics.android.Crashlytics;
+import com.noahhuppert.reflect.core.CommunicationType;
+import com.noahhuppert.reflect.core.uri.XMPPReflectUri;
+import com.noahhuppert.reflect.database.converters.CommunicationTypeConverter;
+
+import java.lang.reflect.Field;
+
 import io.fabric.sdk.android.Fabric;
 
 

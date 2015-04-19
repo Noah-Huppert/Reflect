@@ -76,6 +76,7 @@ communication method.
     - `XMPP`
 - **Reflect Contact**
   - `class ReflectCombinedContact`
+    - `String id`
     - `List<String> contactIds`
     - `CommunicationType prefferedCommunicationType`
   - `class ReflectContact`
@@ -97,10 +98,11 @@ communication method.
     - `String conversationId`
     - `String contactId`
     - `String content`
-    - `Date timestamp`
+    - `Timestamp timestamp`
+    - `CommunicationType communicationType`
   - `class Conversation`
     - `String id`
-    - `List<String> userIds`
+    - `List<String> contactIds`
 - **Messenging**
   - `abtract class ChatProvider`
     - `public abtract List<String> fetchConversations()`
@@ -133,8 +135,6 @@ communication method.
     - `public static final int VERSION`
   - `class ListConverter extends TypeConverter<String, List>`
     - `public String getDBValue(List list)`
-      - Converts to string in form of `<ListType>:1 2 3 4`
-      - Example data: `List<String> foo = new ArrayList<String>(){"1", "2", "3"}`
-      - Converted to `String:1 2 3`
+      - Converts to string with GSON
     - `public List getModelValue(String data)`
       - Returns `List` from data
