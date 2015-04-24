@@ -58,6 +58,47 @@ A basic texting app
       - If composition area is not empty turns into send icon
       - Click: Shows all other identity options
 
+#Messaging Uri Scheme
+**: Used to identify various resources that are common in messaging
+
+**Scheme Parts**
+```
+scheme://resource_type@resource_provider/resource_id
+```
+
+**Scheme**: `messaging`  
+
+**Resource Type**:
+Used to identify what type of resource is being requested.  
+Valid resource types are:
+- message
+- conversation
+- contact
+
+**Resource Provider**:
+Used to identify what messaging service provides the resource.  
+Valid resource providers are:
+- xmpp
+- sms
+- joint
+ - Specifies a resource which is pulled from both sms and xmpp, usualy by
+ merging data from both
+
+**Resource Id**:
+The id of the resource. The id is always a integer.
+
+**Special Cases**:
+For contacts that are provided by the `xmpp` provider the following scheme is used:
+```
+messaging://contact@xmpp/xmpp_host:xmpp_port/xmpp_username
+```
+
+The `xmpp_host` and `xmpp_username` in the context of the `jabber` scheme is:
+```
+jabber://xmpp_username@xmpp_host:xmpp_port
+```
+
+
 #Preferred Communication Method
 Each Reflect client keeps track of the available communication methods. These communication methods
 can sometimes be unavailable due to lack of cellphone or data coverage. The preferred communication

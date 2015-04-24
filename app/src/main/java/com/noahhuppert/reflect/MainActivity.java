@@ -1,18 +1,22 @@
 package com.noahhuppert.reflect;
 
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.SmsMessage;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
-import com.noahhuppert.reflect.core.settings.UserSetting;
-import com.noahhuppert.reflect.core.settings.UserSettings;
 
 import io.fabric.sdk.android.Fabric;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,12 +26,25 @@ public class MainActivity extends ActionBarActivity {
             Fabric.with(this, new Crashlytics());
         }
 
-        UserSettings.SetDefaults();
+        Cursor c = getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI, null, null, null, null);
+
+        while(c.moveToNext()){
+            String out = "";//212
+            String tid = "";
+            for(int i = 0; i < c.getColumnCount(); i++){
+                if(c.getColumnName(i).equals(Telephony.TextBasedSmsColumns.THREAD_ID)){
+                    tid = c.getString(i);
+                }
+
+                if(tid.equals("212")) {
+                    out += c.getColumnName(i) + " => " + c.getString(i) + " ";
+                }
+            }
+
+            Log.d(TAG, out);
+        }
 
         setContentView(R.layout.activity_main);
-
-        UserSetting defaultIso = UserSettings.GetSettingSync(UserSettings.SETTING_DEFAULT_COUNTRY_CODE);
-        System.out.println(defaultIso.getKey() + " => " + defaultIso.getValue() + " " + UserSettings.ValueAsBoolean(defaultIso.getValue()));
     }
 
 
