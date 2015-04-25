@@ -1,6 +1,6 @@
 package com.noahhuppert.reflect.database.converters;
 
-import com.noahhuppert.reflect.core.CommunicationType;
+import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.raizlabs.android.dbflow.converter.TypeConverter;
 
 /**
@@ -17,7 +17,7 @@ public class CommunicationTypeConverter extends TypeConverter<String, Communicat
     @Override
     public CommunicationType getModelValue(String data) {
         try {
-            return CommunicationType.valueOf(CommunicationType.class, data);
+            return CommunicationType.valueOf(data.toUpperCase());
         } catch(IllegalArgumentException e){
             return null;
         }

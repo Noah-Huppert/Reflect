@@ -85,7 +85,7 @@ Valid resource providers are:
  merging data from both
 
 **Resource Id**:
-The id of the resource. The id is always a integer.
+The id of the resource.
 
 **Special Cases**:
 For contacts that are provided by the `xmpp` provider the following scheme is used:

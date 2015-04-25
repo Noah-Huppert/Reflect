@@ -2,7 +2,7 @@ package com.noahhuppert.reflect.database.converters;
 
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.noahhuppert.reflect.core.CommunicationType;
+import com.noahhuppert.reflect.messaging.CommunicationType;
 
 import junit.framework.TestCase;
 
@@ -19,7 +19,7 @@ public class CommunicationTypeConverterTest extends TestCase{
     }
 
     /**
-     * Tests {@link com.noahhuppert.reflect.database.converters.CommunicationTypeConverter#getDBValue(com.noahhuppert.reflect.core.CommunicationType)},
+     * Tests {@link com.noahhuppert.reflect.database.converters.CommunicationTypeConverter#getDBValue(com.noahhuppert.reflect.messaging.CommunicationType)},
      * makes sure a CommunicationType is converted into a String properly
      */
     @SmallTest
