@@ -12,6 +12,7 @@ import com.noahhuppert.reflect.messaging.ReflectContact;
 import com.noahhuppert.reflect.messaging.ReflectConversation;
 import com.noahhuppert.reflect.messaging.ReflectMessage;
 import com.noahhuppert.reflect.uri.MessagingUriUtils;
+import com.venmo.cursor.IterableCursor;
 
 import java.net.URI;
 
@@ -21,9 +22,8 @@ import java.net.URI;
 public class SMSMessagingProvider extends MessagingProvider {
     public static final String[] SMS_COLUMNS_MESSAGE_PROJECTION = {
             BaseColumns._ID,//ReflectMessage.id
-            //ReflectMessage.protocol = CommunicationType.SMS
             Telephony.TextBasedSmsColumns.ADDRESS,//ReflectMessage.receiverUri
-            //Telephony.TextBasedSmsColumns.CREATOR,//ReflectMessage.senderUri
+            Telephony.TextBasedSmsColumns.CREATOR,//ReflectMessage.senderUri
             Telephony.TextBasedSmsColumns.BODY,//ReflectMessage.body
             Telephony.TextBasedSmsColumns.DATE_SENT,//ReflectMessage.sentTimestamp
             Telephony.TextBasedSmsColumns.DATE,//ReflectMessage.receivedTimestamp
@@ -43,21 +43,21 @@ public class SMSMessagingProvider extends MessagingProvider {
                     SMS_COLUMNS_MESSAGE_PROJECTION,
                     null, null, null);
 
-            if(cursor.getCount() < 1){
+            IterableCursor<ReflectMessage> reflectMessages = new ReflectMessage.SmsCursor(cursor);
+
+            if(reflectMessages.getCount() < 1){
                 return null;
             }
 
-            if(cursor.getCount() > 1){
+            if(reflectMessages.getCount() > 1){
                 throw new InvalidUriException("Uri points to more than one message", uri.toString());
             }
 
-            cursor.moveToFirst();
+            for(ReflectMessage message : reflectMessages){
+                return message;
+            }
 
-            ReflectMessage reflectMessage = new ReflectMessage();
 
-            cursor.close();
-
-            return reflectMessage;
         } catch(NumberFormatException e){
             throw new InvalidUriException("The provided message id was not valid", uri.toString());
         }
