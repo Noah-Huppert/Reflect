@@ -36,4 +36,19 @@ public abstract class MessagingProvider {
      * @return The contact
      */
     public abstract ReflectContact fetchContact(URI uri, Context context) throws InvalidUriException;
+
+    /* Interfaces */
+
+    /**
+     * A basic
+     * @param <ResourceType>
+     */
+    public static interface FetchResourceHandler<ResourceType>{
+        public void onDone(ResourceType resource);
+        public void onException(Exception exception);
+    }
+
+    public static interface FetchMessageHandler extends FetchResourceHandler<ReflectMessage>{}
+    public static interface FetchConversationHandler extends FetchResourceHandler<ReflectConversation>{}
+    public static interface FetchContactHandler extends FetchResourceHandler<ReflectContact>{}
 }
