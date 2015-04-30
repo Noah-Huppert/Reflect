@@ -1,11 +1,11 @@
 package com.noahhuppert.reflect.messaging;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.provider.Telephony;
 
 import com.noahhuppert.reflect.utils.TimestampUtils;
-import com.venmo.cursor.IterableCursorAdapter;
 import com.venmo.cursor.IterableCursorWrapper;
 
 import java.net.URI;
@@ -67,23 +67,38 @@ public class ReflectMessage {
      */
     private boolean seen;
 
-    /* Cursor Wrappers */
+    /* Actions */
 
+    @Override
+    public String toString() {
+        return "[id: " + getId() +
+               ", protocol: " + getProtocol() +
+               ", receiverUri: " + getReceiverUri() +
+               ", senderUri: " + getSenderUri() +
+               ", body: " + getBody() +
+               ", sentTimestamp: " + getSentTimestamp() +
+               ", receivedTimestamp: " + getReceivedTimestamp() +
+               ", read: " + getRead() +
+               ", seen: " + getSeen() + "]";
+    }
+    /* Cursor Wrappers */
     /**
      * A cursor wrapper for taking a SMS table query and converting it into a cursor
      */
     public static class SmsCursor extends IterableCursorWrapper<ReflectMessage> {
         public static final String KEY_ID = BaseColumns._ID;
-        public static final String KEY_RECEIVER_URI = Telephony.TextBasedSmsColumns.ADDRESS;
-        public static final String KEY_SENDER_URI = Telephony.TextBasedSmsColumns.CREATOR;
+        public static final String KEY_SENDER_URI = Telephony.TextBasedSmsColumns.ADDRESS;
         public static final String KEY_BODY = Telephony.TextBasedSmsColumns.BODY;
         public static final String KEY_SENT_TIMESTAMP = Telephony.TextBasedSmsColumns.DATE_SENT;
         public static final String KEY_RECEIVED_TIMESTAMP = Telephony.TextBasedSmsColumns.DATE;
         public static final String KEY_READ = Telephony.TextBasedSmsColumns.READ;
         public static final String KEY_SEEN = Telephony.TextBasedSmsColumns.SEEN;
 
-        public SmsCursor(Cursor cursor) {
+        private Context context;
+
+        public SmsCursor(Context context, Cursor cursor) {
             super(cursor);
+            this.context = context;
         }
 
         @Override
@@ -91,8 +106,12 @@ public class ReflectMessage {
             try {
                 //Get information
                 String id = getString(KEY_ID, "");
-                CommunicationType protocol = CommunicationType.SMS;
-                URI receiverUri = new URI(getString(KEY_RECEIVER_URI, ""));
+
+                //Static information
+                CommunicationType protocol = CommunicationType.SMS;//Always SMS
+                URI receiverUri = new URI(getString(KEY_SENDER_URI, ""));//Always the user
+
+
                 URI senderUri = new URI(getString(KEY_SENDER_URI, ""));
                 String body = getString(KEY_BODY, "");
                 Timestamp sentTimestamp = TimestampUtils.FromLong(getLong(KEY_SENT_TIMESTAMP, 0));
@@ -147,11 +166,11 @@ public class ReflectMessage {
         return receivedTimestamp;
     }
 
-    public boolean isRead() {
+    public boolean getRead() {
         return read;
     }
 
-    public boolean isSeen() {
+    public boolean getSeen() {
         return seen;
     }
 

@@ -2,8 +2,7 @@ package com.noahhuppert.reflect;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.BaseColumns;
-import android.provider.Telephony;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +10,7 @@ import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
+import com.noahhuppert.reflect.messaging.ReflectMessage;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviderManager;
 import com.noahhuppert.reflect.uri.MessagingUriBuilder;
 import com.noahhuppert.reflect.uri.MessagingUriResourceProvider;
@@ -35,19 +35,27 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-        Cursor c = getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI, new String[]{BaseColumns._ID}, null, null, null);
+        /*Cursor contactsCursor = getContentResolver().query(ContactsContract.Data.CONTENT_URI, null, null, null, null);
 
-        while(c.moveToNext()) {
-            String out = "";
-            for (int i = 0; i < c.getColumnCount(); i++) {
-                out += c.getColumnName(i) + " => " + c.getString(i) + " ";
+        String out = "[";
+
+        while(contactsCursor.moveToNext()){
+            for(int i = 0; i < contactsCursor.getColumnCount(); i++){
+                if(i != 0){
+                    out += ", ";
+                }
+
+                out += contactsCursor.getColumnName(i) + ": " + contactsCursor.getString(i);
             }
-
-            Log.d(TAG, out);
         }
 
+        out += "]";
+
+        Log.d(TAG, out);*/
+
         try {
-            MessagingProviderManager.getInstance().fetchMessage(MessagingUriBuilder.Build(MessagingUriResourceType.MESSAGE, MessagingUriResourceProvider.SMS, "60"), getBaseContext());
+            ReflectMessage message = MessagingProviderManager.getInstance().fetchMessage(MessagingUriBuilder.Build(MessagingUriResourceType.MESSAGE, MessagingUriResourceProvider.SMS, "60"), getBaseContext());
+            Log.d(TAG, message.toString());
         } catch(URISyntaxException e){
             Log.e(TAG, e.toString());
         } catch(InvalidUriException e){

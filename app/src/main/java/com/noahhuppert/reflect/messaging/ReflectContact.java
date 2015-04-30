@@ -23,9 +23,9 @@ public class ReflectContact {
     private String displayName;
 
     /**
-     * The url of the contact's avatar
+     * The uri of the contact's avatar
      */
-    private String avatarUrl;
+    private URI avatarUri;
 
     /**
      * The URI of the contact.
@@ -49,8 +49,8 @@ public class ReflectContact {
         return displayName;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public URI getAvatarUrl() {
+        return avatarUri;
     }
 
     public URI getUri() {
@@ -70,8 +70,8 @@ public class ReflectContact {
         this.displayName = displayName;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setAvatarUrl(URI avatarUrl) {
+        this.avatarUri = avatarUrl;
     }
 
     public void setUri(URI uri) {

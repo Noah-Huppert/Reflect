@@ -23,7 +23,6 @@ public class SMSMessagingProvider extends MessagingProvider {
     public static final String[] SMS_COLUMNS_MESSAGE_PROJECTION = {
             BaseColumns._ID,//ReflectMessage.id
             Telephony.TextBasedSmsColumns.ADDRESS,//ReflectMessage.receiverUri
-            Telephony.TextBasedSmsColumns.CREATOR,//ReflectMessage.senderUri
             Telephony.TextBasedSmsColumns.BODY,//ReflectMessage.body
             Telephony.TextBasedSmsColumns.DATE_SENT,//ReflectMessage.sentTimestamp
             Telephony.TextBasedSmsColumns.DATE,//ReflectMessage.receivedTimestamp
@@ -43,7 +42,7 @@ public class SMSMessagingProvider extends MessagingProvider {
                     SMS_COLUMNS_MESSAGE_PROJECTION,
                     null, null, null);
 
-            IterableCursor<ReflectMessage> reflectMessages = new ReflectMessage.SmsCursor(cursor);
+            IterableCursor<ReflectMessage> reflectMessages = new ReflectMessage.SmsCursor(context, cursor);
 
             if(reflectMessages.getCount() < 1){
                 return null;
@@ -53,11 +52,8 @@ public class SMSMessagingProvider extends MessagingProvider {
                 throw new InvalidUriException("Uri points to more than one message", uri.toString());
             }
 
-            for(ReflectMessage message : reflectMessages){
-                return message;
-            }
-
-
+            reflectMessages.moveToFirst();
+            return reflectMessages.peek();
         } catch(NumberFormatException e){
             throw new InvalidUriException("The provided message id was not valid", uri.toString());
         }
