@@ -2,14 +2,12 @@ package com.noahhuppert.reflect.messaging.providers;
 
 import android.content.Context;
 
-import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.messaging.ReflectContact;
 import com.noahhuppert.reflect.messaging.ReflectConversation;
 import com.noahhuppert.reflect.messaging.ReflectMessage;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 
 import java.net.URI;
-import java.util.concurrent.Future;
 
 /**
  * A abstract class to provide a framework for fetching messaging resources

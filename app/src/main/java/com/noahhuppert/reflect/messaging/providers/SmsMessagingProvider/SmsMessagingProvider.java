@@ -29,17 +29,17 @@ public class SmsMessagingProvider extends MessagingProvider {
 
     @Override
     public void fetchMessage(URI uri, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
-        SmsFetchMessageRunnable smsFetchMessageRunnable = new SmsFetchMessageRunnable(threadResultHandler, uri, context);
+        SmsFetchMessageRunnable smsFetchMessageRunnable = new SmsFetchMessageRunnable(uri, context, threadResultHandler);
         MainThreadPool.getInstance().getPool().submit(smsFetchMessageRunnable);
     }
 
     @Override
     public void fetchConversation(URI uri, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) {
-
     }
 
     @Override
     public void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
-
+        SmsFetchContactRunnable smsFetchContactRunnable = new SmsFetchContactRunnable(uri, context, threadResultHandler);
+        MainThreadPool.getInstance().getPool().submit(smsFetchContactRunnable);
     }
 }

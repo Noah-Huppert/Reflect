@@ -8,23 +8,19 @@ import android.provider.Telephony;
 
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.messaging.ReflectMessage;
-import com.noahhuppert.reflect.messaging.providers.MessagingProvider;
-import com.noahhuppert.reflect.threading.ResultHandlerThread;
+import com.noahhuppert.reflect.messaging.providers.MessagingProviderFetchRunnable;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriUtils;
 import com.venmo.cursor.IterableCursor;
 
 import java.net.URI;
-import java.util.concurrent.Callable;
 
-public class SmsFetchMessageRunnable extends ResultHandlerThread<ReflectMessage>{
-    private URI uri;
-    private Context context;
-
-    public SmsFetchMessageRunnable(ThreadResultHandler<ReflectMessage> threadResultHandler, URI uri, Context context) {
-        super(threadResultHandler);
-        this.uri = uri;
-        this.context = context;
+/**
+ * A runnable thread task that gets the message pointed to by the URI
+ */
+public class SmsFetchMessageRunnable extends MessagingProviderFetchRunnable<ReflectMessage> {
+    public SmsFetchMessageRunnable(URI uri, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
+        super(uri, context, threadResultHandler);
     }
 
     @Override
@@ -36,7 +32,8 @@ public class SmsFetchMessageRunnable extends ResultHandlerThread<ReflectMessage>
         Cursor cursor = null;
 
         try {
-            synchronized (uri) {
+            //TODO FIGURE OUT SHIT
+            synchronized (uri, context) {
                 long messageId = Long.parseLong(uri.getPath().substring(1));
                 Uri messageUri = ContentUris.withAppendedId(Telephony.Sms.Inbox.CONTENT_URI, messageId);
 

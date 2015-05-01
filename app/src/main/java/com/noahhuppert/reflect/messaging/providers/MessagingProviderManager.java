@@ -8,6 +8,7 @@ import com.noahhuppert.reflect.exceptions.WTFException;
 import com.noahhuppert.reflect.messaging.ReflectContact;
 import com.noahhuppert.reflect.messaging.ReflectConversation;
 import com.noahhuppert.reflect.messaging.ReflectMessage;
+import com.noahhuppert.reflect.messaging.providers.JointMessagingProvider.JointMessagingProvider;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriResourceProvider;
@@ -16,7 +17,6 @@ import com.noahhuppert.reflect.uri.MessagingUriUtils;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Future;
 
 /**
  * A singleton class to automatically map messaging scheme URIs to messaging providers

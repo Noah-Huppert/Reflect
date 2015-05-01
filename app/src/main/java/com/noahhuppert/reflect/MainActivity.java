@@ -16,9 +16,6 @@ import com.noahhuppert.reflect.uri.MessagingUriResourceProvider;
 import com.noahhuppert.reflect.uri.MessagingUriResourceType;
 
 import java.net.URISyntaxException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 
 import io.fabric.sdk.android.Fabric;
 
