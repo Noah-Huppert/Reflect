@@ -1,8 +1,6 @@
 package com.noahhuppert.reflect;
 
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -12,11 +10,15 @@ import com.crashlytics.android.Crashlytics;
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.messaging.ReflectMessage;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviderManager;
+import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriBuilder;
 import com.noahhuppert.reflect.uri.MessagingUriResourceProvider;
 import com.noahhuppert.reflect.uri.MessagingUriResourceType;
 
 import java.net.URISyntaxException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -53,9 +55,20 @@ public class MainActivity extends ActionBarActivity {
 
         Log.d(TAG, out);*/
 
+        Log.d(TAG, "------------------- RESTART -------------------");
+
         try {
-            ReflectMessage message = MessagingProviderManager.getInstance().fetchMessage(MessagingUriBuilder.Build(MessagingUriResourceType.MESSAGE, MessagingUriResourceProvider.SMS, "60"), getBaseContext());
-            Log.d(TAG, message.toString());
+            MessagingProviderManager.getInstance().fetchMessage(MessagingUriBuilder.Build(MessagingUriResourceType.MESSAGE, MessagingUriResourceProvider.SMS, "60"), getBaseContext(), new ThreadResultHandler<ReflectMessage>() {
+                @Override
+                public void onDone(ReflectMessage data) {
+                    Log.d(TAG, data.toString());
+                }
+
+                @Override
+                public void onError(Exception exception) {
+                    Log.e(TAG, "Exception: ", exception);
+                }
+            });
         } catch(URISyntaxException e){
             Log.e(TAG, e.toString());
         } catch(InvalidUriException e){

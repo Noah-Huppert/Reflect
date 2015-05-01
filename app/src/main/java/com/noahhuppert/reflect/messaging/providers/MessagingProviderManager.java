@@ -8,12 +8,15 @@ import com.noahhuppert.reflect.exceptions.WTFException;
 import com.noahhuppert.reflect.messaging.ReflectContact;
 import com.noahhuppert.reflect.messaging.ReflectConversation;
 import com.noahhuppert.reflect.messaging.ReflectMessage;
+import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
+import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriResourceProvider;
 import com.noahhuppert.reflect.uri.MessagingUriUtils;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 /**
  * A singleton class to automatically map messaging scheme URIs to messaging providers
@@ -46,8 +49,8 @@ public class MessagingProviderManager {
     private MessagingProviderManager(){
         messagingProviders = new HashMap<>();
 
-        getMessagingProviders().put(MessagingUriResourceProvider.SMS, new SMSMessagingProvider());
-        getMessagingProviders().put(MessagingUriResourceProvider.XMPP, new SMSMessagingProvider());
+        getMessagingProviders().put(MessagingUriResourceProvider.SMS, new SmsMessagingProvider());
+        getMessagingProviders().put(MessagingUriResourceProvider.XMPP, new SmsMessagingProvider());
         getMessagingProviders().put(MessagingUriResourceProvider.JOINT, new JointMessagingProvider());
     }
 
@@ -58,7 +61,7 @@ public class MessagingProviderManager {
      * @return The Message
      * @throws InvalidUriException Thrown if the URI is invalid
      */
-    public ReflectMessage fetchMessage(URI uri, Context context) throws InvalidUriException{
+    public void fetchMessage(URI uri, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) throws InvalidUriException{
         MessagingProvider messagingProvider = getMessagingProvider(uri);
 
         if(messagingProvider == null){
@@ -67,7 +70,7 @@ public class MessagingProviderManager {
             throw wtfException;
         }
 
-        return messagingProvider.fetchMessage(uri, context);
+        messagingProvider.fetchMessage(uri, context, threadResultHandler);
     }
 
     /**
@@ -76,7 +79,7 @@ public class MessagingProviderManager {
      * @return The Conversation
      * @throws InvalidUriException Thrown if the URI is invalid
      */
-    public ReflectConversation fetchConversation(URI uri, Context context) throws InvalidUriException{
+    public void fetchConversation(URI uri, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) throws InvalidUriException{
         MessagingProvider messagingProvider = getMessagingProvider(uri);
 
         if(messagingProvider == null){
@@ -85,7 +88,7 @@ public class MessagingProviderManager {
             throw wtfException;
         }
 
-        return messagingProvider.fetchConversation(uri, context);
+        messagingProvider.fetchConversation(uri, context, threadResultHandler);
     }
 
     /**
@@ -94,7 +97,7 @@ public class MessagingProviderManager {
      * @return The Contact
      * @throws InvalidUriException Thrown if the URI is invalid
      */
-    public ReflectContact fetchContact(URI uri, Context context) throws InvalidUriException{
+    public void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) throws InvalidUriException{
         MessagingProvider messagingProvider = getMessagingProvider(uri);
 
         if(messagingProvider == null){
@@ -103,7 +106,7 @@ public class MessagingProviderManager {
             throw wtfException;
         }
 
-        return messagingProvider.fetchContact(uri, context);
+        messagingProvider.fetchContact(uri, context, threadResultHandler);
     }
 
     /* Getters */

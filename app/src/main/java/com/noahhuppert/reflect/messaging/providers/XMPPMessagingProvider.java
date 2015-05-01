@@ -2,10 +2,10 @@ package com.noahhuppert.reflect.messaging.providers;
 
 import android.content.Context;
 
-import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.messaging.ReflectContact;
 import com.noahhuppert.reflect.messaging.ReflectConversation;
 import com.noahhuppert.reflect.messaging.ReflectMessage;
+import com.noahhuppert.reflect.threading.ThreadResultHandler;
 
 import java.net.URI;
 
@@ -16,17 +16,15 @@ public class XMPPMessagingProvider extends MessagingProvider {
     public static final int DEFAULT_XMPP_PORT = 5222;
 
     @Override
-    public ReflectMessage fetchMessage(URI uri, Context context) throws InvalidUriException {
-        return null;
+    public void fetchMessage(URI uri, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
+
     }
 
     @Override
-    public ReflectConversation fetchConversation(URI uri, Context context) throws InvalidUriException {
-        return null;
+    public void fetchConversation(URI uri, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) {
     }
 
     @Override
-    public ReflectContact fetchContact(URI uri, Context context) throws InvalidUriException {
-        return null;
+    public void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
     }
 }

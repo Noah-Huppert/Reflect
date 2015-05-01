@@ -6,7 +6,7 @@ import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.messaging.ReflectContact;
 import com.noahhuppert.reflect.messaging.ReflectConversation;
 import com.noahhuppert.reflect.messaging.ReflectMessage;
-import com.noahhuppert.reflect.uri.MessagingUriResourceProvider;
+import com.noahhuppert.reflect.threading.ThreadResultHandler;
 
 import java.net.URI;
 
@@ -25,22 +25,23 @@ public class JointMessagingProvider extends MessagingProvider {
      *
      * @param uri The URI of the message
      * @param context
+     * @param threadResultHandler
      * @return Nothing because this is an invalid operation
      * @throws InvalidUriException Always
      */
     @Override
     @Deprecated
-    public ReflectMessage fetchMessage(URI uri, Context context) throws InvalidUriException {
-        throw new InvalidUriException("Can not fetch a message with provider " + MessagingUriResourceProvider.JOINT, uri.toString());
+    public void fetchMessage(URI uri, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
+        //throw new InvalidUriException("Can not fetch a message with provider " + MessagingUriResourceProvider.JOINT, uri.toString());
     }
 
     @Override
-    public ReflectConversation fetchConversation(URI uri, Context context) throws InvalidUriException {
-        return null;
+    public void fetchConversation(URI uri, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) {
+
     }
 
     @Override
-    public ReflectContact fetchContact(URI uri, Context context) throws InvalidUriException {
-        return null;
+    public void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
+
     }
 }
