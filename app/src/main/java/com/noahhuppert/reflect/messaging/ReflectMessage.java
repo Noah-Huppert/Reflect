@@ -1,6 +1,5 @@
 package com.noahhuppert.reflect.messaging;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.provider.Telephony;
@@ -94,11 +93,8 @@ public class ReflectMessage {
         public static final String KEY_READ = Telephony.TextBasedSmsColumns.READ;
         public static final String KEY_SEEN = Telephony.TextBasedSmsColumns.SEEN;
 
-        private Context context;
-
-        public SmsCursor(Context context, Cursor cursor) {
+        public SmsCursor(Cursor cursor) {
             super(cursor);
-            this.context = context;
         }
 
         @Override
@@ -119,6 +115,7 @@ public class ReflectMessage {
                 boolean read = getBoolean(KEY_READ, false);
                 boolean seen = getBoolean(KEY_SEEN, false);
 
+                //Set data
                 ReflectMessage reflectMessage = new ReflectMessage();
                 reflectMessage.setId(id);
                 reflectMessage.setProtocol(protocol);

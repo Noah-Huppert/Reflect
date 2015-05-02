@@ -32,32 +32,39 @@ public class SmsFetchMessageRunnable extends MessagingProviderFetchRunnable<Refl
         Cursor cursor = null;
 
         try {
-            //TODO FIGURE OUT SHIT
-            synchronized (uri, context) {
-                long messageId = Long.parseLong(uri.getPath().substring(1));
-                Uri messageUri = ContentUris.withAppendedId(Telephony.Sms.Inbox.CONTENT_URI, messageId);
+            long messageId;
+            synchronized (uri){
+                messageId = Long.parseLong(uri.getPath().substring(1));
+            }
 
+            Uri messageUri = ContentUris.withAppendedId(Telephony.Sms.Inbox.CONTENT_URI, messageId);
+            synchronized (context) {
                 cursor = context.getContentResolver().query(messageUri,
-                        SmsMessagingProvider.SMS_COLUMNS_MESSAGE_PROJECTION,
+                        SmsMessagingProvider.SMS_MESSAGE_PROJECTION,
                         null, null, null);
+            }
 
-                if(cursor == null){
+            if (cursor == null) {
+                synchronized (uri) {
                     throw new InvalidUriException("Uri does not point to any messages", uri.toString());
                 }
+            }
 
-                IterableCursor<ReflectMessage> reflectMessages = new ReflectMessage.SmsCursor(context, cursor);
-
-                if (reflectMessages.getCount() < 1) {
+            IterableCursor<ReflectMessage> reflectMessages = new ReflectMessage.SmsCursor(cursor);
+            if (reflectMessages.getCount() < 1) {
+                synchronized (uri) {
                     throw new InvalidUriException("Uri does not point to any messages", uri.toString());
                 }
+            }
 
-                if (reflectMessages.getCount() > 1) {
+            if (reflectMessages.getCount() > 1) {
+                synchronized (uri) {
                     throw new InvalidUriException("Uri points to more than one message", uri.toString());
                 }
-
-                reflectMessages.moveToFirst();
-                return reflectMessages.peek();
             }
+
+            reflectMessages.moveToFirst();
+            return reflectMessages.peek();
         } catch(NumberFormatException e){
             throw new InvalidUriException("The provided message id was not valid", uri.toString());
         } finally {

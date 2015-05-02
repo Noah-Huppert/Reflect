@@ -8,14 +8,18 @@ import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
-import com.noahhuppert.reflect.messaging.ReflectMessage;
+import com.noahhuppert.reflect.messaging.ReflectContact;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviderManager;
+import com.noahhuppert.reflect.threading.MainThreadPool;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriBuilder;
 import com.noahhuppert.reflect.uri.MessagingUriResourceProvider;
 import com.noahhuppert.reflect.uri.MessagingUriResourceType;
+import com.noahhuppert.reflect.uri.MessagingUriUtils;
 
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -34,43 +38,33 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-        /*Cursor contactsCursor = getContentResolver().query(ContactsContract.Data.CONTENT_URI, null, null, null, null);
+        Log.d(TAG, "---------- RESTART ----------");
 
-        String out = "[";
-
-        while(contactsCursor.moveToNext()){
-            for(int i = 0; i < contactsCursor.getColumnCount(); i++){
-                if(i != 0){
-                    out += ", ";
-                }
-
-                out += contactsCursor.getColumnName(i) + ": " + contactsCursor.getString(i);
-            }
-        }
-
-        out += "]";
-
-        Log.d(TAG, out);*/
-
-        Log.d(TAG, "------------------- RESTART -------------------");
-
+        //Get test contact
         try {
-            MessagingProviderManager.getInstance().fetchMessage(MessagingUriBuilder.Build(MessagingUriResourceType.MESSAGE, MessagingUriResourceProvider.SMS, "60"), getBaseContext(), new ThreadResultHandler<ReflectMessage>() {
+            URI contactUri = MessagingUriBuilder.Build(MessagingUriResourceType.CONTACT, MessagingUriResourceProvider.SMS, "1");
+
+            ThreadResultHandler<ReflectContact> reflectContactThreadResultHandler = new ThreadResultHandler<ReflectContact>() {
                 @Override
-                public void onDone(ReflectMessage data) {
-                    Log.d(TAG, data.toString());
+                public void onDone(ReflectContact data) {
+                    if (data != null) {
+                        Log.d(TAG, data.toString());
+                    }
                 }
 
                 @Override
                 public void onError(Exception exception) {
-                    Log.e(TAG, "Exception: ", exception);
+                    Log.e(TAG, "exception", exception);
                 }
-            });
-        } catch(URISyntaxException e){
-            Log.e(TAG, e.toString());
-        } catch(InvalidUriException e){
-            Log.e(TAG, e.toString());
+            };
+
+            MessagingProviderManager.getInstance().fetchContact(contactUri, getBaseContext(), reflectContactThreadResultHandler);
+        } catch (URISyntaxException e) {
+            Log.e(TAG, "exception", e);
+        } catch (InvalidUriException e) {
+            Log.e(TAG, "exception", e);
         }
+
     }
 
 

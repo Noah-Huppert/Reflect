@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os;
+
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
@@ -20,11 +22,13 @@ repositories {
 
 android {
     signingConfigs {
-        debug {
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-            storeFile file('/Users/block7/Documents/debug.keystore')
-            storePassword 'android'
+        if(Os.isFamily(Os.FAMILY_MAC)) {
+            debug {
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+                storeFile file('/Users/block7/Documents/debug.keystore')
+                storePassword 'android'
+            }
         }
     }
     compileSdkVersion 21

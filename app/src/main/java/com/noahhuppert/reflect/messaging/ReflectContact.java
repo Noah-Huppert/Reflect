@@ -1,6 +1,13 @@
 package com.noahhuppert.reflect.messaging;
 
+import android.database.Cursor;
+import android.provider.BaseColumns;
+import android.provider.ContactsContract;
+
+import com.venmo.cursor.IterableCursorWrapper;
+
 import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * A class for holding information about a general contact in Reflect. Every message provider must
@@ -35,6 +42,59 @@ public class ReflectContact {
      * For a XMPP contact this may be: jabber://username@host:port
      */
     private URI uri;
+
+    /* Actions */
+    @Override
+    public String toString() {
+        return "[id: " + getId() +
+                ", protocol: " + getProtocol() +
+                ", displayName: " + getDisplayName() +
+                ", avatarUri: " + getAvatarUrl() +
+                ", Uri: " + getUri() + "]";
+    }
+
+    /* Cursor Wrappers */
+    /**
+     * A cursor wrapper for taking a Contacts table query and converting it into a cursor
+     */
+    public static class SmsCursor extends IterableCursorWrapper<ReflectContact>{
+        public static final String KEY_ID = ContactsContract.Contacts.LOOKUP_KEY;
+        public static final String KEY_DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY;
+        public static final String KEY_AVATAR_URI = ContactsContract.Contacts.PHOTO_URI;
+
+        public SmsCursor(Cursor cursor) {
+            super(cursor);
+        }
+
+        @Override
+        public ReflectContact peek() {
+            try {
+                //Get information
+                String id = getString(KEY_ID, "");
+                CommunicationType protocol = CommunicationType.SMS;
+                String displayName = getString(KEY_DISPLAY_NAME, "");
+
+                String avatarUriString = getString(KEY_AVATAR_URI, "");
+                URI avatarUri = null;
+                if(avatarUriString != null){
+                    avatarUri = new URI(avatarUriString);
+                };
+
+
+                //Set data
+                ReflectContact reflectContact = new ReflectContact();
+
+                reflectContact.setId(id);
+                reflectContact.setProtocol(protocol);
+                reflectContact.setDisplayName(displayName);
+                reflectContact.setAvatarUrl(avatarUri);
+
+                return reflectContact;
+            } catch (URISyntaxException e){
+                return null;
+            }
+        }
+    }
 
     /* Getters */
     public String getId() {
