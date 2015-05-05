@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
@@ -58,12 +59,12 @@ public class SmsFetchContactRunnable extends MessagingProviderFetchRunnable<Refl
             IterableCursor<ReflectContact> reflectContacts = new ReflectContact.SmsCursor(cursor);
             if(reflectContacts.getCount() < 1){
                 synchronized (uri) {
-                    throw new InvalidUriException("Uri does not point to any message", uri.toString());
+                    throw new InvalidUriException("Uri does not point to any contacts", uri.toString());
                 }
             }
             if(reflectContacts.getCount() > 1){
                 synchronized (uri){
-                    throw new InvalidUriException("Uri points to more than one message", uri.toString());
+                    throw new InvalidUriException("Uri points to more than one contact", uri.toString());
                 }
             }
 
@@ -84,40 +85,41 @@ public class SmsFetchContactRunnable extends MessagingProviderFetchRunnable<Refl
     private URI getContactUri(String lookupKey) throws InvalidUriException{
         Cursor cursor;
 
+        //Setup query
+        String[] contactDataProjection = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER};
+        String contactDataQuery = ContactsContract.Data.MIMETYPE + " = ? AND " + ContactsContract.Data.LOOKUP_KEY + " = ?";
+        String[] contactDataQueryArgs = new String[]{ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE, lookupKey};
+
         synchronized (context){
             cursor = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
-                    new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER}, null, null, null);
+                    contactDataProjection,
+                    contactDataQuery,
+                    contactDataQueryArgs,
+                    null);
         }
-
-        if(cursor == null){
-            try {
-                Log.d(TAG, "NONE");
-                return null;
-            } finally {
-                cursor.close();
-            }
-        }
-
-        if(cursor.getCount() < 1){
-            try {
-                Log.d(TAG, "COUNT " + cursor.getCount());
-                return null;
-            } finally {
-                cursor.close();
-            }
-        }
-
-        cursor.moveToFirst();
-        String phoneNumber = cursor.getString(0);
-
-        Log.d(TAG, "PHONE NUMBER " + phoneNumber);
 
         try {
-            return new URI("sms://" + phoneNumber);
-        } catch (URISyntaxException e){
-            return null;
-        } finally{
-            cursor.close();
+            if (cursor == null) {
+                return null;
+            }
+
+            if (cursor.getCount() < 1) {
+                return null;
+            }
+
+            cursor.moveToFirst();
+            String phoneNumber = cursor.getString(0);
+            phoneNumber = PhoneNumberUtils.formatNumber(phoneNumber);
+
+            try {
+                return new URI("sms://" + phoneNumber);
+            } catch (URISyntaxException e) {
+                return null;
+            }
+        } finally {
+            if(cursor != null){
+                cursor.close();
+            }
         }
     }
 }
