@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
+import android.provider.Telephony;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -11,19 +12,16 @@ import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
+import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.ReflectContact;
-import com.noahhuppert.reflect.messaging.providers.MessagingProvider;
+import com.noahhuppert.reflect.messaging.ReflectConversation;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviderManager;
-import com.noahhuppert.reflect.threading.MainThreadPool;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriBuilder;
-import com.noahhuppert.reflect.uri.MessagingUriResourceProvider;
-import com.noahhuppert.reflect.uri.MessagingUriResourceType;
-import com.noahhuppert.reflect.uri.MessagingUriUtils;
+import com.noahhuppert.reflect.messaging.MessagingResourceType;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -43,38 +41,26 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         Log.d(TAG, "---------- RESTART ----------");
-
-        //Get test contact
-        ThreadResultHandler<ReflectContact> contactThreadResultHandler = new ThreadResultHandler<ReflectContact>() {
+        //Test conversation
+        ThreadResultHandler<ReflectConversation> reflectConversationThreadResultHandler = new ThreadResultHandler<ReflectConversation>() {
             @Override
-            public void onDone(ReflectContact data) {
-                if(data.getUri() != null) {
-                    Log.d(TAG, data.toString());
-                }
+            public void onDone(ReflectConversation data) {
+                Log.d(TAG, data.toString());
             }
 
             @Override
             public void onError(Exception exception) {
-                Log.e(TAG, "Exception", exception);
+                Log.e(TAG, "Thread Result Exception", exception);
             }
         };
 
-        Cursor cursor = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
-                new String[]{BaseColumns._ID},
-                ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1", null, null);
-
-        while(cursor != null && cursor.moveToNext()){
-            int contactId = cursor.getInt(0);
-
-            try {
-                URI contactUri = MessagingUriBuilder.Build(MessagingUriResourceType.CONTACT, MessagingUriResourceProvider.SMS, "" + contactId);
-
-                MessagingProviderManager.getInstance().fetchContact(contactUri, getBaseContext(), contactThreadResultHandler);
-            } catch (InvalidUriException e){
-                Log.e(TAG, "Caught Exception", e);
-            } catch (URISyntaxException e){
-                Log.e(TAG, "Caught Exception", e);
-            }
+        try {
+            URI conversationUri = MessagingUriBuilder.Build(MessagingResourceType.CONVERSATION, CommunicationType.SMS, "210");
+            MessagingProviderManager.getInstance().fetchConversation(conversationUri, getBaseContext(), reflectConversationThreadResultHandler);
+        } catch (URISyntaxException e){
+            Log.e(TAG, "Exception", e);
+        } catch (InvalidUriException e){
+            Log.e(TAG, "Exception", e);
         }
     }
 

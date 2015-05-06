@@ -3,6 +3,8 @@ package com.noahhuppert.reflect.uri;
 import android.net.Uri;
 
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
+import com.noahhuppert.reflect.messaging.CommunicationType;
+import com.noahhuppert.reflect.messaging.MessagingResourceType;
 
 import java.net.URI;
 
@@ -70,13 +72,13 @@ public class MessagingUriUtils {
      * @return The Enum value of the resource type
      * @throws InvalidUriException Throws if the URI is not valid
      */
-    public static MessagingUriResourceType GetResourceType(URI uri) throws InvalidUriException{
+    public static MessagingResourceType GetResourceType(URI uri) throws InvalidUriException{
         SoftCheckForValidMessagingUri(uri);
 
         String resourceTypeURIString = uri.getUserInfo().toUpperCase();
 
         try{
-            return MessagingUriResourceType.valueOf(resourceTypeURIString);
+            return MessagingResourceType.valueOf(resourceTypeURIString);
         } catch(IllegalArgumentException e){
             throw new InvalidUriException("The URI provided does not contain a valid resource type", uri.toString());
         }
@@ -88,13 +90,13 @@ public class MessagingUriUtils {
      * @return The Enum value of the resource provider
      * @throws InvalidUriException Thrown if the URI is not valid
      */
-    public static MessagingUriResourceProvider GetResourceProvider(URI uri) throws InvalidUriException{
+    public static CommunicationType GetResourceProvider(URI uri) throws InvalidUriException{
         SoftCheckForValidMessagingUri(uri);
 
         String resourceProviderURIString = uri.getHost().toUpperCase();
 
         try {
-            return MessagingUriResourceProvider.valueOf(resourceProviderURIString);
+            return CommunicationType.valueOf(resourceProviderURIString);
         } catch (IllegalArgumentException e){
             throw new InvalidUriException("The URI provided does not contain a valid resource provider", uri.toString());
         }

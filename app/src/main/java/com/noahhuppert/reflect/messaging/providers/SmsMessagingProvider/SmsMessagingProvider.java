@@ -19,7 +19,7 @@ import java.net.URI;
  */
 public class SmsMessagingProvider extends MessagingProvider {
     public static final String[] SMS_MESSAGE_PROJECTION = {
-            ContactsContract.Contacts._ID,//ReflectMessage.id
+            BaseColumns._ID,//ReflectMessage.id
             Telephony.TextBasedSmsColumns.ADDRESS,//ReflectMessage.receiverUri
             Telephony.TextBasedSmsColumns.BODY,//ReflectMessage.body
             Telephony.TextBasedSmsColumns.DATE_SENT,//ReflectMessage.sentTimestamp
@@ -32,7 +32,11 @@ public class SmsMessagingProvider extends MessagingProvider {
             ContactsContract.Contacts.LOOKUP_KEY,//ReflectContact.id
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,//ReflectContact.displayName
             ContactsContract.Contacts.PHOTO_URI//ReflectContact.avatarUri
-            //ReflectContact.uri
+    };
+
+    public static final String[] SMS_CONVERSATION_PROJECTION = {
+            Telephony.TextBasedSmsColumns.THREAD_ID,//ReflectConversation.id
+            Telephony.Sms.Conversations.SNIPPET//ReflectConversation.snippet
     };
 
     @Override
@@ -43,6 +47,8 @@ public class SmsMessagingProvider extends MessagingProvider {
 
     @Override
     public void fetchConversation(URI uri, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) {
+        SmsFetchConversationRunnable smsFetchConversationRunnable = new SmsFetchConversationRunnable(uri, context, threadResultHandler);
+        MainThreadPool.getInstance().getPool().submit(smsFetchConversationRunnable);
     }
 
     @Override

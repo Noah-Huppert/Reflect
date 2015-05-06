@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Tests the StringListConverter
+ * Tests the {@link StringListConverter}
  */
 public class StringListConverterTest extends TestCase {
     StringListConverter converter;

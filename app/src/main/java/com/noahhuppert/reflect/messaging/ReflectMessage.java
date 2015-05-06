@@ -67,7 +67,6 @@ public class ReflectMessage {
     private boolean seen;
 
     /* Actions */
-
     @Override
     public String toString() {
         return "[id: " + getId() +
@@ -82,7 +81,7 @@ public class ReflectMessage {
     }
     /* Cursor Wrappers */
     /**
-     * A cursor wrapper for taking a SMS table query and converting it into a cursor
+     * A cursor wrapper for taking a SMS table query and converting it to a ReflectMessage
      */
     public static class SmsCursor extends IterableCursorWrapper<ReflectMessage> {
         public static final String KEY_ID = BaseColumns._ID;

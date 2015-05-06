@@ -82,7 +82,12 @@ public class SmsFetchContactRunnable extends MessagingProviderFetchRunnable<Refl
         }
     }
 
-    private URI getContactUri(String lookupKey) throws InvalidUriException{
+    /**
+     * A method specifically used to get the contacts phone number
+     * @param lookupKey The lookup key of the contact
+     * @return The phone number of the contact in Uri form
+     */
+    private URI getContactUri(String lookupKey) {
         Cursor cursor;
 
         //Setup query

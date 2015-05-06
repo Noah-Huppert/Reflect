@@ -7,7 +7,7 @@ import com.noahhuppert.reflect.messaging.CommunicationType;
 import junit.framework.TestCase;
 
 /**
- * Tests the CommunicationTypeConverter
+ * Tests the {@link CommunicationTypeConverter}
  */
 public class CommunicationTypeConverterTest extends TestCase{
     CommunicationTypeConverter converter;

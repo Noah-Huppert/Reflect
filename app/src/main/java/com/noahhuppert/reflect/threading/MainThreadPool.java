@@ -8,14 +8,28 @@ import java.util.concurrent.Executors;
  * pool.
  */
 public class MainThreadPool {
+    /**
+     * The private singleton instance of the MainThreadPool
+     */
     private static MainThreadPool ourInstance = new MainThreadPool();
 
+    /**
+     * The actual thread pool
+     */
     private ExecutorService pool;
 
+    /**
+     * Gets the singleton instance of the MainThreadPool
+     * @return Singleton instance of the MainThreadPool
+     */
     public static MainThreadPool getInstance() {
         return ourInstance;
     }
 
+    /**
+     * Creates a new MainThreadPool singleton. This constructor is marked as private to make sure there
+     * is only one MainThreadPool
+     */
     private MainThreadPool() {
         pool = Executors.newCachedThreadPool();
     }

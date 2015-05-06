@@ -1,5 +1,8 @@
 package com.noahhuppert.reflect.exceptions;
 
+/**
+ * The same as a {@link DetailedException} but in the form of a RuntimeException
+ */
 public class DetailedRuntimeException extends RuntimeException {
     /**
      * The reason that the exception was thrown

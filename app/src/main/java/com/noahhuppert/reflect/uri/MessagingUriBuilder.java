@@ -1,6 +1,8 @@
 package com.noahhuppert.reflect.uri;
 
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
+import com.noahhuppert.reflect.messaging.CommunicationType;
+import com.noahhuppert.reflect.messaging.MessagingResourceType;
 import com.noahhuppert.reflect.utils.EnumUtils;
 
 import java.net.URI;
@@ -24,7 +26,7 @@ public class MessagingUriBuilder {
      * @return A built URI with the provided data
      * @throws URISyntaxException Thrown if the formatting of the URI is incorrect
      */
-    public static URI Build(MessagingUriResourceType resourceType, MessagingUriResourceProvider resourceProvider, String resourceId) throws URISyntaxException{
+    public static URI Build(MessagingResourceType resourceType, CommunicationType resourceProvider, String resourceId) throws URISyntaxException{
         return new URI(MESSAGING_URI_SCHEME, EnumUtils.PartEnumToString(resourceType), EnumUtils.PartEnumToString(resourceProvider), -1, "/" + resourceId, null, null);
     }
 
@@ -37,7 +39,7 @@ public class MessagingUriBuilder {
      * @throws URISyntaxException Thrown if the formatting of the URI is incorrect
      */
     public static URI BuildXMPPContact(String username, String host, int port) throws URISyntaxException{
-        return Build(MessagingUriResourceType.CONTACT, MessagingUriResourceProvider.XMPP, host + ":" + port + "/" + username);
+        return Build(MessagingResourceType.CONTACT, CommunicationType.XMPP, host + ":" + port + "/" + username);
     }
 
     /**

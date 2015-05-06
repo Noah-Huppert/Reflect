@@ -1,7 +1,6 @@
 package com.noahhuppert.reflect.messaging;
 
 import android.database.Cursor;
-import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 
 import com.venmo.cursor.IterableCursorWrapper;

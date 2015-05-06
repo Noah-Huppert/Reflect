@@ -40,7 +40,7 @@ public class TelephonyUtils {
     public static TelephonyManager GetTelephonyManager(Context context) throws NoTelephonyManagerException {
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
-        if(telephonyManager == null){
+        if(telephonyManager == null || !HasTelephony(context)){
             throw new NoTelephonyManagerException("The device does not have a Telephony capability", "telephonyManager is null");
         }
 

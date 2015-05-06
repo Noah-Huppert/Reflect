@@ -13,5 +13,10 @@ public enum CommunicationType {
     /**
      * Communication type of SMS
      */
-    SMS;
+    SMS,
+
+    /**
+     * Communication type of all other CommunicationTypes combined
+     */
+    JOINT;
 }

@@ -5,13 +5,13 @@ import android.util.Log;
 
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.exceptions.WTFException;
+import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.ReflectContact;
 import com.noahhuppert.reflect.messaging.ReflectConversation;
 import com.noahhuppert.reflect.messaging.ReflectMessage;
 import com.noahhuppert.reflect.messaging.providers.JointMessagingProvider.JointMessagingProvider;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
-import com.noahhuppert.reflect.uri.MessagingUriResourceProvider;
 import com.noahhuppert.reflect.uri.MessagingUriUtils;
 
 import java.net.URI;
@@ -29,7 +29,7 @@ public class MessagingProviderManager {
      */
     private static MessagingProviderManager ourInstance;
 
-    private Map<MessagingUriResourceProvider, MessagingProvider> messagingProviders;
+    private Map<CommunicationType, MessagingProvider> messagingProviders;
 
     /**
      * A static method to retrieve the instance of a MessagingProviderManager
@@ -49,9 +49,9 @@ public class MessagingProviderManager {
     private MessagingProviderManager(){
         messagingProviders = new HashMap<>();
 
-        getMessagingProviders().put(MessagingUriResourceProvider.SMS, new SmsMessagingProvider());
-        getMessagingProviders().put(MessagingUriResourceProvider.XMPP, new SmsMessagingProvider());
-        getMessagingProviders().put(MessagingUriResourceProvider.JOINT, new JointMessagingProvider());
+        getMessagingProviders().put(CommunicationType.SMS, new SmsMessagingProvider());
+        getMessagingProviders().put(CommunicationType.XMPP, new SmsMessagingProvider());
+        getMessagingProviders().put(CommunicationType.JOINT, new JointMessagingProvider());
     }
 
     /* Actions */
@@ -110,16 +110,16 @@ public class MessagingProviderManager {
     }
 
     /* Getters */
-    public Map<MessagingUriResourceProvider, MessagingProvider> getMessagingProviders() {
+    public Map<CommunicationType, MessagingProvider> getMessagingProviders() {
         return messagingProviders;
     }
 
     /**
-     * Gets the messaging provider for the provided {@link com.noahhuppert.reflect.uri.MessagingUriResourceProvider}
+     * Gets the messaging provider for the provided {@link CommunicationType}
      * @param resourceProvider The resource provider to fetch a messaging provider for
      * @return The messaging provider for the resource provider
      */
-    public MessagingProvider getMessagingProvider(MessagingUriResourceProvider resourceProvider){
+    public MessagingProvider getMessagingProvider(CommunicationType resourceProvider){
         return getMessagingProviders().get(resourceProvider);
     }
 
@@ -130,13 +130,13 @@ public class MessagingProviderManager {
      * @throws InvalidUriException Thrown if the URI provided is invalid
      */
     public MessagingProvider getMessagingProvider(URI uri) throws InvalidUriException{
-        MessagingUriResourceProvider resourceProvider = MessagingUriUtils.GetResourceProvider(uri);
+        CommunicationType resourceProvider = MessagingUriUtils.GetResourceProvider(uri);
 
         return getMessagingProvider(resourceProvider);
     }
 
     /* Setters */
-    public void setMessagingProviders(Map<MessagingUriResourceProvider, MessagingProvider> messagingProviders) {
+    public void setMessagingProviders(Map<CommunicationType, MessagingProvider> messagingProviders) {
         this.messagingProviders = messagingProviders;
     }
 }
