@@ -16,6 +16,7 @@ import java.net.URI;
 public class XMPPMessagingProvider extends MessagingProvider {
     public static final int DEFAULT_XMPP_PORT = 5222;
 
+    /* Fetch */
     @Override
     public void fetchMessage(URI uri, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
 
@@ -27,5 +28,21 @@ public class XMPPMessagingProvider extends MessagingProvider {
 
     @Override
     public void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
+    }
+
+    /* Push */
+    @Override
+    public void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
+
+    }
+
+    @Override
+    public void pushConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) {
+
+    }
+
+    @Override
+    public void pushContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
+
     }
 }

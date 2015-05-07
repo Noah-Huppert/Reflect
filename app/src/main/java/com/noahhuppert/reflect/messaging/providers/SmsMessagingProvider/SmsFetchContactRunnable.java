@@ -6,11 +6,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
-import android.util.Log;
 
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.messaging.ReflectContact;
-import com.noahhuppert.reflect.messaging.providers.MessagingProviderFetchRunnable;
+import com.noahhuppert.reflect.messaging.providers.MessagingProviderRunnable;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriUtils;
 import com.venmo.cursor.IterableCursor;
@@ -21,7 +20,7 @@ import java.net.URISyntaxException;
 /**
  * A runnable thread task that fetches the contact pointed to by the URI
  */
-public class SmsFetchContactRunnable extends MessagingProviderFetchRunnable<ReflectContact> {
+public class SmsFetchContactRunnable extends MessagingProviderRunnable<ReflectContact> {
     private static final String TAG = SmsFetchContactRunnable.class.getSimpleName();
 
     public SmsFetchContactRunnable(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {

@@ -39,6 +39,7 @@ public class SmsMessagingProvider extends MessagingProvider {
             Telephony.Sms.Conversations.SNIPPET//ReflectConversation.snippet
     };
 
+    /* Fetch */
     @Override
     public void fetchMessage(URI uri, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
         SmsFetchMessageRunnable smsFetchMessageRunnable = new SmsFetchMessageRunnable(uri, context, threadResultHandler);
@@ -55,5 +56,21 @@ public class SmsMessagingProvider extends MessagingProvider {
     public void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
         SmsFetchContactRunnable smsFetchContactRunnable = new SmsFetchContactRunnable(uri, context, threadResultHandler);
         MainThreadPool.getInstance().getPool().submit(smsFetchContactRunnable);
+    }
+
+    /* Push */
+    @Override
+    public void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
+
+    }
+
+    @Override
+    public void pushConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) {
+
+    }
+
+    @Override
+    public void pushContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
+
     }
 }

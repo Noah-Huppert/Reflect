@@ -15,6 +15,7 @@ import java.net.URI;
  * A messaging provider that fetches resources from both SMS and XMPP
  */
 public class JointMessagingProvider extends MessagingProvider {
+    /* Fetch */
     /**
      * DO NOT USE:
      *      Marked as Deprecated to prevent usage
@@ -27,7 +28,6 @@ public class JointMessagingProvider extends MessagingProvider {
      * @param uri The URI of the message
      * @param context
      * @param threadResultHandler
-     * @return Nothing because this is an invalid operation
      * @throws InvalidUriException Always
      */
     @Override
@@ -43,6 +43,22 @@ public class JointMessagingProvider extends MessagingProvider {
 
     @Override
     public void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
+
+    }
+
+    /* Push */
+    @Override
+    public void pushContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
+
+    }
+
+    @Override
+    public void pushConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) {
+
+    }
+
+    @Override
+    public void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
 
     }
 }
