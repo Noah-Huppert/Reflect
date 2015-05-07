@@ -77,7 +77,7 @@ public class ReflectContact {
                 URI avatarUri = null;
                 if(avatarUriString != null){
                     avatarUri = new URI(avatarUriString);
-                };
+                }
 
 
                 //Set data

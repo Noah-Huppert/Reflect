@@ -18,5 +18,5 @@ public enum CommunicationType {
     /**
      * Communication type of all other CommunicationTypes combined
      */
-    JOINT;
+    JOINT
 }

@@ -11,8 +11,8 @@ import java.net.URISyntaxException;
  * Tests the {@link URIConverter}
  */
 public class URIConverterTest extends TestCase {
-    URIConverter converter;
-    String goodUriString;
+    private URIConverter converter;
+    private String goodUriString;
 
     @Override
     protected void setUp() throws Exception {

@@ -26,9 +26,8 @@ public class JointMessagingProvider extends MessagingProvider {
      * and XMPP and combines them. This means you can not fetch a message that is both XMPP and SMS.
      *
      * @param uri The URI of the message
-     * @param context
-     * @param threadResultHandler
-     * @throws InvalidUriException Always
+     * @param context The context of the application
+     * @param threadResultHandler The result handler used to communicate between threads
      */
     @Override
     @Deprecated

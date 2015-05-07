@@ -13,7 +13,7 @@ public abstract class ResultHandlerThread<DataType> implements Runnable {
     /**
      * The {@link ThreadResultHandler} to use to communicate with other threads
      */
-    protected ThreadResultHandler<DataType> threadResultHandler;
+    protected final ThreadResultHandler<DataType> threadResultHandler;
 
     /**
      * Creates a new ResultHandlerThread
@@ -29,7 +29,7 @@ public abstract class ResultHandlerThread<DataType> implements Runnable {
      * @throws Exception A general exception that can be caught and dispatched to other threads with
      * {@link ThreadResultHandler#onError(Exception)}
      */
-    public abstract DataType execute() throws Exception;
+    protected abstract DataType execute() throws Exception;
 
     @Override
     public void run() {

@@ -11,16 +11,16 @@ import java.util.List;
  * Tests the {@link StringListConverter}
  */
 public class StringListConverterTest extends TestCase {
-    StringListConverter converter;
-    List<String> stringList;
-    String dbValueString;
+    private StringListConverter converter;
+    private List stringList;
+    private String dbValueString;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         converter = new StringListConverter();
 
-        stringList = new ArrayList<String>();
+        stringList = new ArrayList<>();
         stringList.add("string1");
         stringList.add("string2");
         stringList.add("string3");

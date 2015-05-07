@@ -17,5 +17,5 @@ public enum MessagingResourceType {
     /**
      * Identifies that the resource is a contact
      */
-    CONTACT;
+    CONTACT
 }

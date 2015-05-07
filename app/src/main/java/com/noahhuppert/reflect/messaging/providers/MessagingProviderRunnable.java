@@ -15,12 +15,12 @@ public abstract class MessagingProviderRunnable<DataType> extends ResultHandlerT
     /**
      * The Uri of the resource the runnable will fetch
      */
-    protected URI uri;
+    protected final URI uri;
 
     /**
      * The context to use in the runnable
      */
-    protected Context context;
+    protected final Context context;
 
     /**
      * Creates a new MessagingProviderRunnable, takes the basic arguments needed in a fetch task

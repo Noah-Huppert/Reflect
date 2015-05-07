@@ -11,12 +11,12 @@ public class MainThreadPool {
     /**
      * The private singleton instance of the MainThreadPool
      */
-    private static MainThreadPool ourInstance = new MainThreadPool();
+    private static final MainThreadPool ourInstance = new MainThreadPool();
 
     /**
      * The actual thread pool
      */
-    private ExecutorService pool;
+    private final ExecutorService pool;
 
     /**
      * Gets the singleton instance of the MainThreadPool

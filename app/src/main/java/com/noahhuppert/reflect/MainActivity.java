@@ -1,10 +1,6 @@
 package com.noahhuppert.reflect;
 
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.BaseColumns;
-import android.provider.ContactsContract;
-import android.provider.Telephony;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -13,12 +9,11 @@ import android.view.MenuItem;
 import com.crashlytics.android.Crashlytics;
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.messaging.CommunicationType;
-import com.noahhuppert.reflect.messaging.ReflectContact;
+import com.noahhuppert.reflect.messaging.MessagingResourceType;
 import com.noahhuppert.reflect.messaging.ReflectConversation;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviderManager;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriBuilder;
-import com.noahhuppert.reflect.messaging.MessagingResourceType;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -57,9 +52,7 @@ public class MainActivity extends ActionBarActivity {
         try {
             URI conversationUri = MessagingUriBuilder.Build(MessagingResourceType.CONVERSATION, CommunicationType.SMS, "210");
             MessagingProviderManager.getInstance().fetchConversation(conversationUri, getBaseContext(), reflectConversationThreadResultHandler);
-        } catch (URISyntaxException e){
-            Log.e(TAG, "Exception", e);
-        } catch (InvalidUriException e){
+        } catch (InvalidUriException | URISyntaxException e){
             Log.e(TAG, "Exception", e);
         }
     }

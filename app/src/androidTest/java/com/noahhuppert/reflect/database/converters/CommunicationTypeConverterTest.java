@@ -10,7 +10,7 @@ import junit.framework.TestCase;
  * Tests the {@link CommunicationTypeConverter}
  */
 public class CommunicationTypeConverterTest extends TestCase{
-    CommunicationTypeConverter converter;
+    private CommunicationTypeConverter converter;
 
     @Override
     protected void setUp() throws Exception {

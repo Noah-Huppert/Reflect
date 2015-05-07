@@ -58,7 +58,6 @@ public class MessagingProviderManager {
     /**
      * Fetches message from URI, automatically finds correct MessagingProvider to use
      * @param uri The URI of the message to get
-     * @return The Message
      * @throws InvalidUriException Thrown if the URI is invalid
      */
     public void fetchMessage(URI uri, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) throws InvalidUriException{
@@ -76,7 +75,6 @@ public class MessagingProviderManager {
     /**
      * Fetches conversation from URI, automatically finds correct MessagingProvider to use
      * @param uri The URI of the conversation to get
-     * @return The Conversation
      * @throws InvalidUriException Thrown if the URI is invalid
      */
     public void fetchConversation(URI uri, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) throws InvalidUriException{
@@ -94,7 +92,6 @@ public class MessagingProviderManager {
     /**
      * Fetches contact from URI, automatically finds correct MessagingProvider to use
      * @param uri The URI of the contact to get
-     * @return The Contact
      * @throws InvalidUriException Thrown if the URI is invalid
      */
     public void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) throws InvalidUriException{
