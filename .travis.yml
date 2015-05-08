@@ -1,1 +1,14 @@
 language: android
+android:
+  components:
+    # Latest Android SDK tools
+    - platform-tools
+    - tools
+
+    # BuildTools 22.0.1
+    - build-tools-22.0.1
+
+    # Compile With Android SDK 22
+    - android-22
+script:
+  - gradle build connectedCheck
