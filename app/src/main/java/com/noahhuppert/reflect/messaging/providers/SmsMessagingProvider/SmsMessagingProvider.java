@@ -17,7 +17,7 @@ import java.net.URI;
 /**
  * A messaging provider that fetches resources from SMS
  */
-public class SmsMessagingProvider extends MessagingProvider {
+public class SmsMessagingProvider implements MessagingProvider {
     public static final String[] SMS_MESSAGE_PROJECTION = {
             BaseColumns._ID,//ReflectMessage.id
             Telephony.TextBasedSmsColumns.ADDRESS,//ReflectMessage.receiverUri
@@ -61,7 +61,8 @@ public class SmsMessagingProvider extends MessagingProvider {
     /* Push */
     @Override
     public void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
-
+        SmsPushMessageRunnable smsPushMessageRunnable = new SmsPushMessageRunnable(reflectMessage, context, threadResultHandler);
+        MainThreadPool.getInstance().getPool().submit(smsPushMessageRunnable);
     }
 
     @Override

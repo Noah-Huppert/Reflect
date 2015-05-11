@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * A singleton class to automatically map messaging scheme URIs to messaging providers
  */
-public class MessagingProviderManager {
+public class MessagingProviderManager implements MessagingProvider{
     private static final String TAG = MessagingProviderManager.class.getSimpleName();
 
     /**
@@ -54,7 +54,7 @@ public class MessagingProviderManager {
         getMessagingProviders().put(CommunicationType.JOINT, new JointMessagingProvider());
     }
 
-    /* Actions */
+    /* Fetch */
     /**
      * Fetches message from URI, automatically finds correct MessagingProvider to use
      * @param uri The URI of the message to get
@@ -70,6 +70,23 @@ public class MessagingProviderManager {
         }
 
         messagingProvider.fetchMessage(uri, context, threadResultHandler);
+    }
+
+    /**
+     * Fetches contact from URI, automatically finds correct MessagingProvider to use
+     * @param uri The URI of the contact to get
+     * @throws InvalidUriException Thrown if the URI is invalid
+     */
+    public void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) throws InvalidUriException{
+        MessagingProvider messagingProvider = getMessagingProvider(uri);
+
+        if(messagingProvider == null){
+            WTFException wtfException = new WTFException("No messaging provider register for valid resource provider in uri", uri.toString());
+            Log.wtf(TAG, wtfException.toString());
+            throw wtfException;
+        }
+
+        messagingProvider.fetchContact(uri, context, threadResultHandler);
     }
 
     /**
@@ -89,21 +106,35 @@ public class MessagingProviderManager {
         messagingProvider.fetchConversation(uri, context, threadResultHandler);
     }
 
+    /* Push */
     /**
-     * Fetches contact from URI, automatically finds correct MessagingProvider to use
-     * @param uri The URI of the contact to get
-     * @throws InvalidUriException Thrown if the URI is invalid
+     * Pushes a message to a messaging resource
+     * @param reflectMessage The {@link ReflectMessage} to push to the messaging resource
+     * @param context The context of the application
+     * @param threadResultHandler The result handler used to communicate between threads
      */
-    public void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) throws InvalidUriException{
-        MessagingProvider messagingProvider = getMessagingProvider(uri);
+    public void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler){
 
-        if(messagingProvider == null){
-            WTFException wtfException = new WTFException("No messaging provider register for valid resource provider in uri", uri.toString());
-            Log.wtf(TAG, wtfException.toString());
-            throw wtfException;
-        }
+    }
 
-        messagingProvider.fetchContact(uri, context, threadResultHandler);
+    /**
+     * Pushes a conversation to a messaging resource
+     * @param reflectConversation The {@link ReflectConversation} to push to the messaging resource
+     * @param context The context of the application
+     * @param threadResultHandler The result handler used to communicate between threads
+     */
+    public void pushConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler){
+
+    }
+
+    /**
+     * Pushes a contact to a messaging resource
+     * @param reflectContact The {@link ReflectContact} to push to the messaging resource
+     * @param context The context of the application
+     * @param threadResultHandler The result handler used to communicate between threads
+     */
+    public void pushContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler){
+
     }
 
     /* Getters */

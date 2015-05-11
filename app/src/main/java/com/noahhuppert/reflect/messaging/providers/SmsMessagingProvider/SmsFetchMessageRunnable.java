@@ -8,7 +8,7 @@ import android.provider.Telephony;
 
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.messaging.ReflectMessage;
-import com.noahhuppert.reflect.messaging.providers.MessagingProviderRunnable;
+import com.noahhuppert.reflect.messaging.providers.MessagingProviderFetchRunnable;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriUtils;
 import com.venmo.cursor.IterableCursor;
@@ -18,7 +18,7 @@ import java.net.URI;
 /**
  * A runnable thread task that gets the message pointed to by the URI
  */
-public class SmsFetchMessageRunnable extends MessagingProviderRunnable<ReflectMessage> {
+public class SmsFetchMessageRunnable extends MessagingProviderFetchRunnable<ReflectMessage> {
     public SmsFetchMessageRunnable(URI uri, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
         super(uri, context, threadResultHandler);
     }

@@ -10,9 +10,9 @@ import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import java.net.URI;
 
 /**
- * A abstract class to provide a framework for fetching messaging resources
+ * A interface to provide a framework for fetching messaging resources
  */
-public abstract class MessagingProvider {
+public interface MessagingProvider {
     /* Fetch */
     /**
      * Gets a message from a messaging resource
@@ -20,7 +20,7 @@ public abstract class MessagingProvider {
      * @param context The context of the application
      * @param threadResultHandler The result handler used to communicate between threads
      */
-    public abstract void fetchMessage(URI uri, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler);
+    void fetchMessage(URI uri, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler);
 
     /**
      * Gets a conversation from a messaging resource
@@ -28,7 +28,7 @@ public abstract class MessagingProvider {
      * @param context The context of the application
      * @param threadResultHandler The result handler used to communicate between threads
      */
-    public abstract void fetchConversation(URI uri, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler);
+    void fetchConversation(URI uri, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler);
 
     /**
      * Gets a contact from a messaging resource
@@ -36,7 +36,7 @@ public abstract class MessagingProvider {
      * @param context The context of the application
      * @param threadResultHandler The result handler used to communicate between threads
      */
-    public abstract void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler);
+    void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler);
 
     /* Push */
     /**
@@ -45,7 +45,7 @@ public abstract class MessagingProvider {
      * @param context The context of the application
      * @param threadResultHandler The result handler used to communicate between threads
      */
-    public abstract void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler);
+    void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler);
 
     /**
      * Pushes a conversation to a messaging resource
@@ -53,7 +53,7 @@ public abstract class MessagingProvider {
      * @param context The context of the application
      * @param threadResultHandler The result handler used to communicate between threads
      */
-    public abstract void pushConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler);
+    void pushConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler);
 
     /**
      * Pushes a contact to a messaging resource
@@ -61,5 +61,5 @@ public abstract class MessagingProvider {
      * @param context The context of the application
      * @param threadResultHandler The result handler used to communicate between threads
      */
-    public abstract void pushContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler);
+    void pushContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler);
 }

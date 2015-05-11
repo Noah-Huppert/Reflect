@@ -10,5 +10,8 @@ android:
 
     # Compile With Android SDK 22
     - android-22
+
+    #Extras
+    - extra-android-support
 script:
   - gradle build connectedCheck

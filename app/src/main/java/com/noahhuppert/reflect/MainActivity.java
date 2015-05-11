@@ -5,13 +5,18 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.MessagingResourceType;
 import com.noahhuppert.reflect.messaging.ReflectConversation;
+import com.noahhuppert.reflect.messaging.ReflectMessage;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviderManager;
+import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriBuilder;
 
@@ -35,26 +40,26 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-        Log.d(TAG, "---------- RESTART ----------");
-        //Test conversation
-        ThreadResultHandler<ReflectConversation> reflectConversationThreadResultHandler = new ThreadResultHandler<ReflectConversation>() {
+        Button testSendSmsButton = (Button) findViewById(R.id.test_send_sms);
+        testSendSmsButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDone(ReflectConversation data) {
-                Log.d(TAG, data.toString());
-            }
+            public void onClick(View v) {
+                Toast toast = Toast.makeText(getBaseContext(), "Test Sms Button", Toast.LENGTH_SHORT);
+                toast.show();
 
-            @Override
-            public void onError(Exception exception) {
-                Log.e(TAG, "Thread Result Exception", exception);
-            }
-        };
+                new SmsMessagingProvider().pushMessage(null, null, new ThreadResultHandler<ReflectMessage>() {
+                    @Override
+                    public void onDone(ReflectMessage data) {
 
-        try {
-            URI conversationUri = MessagingUriBuilder.Build(MessagingResourceType.CONVERSATION, CommunicationType.SMS, "210");
-            MessagingProviderManager.getInstance().fetchConversation(conversationUri, getBaseContext(), reflectConversationThreadResultHandler);
-        } catch (InvalidUriException | URISyntaxException e){
-            Log.e(TAG, "Exception", e);
-        }
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        Log.e(TAG, "Exception", exception);
+                    }
+                });
+            }
+        });
     }
 
 

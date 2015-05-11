@@ -2,7 +2,6 @@ package com.noahhuppert.reflect.messaging.providers.JointMessagingProvider;
 
 import android.content.Context;
 
-import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.messaging.ReflectContact;
 import com.noahhuppert.reflect.messaging.ReflectConversation;
 import com.noahhuppert.reflect.messaging.ReflectMessage;
