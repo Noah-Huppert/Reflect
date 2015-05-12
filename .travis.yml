@@ -1,3 +1,4 @@
+# Language Setup
 language: android
 android:
   components:
@@ -11,7 +12,9 @@ android:
     # Compile With Android SDK 22
     - android-22
 
-    #Extras
-    - extra-android-support
+    # Support library
+    - extra
+
+# Test
 script:
-  - gradle build connectedCheck
+    - gradle build connectedCheck

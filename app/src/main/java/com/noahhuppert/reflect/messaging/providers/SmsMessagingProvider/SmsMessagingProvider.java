@@ -17,7 +17,12 @@ import java.net.URI;
 /**
  * A messaging provider that fetches resources from SMS
  */
-public class SmsMessagingProvider implements MessagingProvider {
+public class SmsMessagingProvider extends MessagingProvider {
+    public static final String SMS_URI_SCHEME = "sms";
+
+    public static final String INTENT_ACTION_MESSAGE_SENT = SmsMessagingProvider.class.getName() + "INTENT_ACTION_MESSAGE_SENT";
+    public static final String INTENT_ACTION_MESSAGE_DELIVERED = SmsMessagingProvider.class.getName() + "INTENT_ACTION_MESSAGE_DELIVERED";
+
     public static final String[] SMS_MESSAGE_PROJECTION = {
             BaseColumns._ID,//ReflectMessage.id
             Telephony.TextBasedSmsColumns.ADDRESS,//ReflectMessage.receiverUri

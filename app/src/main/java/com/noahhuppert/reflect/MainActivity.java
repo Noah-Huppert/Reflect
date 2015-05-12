@@ -10,18 +10,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.noahhuppert.reflect.exceptions.InvalidUriException;
-import com.noahhuppert.reflect.messaging.CommunicationType;
-import com.noahhuppert.reflect.messaging.MessagingResourceType;
-import com.noahhuppert.reflect.messaging.ReflectConversation;
 import com.noahhuppert.reflect.messaging.ReflectMessage;
-import com.noahhuppert.reflect.messaging.providers.MessagingProviderManager;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
-import com.noahhuppert.reflect.uri.MessagingUriBuilder;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import io.fabric.sdk.android.Fabric;
 

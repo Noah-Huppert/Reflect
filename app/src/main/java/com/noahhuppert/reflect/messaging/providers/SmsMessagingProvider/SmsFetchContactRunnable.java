@@ -116,7 +116,7 @@ public class SmsFetchContactRunnable extends MessagingProviderFetchRunnable<Refl
             phoneNumber = PhoneNumberUtils.formatNumber(phoneNumber);
 
             try {
-                return new URI("sms://" + phoneNumber);
+                return new URI(SmsMessagingProvider.SMS_URI_SCHEME + "://" + phoneNumber);
             } catch (URISyntaxException e) {
                 return null;
             }

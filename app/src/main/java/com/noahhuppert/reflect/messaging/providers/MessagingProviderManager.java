@@ -1,10 +1,9 @@
 package com.noahhuppert.reflect.messaging.providers;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.noahhuppert.reflect.exceptions.InvalidMessagingProviderPushData;
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
-import com.noahhuppert.reflect.exceptions.WTFException;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.ReflectContact;
 import com.noahhuppert.reflect.messaging.ReflectConversation;
@@ -21,7 +20,7 @@ import java.util.Map;
 /**
  * A singleton class to automatically map messaging scheme URIs to messaging providers
  */
-public class MessagingProviderManager implements MessagingProvider{
+public class MessagingProviderManager{
     private static final String TAG = MessagingProviderManager.class.getSimpleName();
 
     /**
@@ -64,9 +63,7 @@ public class MessagingProviderManager implements MessagingProvider{
         MessagingProvider messagingProvider = getMessagingProvider(uri);
 
         if(messagingProvider == null){
-            WTFException wtfException = new WTFException("No messaging provider register for valid resource provider in uri", uri.toString());
-            Log.wtf(TAG, wtfException.toString());
-            throw wtfException;
+            throw new InvalidUriException("The Uri provided does not contain a valid MessagingProvider", uri.toString());
         }
 
         messagingProvider.fetchMessage(uri, context, threadResultHandler);
@@ -81,9 +78,7 @@ public class MessagingProviderManager implements MessagingProvider{
         MessagingProvider messagingProvider = getMessagingProvider(uri);
 
         if(messagingProvider == null){
-            WTFException wtfException = new WTFException("No messaging provider register for valid resource provider in uri", uri.toString());
-            Log.wtf(TAG, wtfException.toString());
-            throw wtfException;
+            throw new InvalidUriException("The Uri provided does not contain a valid resource provider", uri.toString());
         }
 
         messagingProvider.fetchContact(uri, context, threadResultHandler);
@@ -98,9 +93,7 @@ public class MessagingProviderManager implements MessagingProvider{
         MessagingProvider messagingProvider = getMessagingProvider(uri);
 
         if(messagingProvider == null){
-            WTFException wtfException = new WTFException("No messaging provider register for valid resource provider in uri", uri.toString());
-            Log.wtf(TAG, wtfException.toString());
-            throw wtfException;
+            throw new InvalidUriException("The Uri provided does not contain a valid resource provider", uri.toString());
         }
 
         messagingProvider.fetchConversation(uri, context, threadResultHandler);
@@ -108,33 +101,54 @@ public class MessagingProviderManager implements MessagingProvider{
 
     /* Push */
     /**
-     * Pushes a message to a messaging resource
+     * Pushes a message to a messaging resource, automatically finds correct MessagingProvider to use
      * @param reflectMessage The {@link ReflectMessage} to push to the messaging resource
      * @param context The context of the application
      * @param threadResultHandler The result handler used to communicate between threads
+     * @throws InvalidMessagingProviderPushData Thrown if the provided data has an invalid {@link CommunicationType}
      */
-    public void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler){
+    public void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) throws InvalidMessagingProviderPushData{
+        MessagingProvider messagingProvider = getMessagingProvider(reflectMessage.getProtocol());
 
+        if(messagingProvider == null){
+            throw new InvalidMessagingProviderPushData("The ReflectMessage provided does not contain a valid resource provider", reflectMessage.toString());
+        }
+
+        messagingProvider.pushMessage(reflectMessage, context, threadResultHandler);
     }
 
     /**
-     * Pushes a conversation to a messaging resource
+     * Pushes a conversation to a messaging resource, automatically finds correct MessagingProvider to use
      * @param reflectConversation The {@link ReflectConversation} to push to the messaging resource
      * @param context The context of the application
      * @param threadResultHandler The result handler used to communicate between threads
+     * @throws InvalidMessagingProviderPushData Thrown if the provided data has an invalid {@link CommunicationType}
      */
-    public void pushConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler){
+    public void pushConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) throws InvalidMessagingProviderPushData{
+        MessagingProvider messagingProvider = getMessagingProvider(reflectConversation.getProtocol());
 
+        if(messagingProvider == null){
+            throw new InvalidMessagingProviderPushData("The ReflectConversation provided does not contain a valid resource provider", reflectConversation.toString());
+        }
+
+        messagingProvider.pushConversation(reflectConversation, context, threadResultHandler);
     }
 
     /**
-     * Pushes a contact to a messaging resource
+     * Pushes a contact to a messaging resource, automatically finds correct MessagingProvider to use
      * @param reflectContact The {@link ReflectContact} to push to the messaging resource
      * @param context The context of the application
      * @param threadResultHandler The result handler used to communicate between threads
+     * @throws InvalidMessagingProviderPushData Thrown if the provided data has an invalid {@link CommunicationType}
      */
-    public void pushContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler){
+    public void pushContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) throws InvalidMessagingProviderPushData{
+        MessagingProvider messagingProvider = getMessagingProvider(reflectContact.getProtocol());
 
+        if(messagingProvider == null){
+            throw new InvalidMessagingProviderPushData("The ReflectContact provided does not contain a valid resource provider", reflectContact.toString());
+        }
+
+        messagingProvider.pushContact(reflectContact, context, threadResultHandler);
     }
 
     /* Getters */
@@ -161,10 +175,5 @@ public class MessagingProviderManager implements MessagingProvider{
         CommunicationType resourceProvider = MessagingUriUtils.GetResourceProvider(uri);
 
         return getMessagingProvider(resourceProvider);
-    }
-
-    /* Setters */
-    public void setMessagingProviders(Map<CommunicationType, MessagingProvider> messagingProviders) {
-        this.messagingProviders = messagingProviders;
     }
 }
