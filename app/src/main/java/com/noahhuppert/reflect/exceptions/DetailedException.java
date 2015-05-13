@@ -4,7 +4,7 @@ package com.noahhuppert.reflect.exceptions;
  * An exception that provides context as to why the exception was thrown. This is done by showing
  * the user the input that caused the exception
  */
-public class DetailedException extends Exception {
+public abstract class DetailedException extends Exception {
     /**
      * The reason that the exception was thrown
      */

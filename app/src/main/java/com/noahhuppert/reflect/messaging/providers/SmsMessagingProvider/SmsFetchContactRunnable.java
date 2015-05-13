@@ -8,7 +8,7 @@ import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
 
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
-import com.noahhuppert.reflect.messaging.ReflectContact;
+import com.noahhuppert.reflect.messaging.models.ReflectContact;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviderFetchRunnable;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriUtils;

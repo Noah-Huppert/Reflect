@@ -1,8 +1,9 @@
-package com.noahhuppert.reflect.messaging;
+package com.noahhuppert.reflect.messaging.models;
 
 import android.database.Cursor;
 import android.provider.ContactsContract;
 
+import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.venmo.cursor.IterableCursorWrapper;
 
 import java.net.URI;

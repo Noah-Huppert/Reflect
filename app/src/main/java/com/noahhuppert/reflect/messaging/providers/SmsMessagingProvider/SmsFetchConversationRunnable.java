@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
 import android.provider.Telephony;
 
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
-import com.noahhuppert.reflect.messaging.ReflectConversation;
+import com.noahhuppert.reflect.messaging.models.ReflectConversation;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviderFetchRunnable;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriUtils;

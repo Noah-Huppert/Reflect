@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.noahhuppert.reflect.messaging.ReflectMessage;
+import com.noahhuppert.reflect.messaging.models.ReflectMessage;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 

@@ -1,9 +1,11 @@
-package com.noahhuppert.reflect.messaging;
+package com.noahhuppert.reflect.messaging.models;
 
 import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.provider.Telephony;
 
+import com.noahhuppert.reflect.messaging.CommunicationType;
+import com.noahhuppert.reflect.messaging.MessageState;
 import com.noahhuppert.reflect.utils.TimestampUtils;
 import com.venmo.cursor.IterableCursorWrapper;
 
@@ -55,16 +57,9 @@ public class ReflectMessage {
     private Timestamp receivedTimestamp;
 
     /**
-     * Has the message been read by the receiver
+     * The state of the message, weather it is sending, sent, received, or read
      */
-    private boolean read;
-
-    /**
-     * Has the user seen the message
-     *
-     * Used to determine if a notification should be shown
-     */
-    private boolean seen;
+    private MessageState messageState;
 
     /* Actions */
     @Override
@@ -76,8 +71,7 @@ public class ReflectMessage {
                ", body: " + getBody() +
                ", sentTimestamp: " + getSentTimestamp() +
                ", receivedTimestamp: " + getReceivedTimestamp() +
-               ", read: " + getRead() +
-               ", seen: " + getSeen() + "]";
+               ", messageState: " + getMessageState() + "]";
     }
     /* Cursor Wrappers */
     /**
@@ -112,7 +106,7 @@ public class ReflectMessage {
                 Timestamp sentTimestamp = TimestampUtils.FromLong(getLong(KEY_SENT_TIMESTAMP, 0));
                 Timestamp receivedTimestamp = TimestampUtils.FromLong(getLong(KEY_RECEIVED_TIMESTAMP, 0));
                 boolean read = getBoolean(KEY_READ, false);
-                boolean seen = getBoolean(KEY_SEEN, false);
+                MessageState messageState = read ? MessageState.READ : MessageState.RECEIVED;
 
                 //Set data
                 ReflectMessage reflectMessage = new ReflectMessage();
@@ -123,8 +117,7 @@ public class ReflectMessage {
                 reflectMessage.setBody(body);
                 reflectMessage.setSentTimestamp(sentTimestamp);
                 reflectMessage.setReceivedTimestamp(receivedTimestamp);
-                reflectMessage.setRead(read);
-                reflectMessage.setSeen(seen);
+                reflectMessage.setMessageState(messageState);
 
                 return reflectMessage;
             } catch(URISyntaxException e){
@@ -162,12 +155,8 @@ public class ReflectMessage {
         return receivedTimestamp;
     }
 
-    public boolean getRead() {
-        return read;
-    }
-
-    public boolean getSeen() {
-        return seen;
+    public MessageState getMessageState(){
+        return messageState;
     }
 
     /* Setters */
@@ -199,11 +188,7 @@ public class ReflectMessage {
         this.receivedTimestamp = receivedTimestamp;
     }
 
-    public void setRead(boolean read) {
-        this.read = read;
-    }
-
-    public void setSeen(boolean seen) {
-        this.seen = seen;
+    public void setMessageState(MessageState messageState){
+        this.messageState = messageState;
     }
 }

@@ -1,16 +1,14 @@
 package com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.Telephony;
 import android.telephony.SmsManager;
 
 import com.noahhuppert.reflect.exceptions.InvalidMessagingProviderPushData;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.MessagingResourceType;
-import com.noahhuppert.reflect.messaging.ReflectMessage;
+import com.noahhuppert.reflect.messaging.models.ReflectMessage;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviderPushRunnable;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriBuilder;
@@ -23,8 +21,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<ReflectMessage> {
+    private final String temporaryMessageId;
+
     public SmsPushMessageRunnable(ReflectMessage data, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
         super(data, context, threadResultHandler);
+        temporaryMessageId = UUID.randomUUID().toString();
     }
 
     @Override
@@ -46,11 +47,16 @@ public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<Reflec
                     SmsMessagingProvider.SMS_URI_SCHEME + "\"", data.toString());
         }
 
-        String tempMessageId = UUID.randomUUID().toString();
-
         String receiver = data.getReceiverUri().getPath();
         List<String> messages = SmsManager.getDefault().divideMessage(data.getBody());
-        List<Intent> sentIntents = generateSentIntents(messages.size(), tempMessageId);
+        List<Intent> sentIntents = generateSentIntents(messages.size());
+
+        /**
+         * Requirement:
+         *  - Identify total message parts
+         *  - Identify message part
+         *  - Provide Intent
+         */
 
         /**
          * TODO:
@@ -73,50 +79,22 @@ public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<Reflec
         return data;*/
     }
 
-    private List<Intent> generateSentIntents(int messagesCount, String tempMessageId) throws URISyntaxException{
+    private List<Intent> generateSentIntents(int messagesCount) throws URISyntaxException{
         List<Intent> sentIntents = new ArrayList<>();
 
-        for(int i = 0; i <= messagesCount; i++){
-            String action = SmsMessagingProvider.INTENT_ACTION_MESSAGE_SENT;
-            URI javaUri = MessagingUriBuilder.Build(MessagingResourceType.MESSAGE, CommunicationType.SMS, tempMessageId + "/" + i);
+        for(int i = 0; i < messagesCount; i++){
+            URI javaUri = MessagingUriBuilder.Build(MessagingResourceType.MESSAGE, CommunicationType.SMS, temporaryMessageId);
             Uri uri = MessagingUriUtils.ToAndroidUri(javaUri);
 
-            Intent sentIntent;
+            Intent intent;
 
-            synchronized (context) {
-                sentIntent = new Intent(action,
+            synchronized (context){
+                /*intent = new Intent(SmsMessagingProvider.INTENT_ACTION_MESSAGE_SENT,
                         uri,
-                        context,
-                        SmsPushMessageRunnable.SmsMessageDeliveryListener.class);
+                        );*/
             }
-
-            sentIntents.add(sentIntent);
         }
 
         return sentIntents;
-    }
-
-    private Intent generateDeliveredIntent(String tempMessageId) throws URISyntaxException{
-        String action = SmsMessagingProvider.INTENT_ACTION_MESSAGE_DELIVERED;
-        URI javaUri = MessagingUriBuilder.Build(MessagingResourceType.MESSAGE, CommunicationType.SMS, tempMessageId);
-        Uri uri = MessagingUriUtils.ToAndroidUri(javaUri);
-
-        Intent deliveredIntent;
-
-        synchronized (context){
-            deliveredIntent = new Intent(action,
-                    uri,
-                    context,
-                    SmsPushMessageRunnable.SmsMessageDeliveryListener.class);
-        }
-
-        return deliveredIntent;
-    }
-
-    public static class SmsMessageDeliveryListener extends BroadcastReceiver{
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-        }
     }
 }
