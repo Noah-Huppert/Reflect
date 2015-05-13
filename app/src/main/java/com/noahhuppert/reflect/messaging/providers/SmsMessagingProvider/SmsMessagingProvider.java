@@ -5,6 +5,7 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
 
+import com.noahhuppert.reflect.exceptions.InvalidMessagingProviderPushData;
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.messaging.models.ReflectContact;
 import com.noahhuppert.reflect.messaging.models.ReflectConversation;
@@ -66,18 +67,18 @@ public class SmsMessagingProvider implements MessagingProvider {
 
     /* Push */
     @Override
-    public void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
+    public void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) throws InvalidMessagingProviderPushData {
         SmsPushMessageRunnable smsPushMessageRunnable = new SmsPushMessageRunnable(reflectMessage, context, threadResultHandler);
         MainThreadPool.getInstance().getPool().submit(smsPushMessageRunnable);
     }
 
     @Override
-    public void pushConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) {
+    public void pushConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) throws InvalidMessagingProviderPushData {
 
     }
 
     @Override
-    public void pushContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
+    public void pushContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) throws InvalidMessagingProviderPushData {
 
     }
 }
