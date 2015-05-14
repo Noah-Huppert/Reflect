@@ -12,7 +12,7 @@ import com.noahhuppert.reflect.messaging.models.ReflectMessage;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviderPushRunnable;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriBuilder;
-import com.noahhuppert.reflect.uri.MessagingUriUtils;
+import com.noahhuppert.reflect.utils.UriUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -84,7 +84,7 @@ public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<Reflec
 
         for(int i = 0; i < messagesCount; i++){
             URI javaUri = MessagingUriBuilder.Build(MessagingResourceType.MESSAGE, CommunicationType.SMS, temporaryMessageId);
-            Uri uri = MessagingUriUtils.ToAndroidUri(javaUri);
+            Uri uri = UriUtils.ToAndroidUri(javaUri);
 
             Intent intent;
 

@@ -1,7 +1,5 @@
 package com.noahhuppert.reflect.uri;
 
-import android.net.Uri;
-
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.MessagingResourceType;
@@ -100,9 +98,5 @@ public class MessagingUriUtils {
         } catch (IllegalArgumentException e){
             throw new InvalidUriException("The URI provided does not contain a valid resource provider", uri.toString());
         }
-    }
-
-    public static Uri ToAndroidUri(URI uri){
-        return Uri.parse(uri.toString());
     }
 }
