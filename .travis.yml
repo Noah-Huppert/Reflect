@@ -1,20 +1,20 @@
-# Language Setup
+#Language Setup
 language: android
 android:
   components:
-    # Latest Android SDK tools
+    #Latest Android SDK tools
     - platform-tools
     - tools
 
-    # BuildTools 22.0.1
+    #BuildTools 22.0.1
     - build-tools-22.0.1
 
-    # Compile With Android SDK 22
+    #Compile With Android SDK 22
     - android-22
 
-    # Support library
+    #Support library
     - extra
 
-# Test
+#Test
 script:
     - gradle build connectedCheck
