@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.telephony.SmsManager;
 
 import com.noahhuppert.reflect.exceptions.InvalidMessagingProviderPushData;
+import com.noahhuppert.reflect.intents.IntentReceiver;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.MessagingResourceType;
 import com.noahhuppert.reflect.messaging.models.ReflectMessage;
@@ -91,7 +92,7 @@ public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<Reflec
             synchronized (context){
                 /*intent = new Intent(SmsMessagingProvider.INTENT_ACTION_MESSAGE_SENT,
                         uri,
-                        );*/
+                        IntentReceiver.class);*/
             }
         }
 

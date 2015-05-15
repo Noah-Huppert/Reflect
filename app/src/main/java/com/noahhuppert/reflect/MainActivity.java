@@ -2,15 +2,19 @@ package com.noahhuppert.reflect;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
+import com.noahhuppert.reflect.exceptions.NoTelephonyManagerException;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.MessagingManager;
 import com.noahhuppert.reflect.messaging.MessagingResourceType;
@@ -19,6 +23,7 @@ import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessa
 import com.noahhuppert.reflect.threading.DebugThreadResultHandler;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriBuilder;
+import com.noahhuppert.reflect.utils.TelephonyUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,16 +45,28 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-        /* Test Get Sms */
+        //Personal Number
+        TextView personalNumber = (TextView) findViewById(R.id.personal_phone_number);
+
         try {
+            TelephonyManager telephonyManager = TelephonyUtils.GetTelephonyManager(getBaseContext());
+            personalNumber.setText(telephonyManager.getLine1Number());
+        } catch(NoTelephonyManagerException e){
+            personalNumber.setText("ERROR");
+        }
+
+        //Send Sms
+        EditText smsNumber = (EditText) findViewById(R.id.sms_number);
+        EditText smsText = (EditText) findViewById(R.id.sms_text);
+
+        /* Test Get Sms */
+        /*try {
             URI uri = MessagingUriBuilder.Build(MessagingResourceType.MESSAGE, CommunicationType.SMS, "1");
             MessagingManager.getInstance().fetchMessage(uri, getBaseContext(), new DebugThreadResultHandler(TAG));
         } catch (URISyntaxException | InvalidUriException e){
             Log.e(TAG, "Exception", e);
         }
 
-
-        /* Test Send Sms */
         Button testSendSmsButton = (Button) findViewById(R.id.test_send_sms);
         testSendSmsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
                     invalidMessagingProviderPushData.printStackTrace();
                 }
             }
-        });
+        });*/
     }
 
 
