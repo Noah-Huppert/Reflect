@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.telephony.SmsManager;
 
 import com.noahhuppert.reflect.exceptions.InvalidMessagingProviderPushData;
+import com.noahhuppert.reflect.intents.IntentFilter;
+import com.noahhuppert.reflect.intents.IntentHandler;
 import com.noahhuppert.reflect.intents.IntentReceiver;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.MessagingResourceType;
@@ -22,17 +24,19 @@ import java.util.List;
 import java.util.UUID;
 
 public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<ReflectMessage> {
-    private final String temporaryMessageId;
+    private final String tempMessageId;
+    private final IntentHandler sentIntentHandler;
 
-    public SmsPushMessageRunnable(ReflectMessage data, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
+    public SmsPushMessageRunnable(ReflectMessage data, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler, IntentHandler sentIntentHandler) {
         super(data, context, threadResultHandler);
-        temporaryMessageId = UUID.randomUUID().toString();
+        tempMessageId = UUID.randomUUID().toString();
+        this.sentIntentHandler = sentIntentHandler;
     }
 
     @Override
     protected ReflectMessage execute() throws Exception {
         if(data == null){
-            throw new InvalidMessagingProviderPushData("The ReflectMessage provided cannot be null", data.toString());
+            throw new InvalidMessagingProviderPushData("The ReflectMessage provided cannot be null", null);
         }
 
         if(data.getBody() == null){
@@ -48,9 +52,19 @@ public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<Reflec
                     SmsMessagingProvider.SMS_URI_SCHEME + "\"", data.toString());
         }
 
-        String receiver = data.getReceiverUri().getPath();
+        String receiver = data.getReceiverUri().getHost();
         List<String> messages = SmsManager.getDefault().divideMessage(data.getBody());
         List<Intent> sentIntents = generateSentIntents(messages.size());
+
+        SmsManager smsManager = SmsManager.getDefault();
+
+        int i = 0;
+        for(String messageText : messages){
+            smsManager.sendTextMessage(receiver, null, messageText, sentIntents.get(i), null);
+            i++;
+        }
+
+        return data;
 
         /**
          * Requirement:
@@ -66,8 +80,6 @@ public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<Reflec
          *      - Send messages in parts
          *      - Get new message id from system once sent
          */
-
-        return null;
         /*
         //Get message data
         String destinationAddress = data.getReceiverUri().getPath();
@@ -84,16 +96,24 @@ public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<Reflec
         List<Intent> sentIntents = new ArrayList<>();
 
         for(int i = 0; i < messagesCount; i++){
-            URI javaUri = MessagingUriBuilder.Build(MessagingResourceType.MESSAGE, CommunicationType.SMS, temporaryMessageId);
+            URI javaUri = MessagingUriBuilder.Build(MessagingResourceType.MESSAGE, CommunicationType.SMS, tempMessageId);
             Uri uri = UriUtils.ToAndroidUri(javaUri);
 
             Intent intent;
 
             synchronized (context){
-                /*intent = new Intent(SmsMessagingProvider.INTENT_ACTION_MESSAGE_SENT,
+                intent = new Intent(SmsMessagingProvider.INTENT_ACTION_MESSAGE_SENT,
                         uri,
-                        IntentReceiver.class);*/
+                        context,
+                        IntentReceiver.class);
             }
+
+            intent.putExtra(SmsMessagingProvider.INTENT_EXTRA_TOTAL_MESSAGE_PARTS, messagesCount);
+            intent.putExtra(SmsMessagingProvider.INTENT_EXTRA_MESSAGE_PART, i);
+
+            IntentReceiver.getInstance().RegisterIntentHandler(new IntentFilter(SmsMessagingProvider.INTENT_ACTION_MESSAGE_SENT, javaUri), sentIntentHandler);
+
+            sentIntents.add(intent);
         }
 
         return sentIntents;

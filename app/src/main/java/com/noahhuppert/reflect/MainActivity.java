@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.noahhuppert.reflect.exceptions.InvalidMessagingProviderPushData;
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
 import com.noahhuppert.reflect.exceptions.NoTelephonyManagerException;
 import com.noahhuppert.reflect.messaging.CommunicationType;
@@ -46,7 +47,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         //Personal Number
-        TextView personalNumber = (TextView) findViewById(R.id.personal_phone_number);
+        final TextView personalNumber = (TextView) findViewById(R.id.personal_phone_number);
 
         try {
             TelephonyManager telephonyManager = TelephonyUtils.GetTelephonyManager(getBaseContext());
@@ -56,8 +57,35 @@ public class MainActivity extends ActionBarActivity {
         }
 
         //Send Sms
-        EditText smsNumber = (EditText) findViewById(R.id.sms_number);
-        EditText smsText = (EditText) findViewById(R.id.sms_text);
+        final EditText smsNumber = (EditText) findViewById(R.id.sms_number);
+        final EditText smsText = (EditText) findViewById(R.id.sms_text);
+        Button smsSend = (Button) findViewById(R.id.sms_send);
+
+
+        personalNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                smsNumber.setText(personalNumber.getText());
+            }
+        });
+
+        smsSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReflectMessage reflectMessage = new ReflectMessage();
+                reflectMessage.setProtocol(CommunicationType.SMS);
+                reflectMessage.setBody(smsText.getText().toString());
+                reflectMessage.setReceiverUri(URI.create("sms://" + smsNumber.getText()));
+
+                Log.d(TAG, reflectMessage.toString());
+
+                try {
+                    MessagingManager.getInstance().pushMessage(reflectMessage, getBaseContext(), new DebugThreadResultHandler(TAG));
+                } catch (InvalidMessagingProviderPushData e){
+                    Log.e(TAG, "Exception", e);
+                }
+            }
+        });
 
         /* Test Get Sms */
         /*try {

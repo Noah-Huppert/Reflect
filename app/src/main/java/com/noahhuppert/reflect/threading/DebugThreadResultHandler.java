@@ -19,11 +19,19 @@ public class DebugThreadResultHandler implements ThreadResultHandler{
 
     @Override
     public void onDone(Object data) {
-        Log.d(tag, data.toString());
+        if(data != null) {
+            Log.d(tag, data.toString());
+        } else {
+            Log.d(tag, "null");
+        }
     }
 
     @Override
     public void onError(Exception exception) {
-        Log.e(tag, "Exception", exception);
+        if(exception != null) {
+            Log.e(tag, "Exception", exception);
+        } else {
+            Log.e(tag, "Exception: null");
+        }
     }
 }
