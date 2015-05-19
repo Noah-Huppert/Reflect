@@ -1,4 +1,4 @@
-package com.noahhuppert.reflect.fragments;
+package com.noahhuppert.reflect.views.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

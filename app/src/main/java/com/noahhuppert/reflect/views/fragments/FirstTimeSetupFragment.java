@@ -1,4 +1,4 @@
-package com.noahhuppert.reflect.fragments;
+package com.noahhuppert.reflect.views.fragments;
 
 import com.noahhuppert.reflect.R;
 

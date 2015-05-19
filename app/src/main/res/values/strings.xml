@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Reflect</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open_description">open drawer</string>
+    <string name="navigation_drawer_close_description">close drawer</string>
 </resources>
