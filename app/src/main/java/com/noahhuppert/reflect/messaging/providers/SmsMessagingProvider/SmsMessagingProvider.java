@@ -1,15 +1,12 @@
 package com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider;
 
 import android.content.Context;
-import android.content.Intent;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
-import android.util.Log;
 
 import com.noahhuppert.reflect.exceptions.InvalidMessagingProviderPushData;
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
-import com.noahhuppert.reflect.intents.IntentHandler;
 import com.noahhuppert.reflect.messaging.models.ReflectContact;
 import com.noahhuppert.reflect.messaging.models.ReflectConversation;
 import com.noahhuppert.reflect.messaging.models.ReflectMessage;
@@ -24,9 +21,6 @@ import java.net.URI;
  */
 public class SmsMessagingProvider implements MessagingProvider {
     public static final String SMS_URI_SCHEME = "sms";
-
-    public static final String INTENT_ACTION_MESSAGE_SENT = SmsMessagingProvider.class.getName() + "INTENT_ACTION_MESSAGE_SENT";
-    public static final String INTENT_ACTION_MESSAGE_DELIVERED = SmsMessagingProvider.class.getName() + "INTENT_ACTION_MESSAGE_DELIVERED";
 
     public static final String INTENT_EXTRA_TOTAL_MESSAGE_PARTS = "INTENT_EXTRA_TOTAL_MESSAGE_PARTS";
     public static final String INTENT_EXTRA_MESSAGE_PART = "INTENT_EXTRA_MESSAGE_PART";
@@ -74,12 +68,7 @@ public class SmsMessagingProvider implements MessagingProvider {
     /* Push */
     @Override
     public void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) throws InvalidMessagingProviderPushData {
-        SmsPushMessageRunnable smsPushMessageRunnable = new SmsPushMessageRunnable(reflectMessage, context, threadResultHandler, new IntentHandler() {
-            @Override
-            public void onReceive(Intent intent, Context context, URI uri) {
-                Log.d("TAG", intent.getDataString());
-            }
-        });
+        SmsPushMessageRunnable smsPushMessageRunnable = new SmsPushMessageRunnable(reflectMessage, context, threadResultHandler);
         MainThreadPool.getInstance().getPool().submit(smsPushMessageRunnable);
     }
 

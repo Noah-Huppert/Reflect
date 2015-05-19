@@ -1,10 +1,8 @@
 package com.noahhuppert.reflect.utils;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.provider.Telephony;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.noahhuppert.reflect.exceptions.NoTelephonyManagerException;
 

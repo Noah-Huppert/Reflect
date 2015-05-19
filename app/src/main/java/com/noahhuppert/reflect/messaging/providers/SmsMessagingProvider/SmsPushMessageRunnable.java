@@ -1,14 +1,14 @@
 package com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.telephony.SmsManager;
+import android.util.Log;
 
 import com.noahhuppert.reflect.exceptions.InvalidMessagingProviderPushData;
-import com.noahhuppert.reflect.intents.IntentFilter;
-import com.noahhuppert.reflect.intents.IntentHandler;
-import com.noahhuppert.reflect.intents.IntentReceiver;
+import com.noahhuppert.reflect.intents.SmsIntentReceiver;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.MessagingResourceType;
 import com.noahhuppert.reflect.messaging.models.ReflectMessage;
@@ -24,13 +24,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<ReflectMessage> {
-    private final String tempMessageId;
-    private final IntentHandler sentIntentHandler;
+    private static final String TAG = SmsPushMessageRunnable.class.getSimpleName();
 
-    public SmsPushMessageRunnable(ReflectMessage data, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler, IntentHandler sentIntentHandler) {
+    private final String tempMessageId;
+
+    public SmsPushMessageRunnable(ReflectMessage data, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
         super(data, context, threadResultHandler);
         tempMessageId = UUID.randomUUID().toString();
-        this.sentIntentHandler = sentIntentHandler;
     }
 
     @Override
@@ -54,14 +54,13 @@ public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<Reflec
 
         String receiver = data.getReceiverUri().getHost();
         List<String> messages = SmsManager.getDefault().divideMessage(data.getBody());
-        List<Intent> sentIntents = generateSentIntents(messages.size());
+        List<PendingIntent> sentIntents = generateSentIntents(messages.size());
 
         SmsManager smsManager = SmsManager.getDefault();
 
-        int i = 0;
-        for(String messageText : messages){
-            smsManager.sendTextMessage(receiver, null, messageText, sentIntents.get(i), null);
-            i++;
+
+        for(int i = 0; i < messages.size(); i++){
+            smsManager.sendTextMessage(receiver, null, messages.get(i), sentIntents.get(i), null);
         }
 
         return data;
@@ -92,8 +91,8 @@ public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<Reflec
         return data;*/
     }
 
-    private List<Intent> generateSentIntents(int messagesCount) throws URISyntaxException{
-        List<Intent> sentIntents = new ArrayList<>();
+    private List<PendingIntent> generateSentIntents(int messagesCount) throws URISyntaxException{
+        List<PendingIntent> sentIntents = new ArrayList<>();
 
         for(int i = 0; i < messagesCount; i++){
             URI javaUri = MessagingUriBuilder.Build(MessagingResourceType.MESSAGE, CommunicationType.SMS, tempMessageId);
@@ -102,18 +101,19 @@ public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<Reflec
             Intent intent;
 
             synchronized (context){
-                intent = new Intent(SmsMessagingProvider.INTENT_ACTION_MESSAGE_SENT,
+                intent = new Intent(SmsIntentReceiver.ACTION_SENT,
                         uri,
                         context,
-                        IntentReceiver.class);
+                        SmsIntentReceiver.class);
             }
 
             intent.putExtra(SmsMessagingProvider.INTENT_EXTRA_TOTAL_MESSAGE_PARTS, messagesCount);
             intent.putExtra(SmsMessagingProvider.INTENT_EXTRA_MESSAGE_PART, i);
+            Log.d(TAG, "create " + i);
 
-            IntentReceiver.getInstance().RegisterIntentHandler(new IntentFilter(SmsMessagingProvider.INTENT_ACTION_MESSAGE_SENT, javaUri), sentIntentHandler);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-            sentIntents.add(intent);
+            sentIntents.add(pendingIntent);
         }
 
         return sentIntents;
