@@ -1,7 +1,10 @@
 package com.noahhuppert.reflect;
 
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -15,8 +18,10 @@ import io.fabric.sdk.android.Fabric;
 
 
 public class MainActivity extends ActionBarActivity {
-
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    //Main UI Elements
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +35,21 @@ public class MainActivity extends ActionBarActivity {
 
         //Set main fragment content
         //TODO: Continue working on https://developer.android.com/training/implementing-navigation/nav-drawer.html
+        //TODO: Set Home as dawer toggler
+        drawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
+
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                R.string.navigation_drawer_open_description,
+                R.string.navigation_drawer_close_description);
+
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_launcher);
+
 
         FragmentUtils.SetFragment(new NavigationDrawerFragment(), R.id.activity_main_navigation_drawer, getSupportFragmentManager());
 
