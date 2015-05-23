@@ -9,10 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
-import com.noahhuppert.reflect.views.fragments.FirstTimeSetupFragment;
-import com.noahhuppert.reflect.views.fragments.NavigationDrawerFragment;
 import com.noahhuppert.reflect.settings.Settings;
 import com.noahhuppert.reflect.utils.FragmentUtils;
+import com.noahhuppert.reflect.views.FragmentSetter;
+import com.noahhuppert.reflect.views.fragments.NavigationDrawerFragment;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -34,7 +34,10 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-        //Set main fragment content
+        //Setup fragment switcher event system
+        FragmentSetter.getInstance().register(this, getSupportFragmentManager());
+
+        //Setup navigation drawer
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(
@@ -50,10 +53,11 @@ public class MainActivity extends ActionBarActivity {
 
         FragmentUtils.SetFragment(new NavigationDrawerFragment(), R.id.activity_main_navigation_drawer, getSupportFragmentManager());
 
+        //Setup main content
         if(Settings.getInstance().getBoolean(Settings.KEY_FIRST_TIME_SETUP_COMPLETE, getBaseContext())){
 
         } else {
-            FragmentUtils.SetFragment(new FirstTimeSetupFragment(), R.id.activity_main_content, getSupportFragmentManager());
+            FragmentSetter.getInstance().setFragment(FragmentSetter.RegisteredFragment.FIRST_TIME_SETUP, this);
         }
     }
 
@@ -68,6 +72,18 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FragmentSetter.getInstance().unregister(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FragmentSetter.getInstance().register(this, getSupportFragmentManager());
     }
 
     @Override

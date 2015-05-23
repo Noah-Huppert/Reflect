@@ -7,9 +7,9 @@ import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.noahhuppert.reflect.R;
+import com.noahhuppert.reflect.exceptions.WTFException;
 import com.noahhuppert.reflect.utils.FragmentUtils;
 import com.noahhuppert.reflect.views.fragments.FirstTimeSetupFragment;
 
@@ -37,23 +37,20 @@ public class FragmentSetter {
             public void onReceive(Context context, Intent intent) {
                 String registeredFragmentId = intent.getStringExtra(INTENT_EXTRA_FRAGMENT);
 
-                Log.d(TAG, "Received request to switch to \"" + intent.getStringExtra(INTENT_EXTRA_FRAGMENT) + "\"");
-
                 if(registeredFragmentId == null){
-                    Log.e(TAG, "Cannot set fragment if extra \"" + INTENT_EXTRA_FRAGMENT + "\" is not set");
-                    return;
+                    throw new WTFException("Cannot set fragment if extra \"" + INTENT_EXTRA_FRAGMENT + "\" is not set", null);
                 }
 
                 RegisteredFragment registeredFragment = RegisteredFragment.valueOf(registeredFragmentId);
                 Fragment fragment = RegisteredFragment.GetFragmentInstance(registeredFragment);
 
                 if(registeredFragment == null){
-                    Log.e(TAG, "Unknown fragment id of \"" +  registeredFragment + "\"");
-                    return;
+                    throw new WTFException("Unknown fragment id of \"" +  registeredFragment + "\"", null);
                 }
 
-                //TODO throw errors instead of log
-                //TODO throw error if FragmentManager is not set
+                if(fragmentManager == null){
+                    throw new WTFException("FragmentManager is not set, call FragmentSetter.register first", null);
+                }
 
                 FragmentUtils.SetFragment(fragment, R.id.activity_main_content, fragmentManager);
             }
