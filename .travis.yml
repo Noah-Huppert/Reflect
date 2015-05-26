@@ -17,13 +17,21 @@ android:
 
 before_script:
   #Create AVDs
-  - android create avd --force -n v22 -t 20 --abi armeabi-v7a
+  - android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
 
   #Start AVDs
-  - emulator -avd v22 -no-skin -no-window
+  - emulator -avd test -no-skin -no-window
   - android-wait-for-emulator
   - adb shell input keyevent 82
 
 #Test
 script:
     - gradle build connectedCheck
+
+#Build Matrix
+env:
+  matrix:
+    - ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-20 ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-22 ANDROID_ABI=armeabi-v7a
