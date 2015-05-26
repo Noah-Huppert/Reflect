@@ -17,7 +17,7 @@ android:
 
 before_script:
   #Create AVDs
-  - android create avd --force -n v22 -t android-22 --abi armeabi-v7a
+  - android create avd --force -n v22 -t android-22 --abi google_apis-x86
 
   #Start AVDs
   - emulator -avd v22 -no-skin -no-window
