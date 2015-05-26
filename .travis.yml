@@ -17,7 +17,7 @@ android:
 
 before_script:
   #Create AVDs
-  - android create anv --forice -n v22 -t android-22
+  - android create anv --force -n v22 -t android-22
 
   #Start AVDs
   - emulator -avd v22 -no-skin -no-window
