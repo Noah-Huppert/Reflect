@@ -9,15 +9,25 @@ android:
     #BuildTools 22.0.1
     - build-tools-22.0.1
 
-    #Compile With Android SDK 22
+    #Android Versions
+    - android-19
+    - android-20
+    - android-21
     - android-22
+
+    #System Images
+    - sys-img-armeabi-v7a-android-19
+    - sys-img-armeabi-v7a-android-20
+    - sys-img-armeabi-v7a-android-21
+    - sys-img-armeabi-v7a-android-22
 
     #Support library
     - extra
+    - extra-android-support
 
 before_script:
   #Create AVDs
-  - android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
 
   #Start AVDs
   - emulator -avd test -no-skin -no-window
