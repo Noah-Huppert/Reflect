@@ -15,7 +15,7 @@ android:
     - android-22
 
     #System Images
-    - sys-img-armeabi-v7a-android-22
+    - sys-img-armeabi-v7a-$ANDROID_TARGET
 
     #Support library
     - extra
@@ -23,7 +23,7 @@ android:
 
 before_script:
   #Create Emulator
-  - echo no | android create avd --force --name test --target android-22 --abi armeabi-v7a
+  - echo no | android create avd --force --name test --target $ANDROID_TARGET --abi armeabi-v7a
 
   #Start Emulator
   - emulator -avd test -no-skin -no-audio -no-window &
@@ -35,8 +35,8 @@ script:
     - gradle build connectedCheck --parallel
 
 #Build Matrix
-#env:
-#  matrix:
+env:
+  matrix:
 #    - ANDROID_TARGET=android-19
 #    - ANDROID_TARGET=android-21
-#    - ANDROID_TARGET=android-22
+    - ANDROID_TARGET=android-22
