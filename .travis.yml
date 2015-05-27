@@ -1,10 +1,8 @@
 #Language Setup
 language: android
 
-#Cache Gradle
-cache:
-  directories:
-    - ~/.gradle
+#Turn Off Email Notifications
+email: false
 
 android:
   components:
@@ -20,7 +18,6 @@ android:
     - sys-img-armeabi-v7a-$ANDROID_TARGET
 
     #Support library
-    - extra
     - extra-android-support
 
 before_script:
