@@ -1,5 +1,11 @@
 #Language Setup
 language: android
+
+#Cache Gradle
+cache:
+  directories:
+    - ~/.gradle
+
 android:
   components:
     #Latest Android SDK tools
