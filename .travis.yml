@@ -18,6 +18,7 @@ android:
     - sys-img-armeabi-v7a-$ANDROID_TARGET
 
     #Support library
+    - extra
     - extra-android-support
 
 before_script:
@@ -31,7 +32,7 @@ before_script:
 
 #Test
 script:
-    - gradle build connectedCheck
+    - gradle build connectedCheck --parallel
 
 #Build Matrix
 env:
