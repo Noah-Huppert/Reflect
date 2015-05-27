@@ -38,5 +38,5 @@ script:
 env:
   matrix:
 #    - ANDROID_TARGET=android-19
-#    - ANDROID_TARGET=android-21
+    - ANDROID_TARGET=android-21
     - ANDROID_TARGET=android-22
