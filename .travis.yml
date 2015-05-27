@@ -11,13 +11,11 @@ android:
 
     #Android Versions
     - android-19
-    - android-20
     - android-21
     - android-22
 
     #System Images
     - sys-img-armeabi-v7a-android-19
-    - sys-img-armeabi-v7a-android-wear-android-20
     - sys-img-armeabi-v7a-android-21
     - sys-img-armeabi-v7a-android-22
 
@@ -26,7 +24,10 @@ android:
     - extra-android-support
 
 before_script:
-  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+  #Create Emulator
+  - echo no | android create avd --force --name test --target $ANDROID_TARGET --abi $ANDROID_ABI
+
+  #Start Emulator
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
@@ -38,7 +39,6 @@ script:
 #Build Matrix
 env:
   matrix:
-    #- ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
-    - ANDROID_TARGET=android-20 ANDROID_ABI="android-wear/armeabi-v7a"
-    #- ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
-    #- ANDROID_TARGET=android-22 ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-22 ANDROID_ABI=armeabi-v7a
