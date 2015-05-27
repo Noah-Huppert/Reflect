@@ -14,16 +14,10 @@ android:
 
     #BuildTools 22.0.1
     - build-tools-22.0.1
-
-    #Android Versions
-    - android-19
-    - android-21
     - android-22
 
     #System Images
-    - sys-img-armeabi-v7a-android-19
-    - sys-img-armeabi-v7a-android-21
-    - sys-img-armeabi-v7a-android-22
+    - sys-img-armeabi-v7a-$ANDROID_TARGET
 
     #Support library
     - extra
@@ -31,7 +25,7 @@ android:
 
 before_script:
   #Create Emulator
-  - echo no | android create avd --force --name test --target $ANDROID_TARGET --abi $ANDROID_ABI
+  - echo no | android create avd --force --name test --target $ANDROID_TARGET --abi armeabi-v7a
 
   #Start Emulator
   - emulator -avd test -no-skin -no-audio -no-window &
@@ -45,6 +39,6 @@ script:
 #Build Matrix
 env:
   matrix:
-    - ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
-    - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
-    - ANDROID_TARGET=android-22 ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-19
+    - ANDROID_TARGET=android-21
+    - ANDROID_TARGET=android-22
