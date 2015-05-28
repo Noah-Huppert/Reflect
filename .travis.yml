@@ -23,7 +23,7 @@ android:
 
 before_script:
   #Create Emulator
-  - echo no | android create avd --force --name test --target $ANDROID_TARGET --abi armeabi-v7a
+  - echo no | android create avd --force --name test --target $ANDROID_TARGET --abi armeabi-v7a --skin WVGA800
 
   #Start Emulator
   - emulator -avd test -no-skin -no-audio -no-window &
@@ -37,6 +37,6 @@ script:
 #Build Matrix
 env:
   matrix:
-#    - ANDROID_TARGET=android-19
-#    - ANDROID_TARGET=android-21
+    - ANDROID_TARGET=android-19
+    - ANDROID_TARGET=android-21
     - ANDROID_TARGET=android-22
