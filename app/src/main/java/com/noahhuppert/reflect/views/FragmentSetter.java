@@ -11,7 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.exceptions.WTFException;
 import com.noahhuppert.reflect.utils.FragmentUtils;
-import com.noahhuppert.reflect.views.fragments.FirstTimeSetupFragment;
+import com.noahhuppert.reflect.views.fragments.FirstTimeSetupFragment.FirstTimeSetupFragment;
 
 /**
  * A class to manage the lifecycle of fragments

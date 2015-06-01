@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/primary</item>
     </style>
 
-    <style name="ButtonSecondaryColorTint">
+    <style name="SecondaryColorButton" parent="Widget.AppCompat.Button">
         <item name="colorButtonNormal">@color/secondary</item>
     </style>
 

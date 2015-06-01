@@ -1,27 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary">
-
-    <!-- Page Switcher Buttons -->
-    <!--<Button
-        android:id="@+id/fragment_first_time_setup_switch_page_back"
-        android:layout_width="@dimen/fragment_first_time_setup_navigation_arrow_size"
-        android:layout_height="@dimen/fragment_first_time_setup_navigation_arrow_size"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:alpha="@dimen/fragment_first_time_setup_navigation_arrow_alpha"
-        android:background="@drawable/ic_keyboard_arrow_left_white"/>
-
-    <Button
-        android:id="@+id/fragment_first_time_setup_switch_page_forward"
-        android:layout_width="@dimen/fragment_first_time_setup_navigation_arrow_size"
-        android:layout_height="@dimen/fragment_first_time_setup_navigation_arrow_size"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:alpha="@dimen/fragment_first_time_setup_navigation_arrow_alpha"
-        android:background="@drawable/ic_keyboard_arrow_right_white" />-->
 
     <!-- Pages -->
     <ViewFlipper
@@ -31,70 +13,25 @@
         android:layout_above="@+id/fragment_first_time_setup_page_indicator_2">
 
         <!-- SMS Setup -->
-        <RelativeLayout
+        <fragment
+            android:name="com.noahhuppert.reflect.views.fragments.FirstTimeSetupFragment.FirstTimeSetupSmsFragment"
+            tools:layout="@layout/fragment_first_time_setup_sms"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/fragment_first_time_setup_sms_prompt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="@string/fragment_first_time_setup_sms_prompt"/>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="2"
-                android:orientation="horizontal"
-                android:layout_alignParentBottom="true">
-
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/fragment_first_time_setup_navigation_buttons_height"
-                    android:layout_weight="1"
-                    style="@style/ButtonSecondaryColorTint"
-                    android:textColor="@android:color/white"
-                    android:text="@string/fragment_first_time_setup_sms_yes" />
-
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/fragment_first_time_setup_navigation_buttons_height"
-                    android:layout_weight="1"
-                    android:text="@string/fragment_first_time_setup_sms_no" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
+            android:layout_height="match_parent"></fragment>
 
         <!-- Google Account Setup -->
-        <RelativeLayout
+        <fragment
+            android:name="com.noahhuppert.reflect.views.fragments.FirstTimeSetupFragment.FirstTimeSetupGoogleFragment"
+            tools:layout="@layout/fragment_first_time_setup_google"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="Google Account Setup"/>
-
-        </RelativeLayout>
+            android:layout_height="match_parent"></fragment>
 
         <!-- Jabber Setup -->
-        <RelativeLayout
+        <fragment
+            android:name="com.noahhuppert.reflect.views.fragments.FirstTimeSetupFragment.FirstTimeSetupXMPPFragment"
+            tools:layout="@layout/fragment_first_time_setup_xmpp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="Jabber Setup"/>
-
-        </RelativeLayout>
+            android:layout_height="match_parent"></fragment>
 
     </ViewFlipper>
 
