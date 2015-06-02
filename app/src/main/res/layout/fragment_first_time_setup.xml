@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"></fragment>
 
-        <!-- Jabber Setup -->
+        <!-- XMPP Setup -->
         <fragment
             android:name="com.noahhuppert.reflect.views.fragments.FirstTimeSetupFragment.FirstTimeSetupXMPPFragment"
             tools:layout="@layout/fragment_first_time_setup_xmpp"

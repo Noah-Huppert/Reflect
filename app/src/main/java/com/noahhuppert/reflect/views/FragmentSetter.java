@@ -79,12 +79,32 @@ public class FragmentSetter {
     public enum RegisteredFragment {
         FIRST_TIME_SETUP;
 
+        private Fragment fragmentInstance;
+
+        RegisteredFragment(){
+            fragmentInstance = null;
+        }
+
+        /* Actions */
         public static Fragment GetFragmentInstance(RegisteredFragment fragment){
-            if(fragment == FIRST_TIME_SETUP){
-                return new FirstTimeSetupFragment();
+            //Save memory by having saved instance
+            if(fragment.getFragmentInstance() == null) {
+                if (fragment == FIRST_TIME_SETUP) {
+                    fragment.setFragmentInstance(new FirstTimeSetupFragment());
+                }
             }
 
-            return null;
+            return fragment.getFragmentInstance();
+        }
+
+        /* Getters */
+        public Fragment getFragmentInstance() {
+            return fragmentInstance;
+        }
+
+        /* Setters */
+        public void setFragmentInstance(Fragment fragmentInstance) {
+            this.fragmentInstance = fragmentInstance;
         }
     }
 }
