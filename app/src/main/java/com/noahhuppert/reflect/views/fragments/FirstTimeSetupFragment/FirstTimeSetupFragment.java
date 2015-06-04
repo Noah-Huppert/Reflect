@@ -1,5 +1,8 @@
 package com.noahhuppert.reflect.views.fragments.FirstTimeSetupFragment;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +14,30 @@ import android.widget.ImageView;
 import android.widget.ViewFlipper;
 
 import com.noahhuppert.reflect.R;
+import com.noahhuppert.reflect.intents.LocalBroadcaster;
+
+import javax.validation.constraints.NotNull;
 
 public class FirstTimeSetupFragment extends Fragment {
+    public static final String ACTION_FRAGMENT_FIRST_TIME_SETUP_SET_PAGE= "com.noahhuppert.reflect.intent.actions.ACTION_FRAGMENT_FIRST_TIME_SETUP_SET_PAGE";
+    public static final String EXTRA_PAGE_NUMBER = "page_number";
+
+    /**
+     * A key for the page direction in a {@link FirstTimeSetupFragment#ACTION_FRAGMENT_FIRST_TIME_SETUP_SET_PAGE} intent
+     * If the value is positive then it is forward, if the value is negative then is is backwards
+     */
+    public static final String EXTRA_SET_PAGE_DIRECTION = "set_page_direction";
+
     private ViewFlipper viewFlipper;
     private ImageView[] pageIndicators = new ImageView[3];
     private int currentPageIndex = 0;
+
+    private LocalBroadcaster setPageBroadcaster = new LocalBroadcaster(new IntentFilter(ACTION_FRAGMENT_FIRST_TIME_SETUP_SET_PAGE)) {
+        @Override
+        public void onBroadcast(@NotNull Context context, @NotNull Intent intent) {
+            //TODO implement ACTION_FRAGMENT_FIRST_TIME_SETUP_SET_PAGE broadcast
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,16 +59,22 @@ public class FirstTimeSetupFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+        setPageBroadcaster.register(getActivity());
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        setPageBroadcaster.unregister(getActivity());
         ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
 
-    private void switchPage(int index){
+    public void switchPage(int index){
+        if(index < 0 || index > pageIndicators.length){
+            return;
+        }
+
         currentPageIndex = index;
 
         for(int i = 0; i < pageIndicators.length; i++){
@@ -60,6 +88,18 @@ public class FirstTimeSetupFragment extends Fragment {
         viewFlipper.setDisplayedChild(currentPageIndex);
     }
 
+    public void nextPage() {
+        if(currentPageIndex + 1 <= 2){
+            switchPage(currentPageIndex + 1);
+        }
+    }
+
+    public void previousPage() {
+        if(currentPageIndex - 1 >= 0){
+            switchPage(currentPageIndex - 1);
+        }
+    }
+
     private View.OnTouchListener rootViewOnTouchListener = new View.OnTouchListener() {
         private float lastX;
 
@@ -69,13 +109,9 @@ public class FirstTimeSetupFragment extends Fragment {
                 lastX = event.getX();
             } else if(event.getAction() == MotionEvent.ACTION_UP){
                 if(lastX > event.getX()){//LTR Swipe, forward
-                    if(currentPageIndex + 1 <= 2){
-                        switchPage(currentPageIndex + 1);
-                    }
+                    nextPage();
                 } else if(lastX < event.getX()){//RTL Swipe, backward
-                    if(currentPageIndex - 1 >= 0){
-                        switchPage(currentPageIndex - 1);
-                    }
+                    previousPage();
                 }
             }
 
