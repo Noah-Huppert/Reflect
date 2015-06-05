@@ -8,4 +8,7 @@
     <dimen name="fragment_first_time_setup_page_indicator_margin_bottom">10dp</dimen>
     <dimen name="fragment_first_time_setup_page_indicator_margin_side">5dp</dimen>
     <dimen name="fragment_first_time_setup_navigation_buttons_height">60dp</dimen>
+
+    <!-- First Time Setup Fragment SMS -->
+    <dimen name="fragment_first_time_setup_sms_prompt_size">40dp</dimen>
 </resources>

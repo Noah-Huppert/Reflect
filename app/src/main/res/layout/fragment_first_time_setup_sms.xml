@@ -10,7 +10,9 @@ xmlns:android="http://schemas.android.com/apk/res/android">
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="true"
-    android:text="@string/fragment_first_time_setup_sms_prompt"/>
+    android:textSize="@dimen/fragment_first_time_setup_sms_prompt_size"
+    android:text="@string/fragment_first_time_setup_sms_prompt"
+    android:textColor="@android:color/white" />
 
 <include
     android:id="@+id/fragment_first_time_setup_sms_navigation_buttons"

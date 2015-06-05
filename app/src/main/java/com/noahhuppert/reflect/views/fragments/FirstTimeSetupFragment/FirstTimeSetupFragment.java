@@ -1,8 +1,5 @@
 package com.noahhuppert.reflect.views.fragments.FirstTimeSetupFragment;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -14,11 +11,8 @@ import android.widget.ImageView;
 import android.widget.ViewFlipper;
 
 import com.noahhuppert.reflect.R;
-import com.noahhuppert.reflect.intents.LocalBroadcaster;
 
-import javax.validation.constraints.NotNull;
-
-public class FirstTimeSetupFragment extends Fragment {
+public class FirstTimeSetupFragment extends Fragment implements FirstTimeSetupPageSwitcher {
     public static final String ACTION_FRAGMENT_FIRST_TIME_SETUP_SET_PAGE= "com.noahhuppert.reflect.intent.actions.ACTION_FRAGMENT_FIRST_TIME_SETUP_SET_PAGE";
     public static final String EXTRA_PAGE_NUMBER = "page_number";
 
@@ -31,13 +25,6 @@ public class FirstTimeSetupFragment extends Fragment {
     private ViewFlipper viewFlipper;
     private ImageView[] pageIndicators = new ImageView[3];
     private int currentPageIndex = 0;
-
-    private LocalBroadcaster setPageBroadcaster = new LocalBroadcaster(new IntentFilter(ACTION_FRAGMENT_FIRST_TIME_SETUP_SET_PAGE)) {
-        @Override
-        public void onBroadcast(@NotNull Context context, @NotNull Intent intent) {
-            //TODO implement ACTION_FRAGMENT_FIRST_TIME_SETUP_SET_PAGE broadcast
-        }
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,14 +46,12 @@ public class FirstTimeSetupFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        setPageBroadcaster.register(getActivity());
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        setPageBroadcaster.unregister(getActivity());
         ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
 
@@ -88,18 +73,6 @@ public class FirstTimeSetupFragment extends Fragment {
         viewFlipper.setDisplayedChild(currentPageIndex);
     }
 
-    public void nextPage() {
-        if(currentPageIndex + 1 <= 2){
-            switchPage(currentPageIndex + 1);
-        }
-    }
-
-    public void previousPage() {
-        if(currentPageIndex - 1 >= 0){
-            switchPage(currentPageIndex - 1);
-        }
-    }
-
     private View.OnTouchListener rootViewOnTouchListener = new View.OnTouchListener() {
         private float lastX;
 
@@ -109,13 +82,21 @@ public class FirstTimeSetupFragment extends Fragment {
                 lastX = event.getX();
             } else if(event.getAction() == MotionEvent.ACTION_UP){
                 if(lastX > event.getX()){//LTR Swipe, forward
-                    nextPage();
+                    switchPage(currentPageIndex + 1);
                 } else if(lastX < event.getX()){//RTL Swipe, backward
-                    previousPage();
+
+                    switchPage(currentPageIndex - 1);
                 }
             }
 
             return true;
         }
     };
+
+    /* Getters */
+
+    @Override
+    public int getCurrentPageIndex() {
+        return currentPageIndex;
+    }
 }

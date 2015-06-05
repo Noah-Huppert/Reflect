@@ -1,6 +1,5 @@
 package com.noahhuppert.reflect.views.fragments.FirstTimeSetupFragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +14,8 @@ import com.noahhuppert.reflect.R;
 public class FirstTimeSetupSmsFragment extends Fragment {
     private static final String TAG = FirstTimeSetupSmsFragment.class.getSimpleName();
 
+    private FirstTimeSetupPageSwitcher pageSwitcher;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,17 +28,30 @@ public class FirstTimeSetupSmsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Make default");
-                //TODO Use LocalBroadcaster to switch page with ACTION_FRAGMENT_FIRST_TIME_SETUP_SET_PAGE action
+
+                //TODO Actaully make app default messaging app
+                //TODO only switch page after set default dialog is complete
+                pageSwitcher.switchPage(pageSwitcher.getCurrentPageIndex() + 1);
             }
         });
 
         noButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Use LocalBroadcaster to switch page with ACTION_FRAGMENT_FIRST_TIME_SETUP_SET_PAGE action
+                pageSwitcher.switchPage(pageSwitcher.getCurrentPageIndex() + 1);
             }
         });
 
+
+        //Attach FirstTimeSetupPageSwitcher
+        try{
+            pageSwitcher = (FirstTimeSetupPageSwitcher) getParentFragment();
+        } catch(ClassCastException e){
+            throw new ClassCastException(getParentFragment().getClass().getSimpleName() + " must implement " + FirstTimeSetupPageSwitcher.class.getSimpleName());
+        }
+
         return rootView;
     }
+
+
 }

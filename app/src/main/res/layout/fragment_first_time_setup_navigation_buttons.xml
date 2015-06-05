@@ -9,13 +9,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Button
-        android:id="@+id/fragment_first_time_setup_navigation_button_no"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/fragment_first_time_setup_navigation_buttons_height"
-        android:layout_weight="1"
-        android:text="@string/fragment_first_time_setup_sms_no" />
-
-    <Button
         android:id="@+id/fragment_first_time_setup_navigation_button_yes"
         android:layout_width="0dp"
         android:layout_height="@dimen/fragment_first_time_setup_navigation_buttons_height"
@@ -23,5 +16,12 @@
         android:textColor="@android:color/white"
         android:theme="@style/SecondaryColorButton"
         android:text="@string/fragment_first_time_setup_sms_yes" />
+
+    <Button
+        android:id="@+id/fragment_first_time_setup_navigation_button_no"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/fragment_first_time_setup_navigation_buttons_height"
+        android:layout_weight="1"
+        android:text="@string/fragment_first_time_setup_sms_no" />
 
 </LinearLayout>
