@@ -7,8 +7,12 @@
     <string name="navigation_drawer_open_description">open drawer</string>
     <string name="navigation_drawer_close_description">close drawer</string>
 
-    <!-- First Time Setup Fragment -->
-    <string name="fragment_first_time_setup_sms_prompt">Use Reflect as your default SMS app?</string>
-    <string name="fragment_first_time_setup_sms_yes">Yes</string>
-    <string name="fragment_first_time_setup_sms_no">No</string>
+    <!-- First Time Setup Fragment SMS -->
+    <string name="fragment_first_time_setup_sms_set_default_prompt">Use Reflect as your default SMS app?</string>
+    <string name="fragment_first_time_setup_sms_is_default_prompt">Reflect is your default SMS app</string>
+    <string name="fragment_first_time_setup_sms_is_default_next_button">Next</string>
+
+    <!-- First Time Setup Fragment Navigation Buttons -->
+    <string name="fragment_first_time_setup_navigation_buttons_yes">Yes</string>
+    <string name="fragment_first_time_setup_navigation_buttons_no">No</string>
 </resources>

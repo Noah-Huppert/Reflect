@@ -63,35 +63,5 @@
         android:layout_toEndOf="@+id/fragment_first_time_setup_page_indicator_2"
         android:layout_marginBottom="@dimen/fragment_first_time_setup_page_indicator_margin_bottom"
         android:background="@drawable/circle"/>
-    <!--
-    <ImageView
-        android:id="@+id/fragment_first_time_setup_page_indicator_1"
-        android:layout_width="@dimen/fragment_first_time_setup_page_indicator_size"
-        android:layout_height="@dimen/fragment_first_time_setup_page_indicator_size"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/fragment_first_time_setup_page_indicator_2"
-        android:layout_marginBottom="@dimen/fragment_first_time_setup_page_indicator_margin_bottom"
-        android:src="@drawable/ic_brightness_1_white" />
-
-    <ImageView
-        android:id="@+id/fragment_first_time_setup_page_indicator_2"
-        android:layout_width="@dimen/fragment_first_time_setup_page_indicator_size"
-        android:layout_height="@dimen/fragment_first_time_setup_page_indicator_size"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/fragment_first_time_setup_page_indicator_margin_bottom"
-        android:layout_marginLeft="@dimen/fragment_first_time_setup_page_indicator_margin_side"
-        android:layout_marginRight="@dimen/fragment_first_time_setup_page_indicator_margin_side"
-        android:src="@drawable/ic_brightness_1_white" />
-
-    <ImageView
-        android:id="@+id/fragment_first_time_setup_page_indicator_3"
-        android:layout_width="@dimen/fragment_first_time_setup_page_indicator_size"
-        android:layout_height="@dimen/fragment_first_time_setup_page_indicator_size"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/fragment_first_time_setup_page_indicator_2"
-        android:layout_marginBottom="@dimen/fragment_first_time_setup_page_indicator_margin_bottom"
-        android:src="@drawable/ic_brightness_1_white" />
-        -->
 
 </RelativeLayout>

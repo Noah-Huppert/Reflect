@@ -1,4 +1,4 @@
-package com.noahhuppert.reflect;
+package com.noahhuppert.reflect.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
+import com.noahhuppert.reflect.BuildConfig;
+import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.settings.Settings;
 import com.noahhuppert.reflect.utils.FragmentUtils;
 import com.noahhuppert.reflect.views.fragments.FirstTimeSetupFragment.FirstTimeSetupFragment;

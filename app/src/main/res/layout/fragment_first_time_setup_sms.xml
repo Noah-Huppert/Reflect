@@ -4,17 +4,63 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 xmlns:android="http://schemas.android.com/apk/res/android">
 
-<TextView
-    android:id="@+id/fragment_first_time_setup_sms_prompt"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    android:layout_centerVertical="true"
-    android:textSize="@dimen/fragment_first_time_setup_sms_prompt_size"
-    android:text="@string/fragment_first_time_setup_sms_prompt" />
+    <RelativeLayout
+        android:id="@+id/fragment_first_time_setup_sms_promp_view_not_default"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/fragment_first_time_setup_sms_prompt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="@dimen/fragment_first_time_setup_sms_prompt_not_default_text_size"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="@string/fragment_first_time_setup_sms_set_default_prompt"
+            android:textColor="@color/gray" />
 
-<include
-    android:id="@+id/fragment_first_time_setup_sms_navigation_buttons"
-    layout="@layout/fragment_first_time_setup_navigation_buttons"></include>
+        <include
+            android:id="@+id/fragment_first_time_setup_sms_navigation_buttons"
+            layout="@layout/fragment_first_time_setup_navigation_buttons"></include>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/fragment_first_time_setup_sms_promp_view_is_default"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/fragment_first_time_Setup_prompt_is_default_check_mark"
+            android:layout_width="@dimen/fragment_first_time_setup_sms_is_default_icon_size"
+            android:layout_height="@dimen/fragment_first_time_setup_sms_is_default_icon_size"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_done_white_48dp"
+            android:tint="@color/light_green"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_below="@+id/fragment_first_time_Setup_prompt_is_default_check_mark"
+            android:textSize="@dimen/fragment_first_time_setup_sms_prompt_is_default_text_size"
+            android:textStyle="bold"
+            android:text="@string/fragment_first_time_setup_sms_is_default_prompt"
+            android:textColor="@color/gray" />
+
+        <Button
+            android:id="@+id/fragment_first_time_setup_is_default_next_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/fragment_first_time_setup_page_indicator_margin_bottom"
+            android:text="@string/fragment_first_time_setup_sms_is_default_next_button"
+            android:background="@color/secondary"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

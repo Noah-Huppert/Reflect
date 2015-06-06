@@ -8,7 +8,7 @@ import android.telephony.SmsManager;
 import android.util.Log;
 
 import com.noahhuppert.reflect.exceptions.InvalidMessagingProviderPushData;
-import com.noahhuppert.reflect.intents.SmsIntentReceiver;
+import com.noahhuppert.reflect.intents.SmsOutgoingSent;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.MessagingResourceType;
 import com.noahhuppert.reflect.messaging.models.ReflectMessage;
@@ -101,10 +101,10 @@ public class SmsPushMessageRunnable extends MessagingProviderPushRunnable<Reflec
             Intent intent;
 
             synchronized (context){
-                intent = new Intent(SmsIntentReceiver.ACTION_SENT,
+                intent = new Intent(SmsOutgoingSent.ACTION_SENT,
                         uri,
                         context,
-                        SmsIntentReceiver.class);
+                        SmsOutgoingSent.class);
             }
 
             intent.putExtra(SmsMessagingProvider.INTENT_EXTRA_TOTAL_MESSAGE_PARTS, messagesCount);

@@ -7,4 +7,8 @@
 
     <color name="primary">#F50057</color>
     <color name="secondary">#FFEB3B</color>
+
+    <!-- Pallet Colors -->
+    <color name="gray">#aaaaaa</color>
+    <color name="light_green">#00C853</color>
 </resources>
