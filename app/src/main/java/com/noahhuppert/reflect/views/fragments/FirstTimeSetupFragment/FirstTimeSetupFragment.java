@@ -23,7 +23,7 @@ public class FirstTimeSetupFragment extends Fragment implements FirstTimeSetupPa
     public static final String EXTRA_SET_PAGE_DIRECTION = "set_page_direction";
 
     private ViewFlipper viewFlipper;
-    private ImageView[] pageIndicators = new ImageView[3];
+    private View[] pageIndicators = new View[3];
     private int currentPageIndex = 0;
 
     @Override
@@ -32,9 +32,9 @@ public class FirstTimeSetupFragment extends Fragment implements FirstTimeSetupPa
 
         viewFlipper = (ViewFlipper) rootView.findViewById(R.id.fragment_first_time_setup_view_flipper);
 
-        pageIndicators[0] = (ImageView) rootView.findViewById(R.id.fragment_first_time_setup_page_indicator_1);
-        pageIndicators[1] = (ImageView) rootView.findViewById(R.id.fragment_first_time_setup_page_indicator_2);
-        pageIndicators[2] = (ImageView) rootView.findViewById(R.id.fragment_first_time_setup_page_indicator_3);
+        pageIndicators[0] = rootView.findViewById(R.id.fragment_first_time_setup_page_indicator_1);
+        pageIndicators[1] = rootView.findViewById(R.id.fragment_first_time_setup_page_indicator_2);
+        pageIndicators[2] = rootView.findViewById(R.id.fragment_first_time_setup_page_indicator_3);
 
         switchPage(0);
 
@@ -66,7 +66,7 @@ public class FirstTimeSetupFragment extends Fragment implements FirstTimeSetupPa
             if(i == currentPageIndex){
                 pageIndicators[i].setAlpha(0.8f);
             } else {
-                pageIndicators[i].setAlpha(0.5f);
+                pageIndicators[i].setAlpha(0.2f);
             }
         }
 

@@ -13,7 +13,6 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/fragment_first_time_setup_navigation_buttons_height"
         android:layout_weight="1"
-        android:textColor="@android:color/white"
         android:theme="@style/SecondaryColorButton"
         android:text="@string/fragment_first_time_setup_sms_yes" />
 
