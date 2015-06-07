@@ -15,6 +15,8 @@ public class FirstTimeSetupGoogleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_first_time_setup_google, container, false);
 
+        //TODO Sign into google and authenticate with Google Hangouts
+
         return rootView;
     }
 }

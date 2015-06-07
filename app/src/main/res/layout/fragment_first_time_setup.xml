@@ -9,7 +9,9 @@
         android:id="@+id/fragment_first_time_setup_view_flipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/fragment_first_time_setup_page_indicator_2">
+        android:layout_above="@+id/fragment_first_time_setup_page_indicator_2"
+        android:outAnimation="@anim/abc_fade_out"
+        android:inAnimation="@anim/abc_fade_in">
 
         <!-- SMS Setup -->
         <fragment

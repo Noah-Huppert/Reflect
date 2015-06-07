@@ -13,8 +13,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
             android:id="@+id/fragment_first_time_setup_sms_prompt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             android:textSize="@dimen/fragment_first_time_setup_sms_prompt_not_default_text_size"
             android:textStyle="bold"
             android:gravity="center"
@@ -37,16 +36,15 @@ xmlns:android="http://schemas.android.com/apk/res/android">
             android:id="@+id/fragment_first_time_Setup_prompt_is_default_check_mark"
             android:layout_width="@dimen/fragment_first_time_setup_sms_is_default_icon_size"
             android:layout_height="@dimen/fragment_first_time_setup_sms_is_default_icon_size"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
             android:src="@drawable/ic_done_white_48dp"
             android:tint="@color/light_green"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_below="@+id/fragment_first_time_Setup_prompt_is_default_check_mark"
+            android:gravity="center"
             android:textSize="@dimen/fragment_first_time_setup_sms_prompt_is_default_text_size"
             android:textStyle="bold"
             android:text="@string/fragment_first_time_setup_sms_is_default_prompt"
@@ -55,11 +53,46 @@ xmlns:android="http://schemas.android.com/apk/res/android">
         <Button
             android:id="@+id/fragment_first_time_setup_is_default_next_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/fragment_first_time_setup_navigation_buttons_height"
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/fragment_first_time_setup_page_indicator_margin_bottom"
             android:text="@string/fragment_first_time_setup_sms_is_default_next_button"
-            android:background="@color/secondary"/>
+            android:theme="@style/SecondaryColorButton"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/fragment_first_time_setup_no_telephony"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/fragment_first_time_setup_no_telephony_icon"
+            android:layout_width="@dimen/fragment_first_time_setup_sms_no_telephony_icon_size"
+            android:layout_height="@dimen/fragment_first_time_setup_sms_no_telephony_icon_size"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_chat_bubble_outline_white_48dp"
+            android:tint="@color/red"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fragment_first_time_setup_no_telephony_icon"
+            android:gravity="center"
+            android:textSize="@dimen/fragment_first_time_setup_sms_no_telephony_text_size"
+            android:textStyle="bold"
+            android:text="@string/fragment_first_time_setup_sms_no_telephony_prompt"
+            android:textColor="@color/gray"/>
+
+        <Button
+            android:id="@+id/fragment_First_time_setup_no_telephony_next_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/fragment_first_time_setup_navigation_buttons_height"
+            android:layout_margin="@dimen/fragment_first_time_setup_page_indicator_margin_bottom"
+            android:layout_alignParentBottom="true"
+            android:theme="@style/SecondaryColorButton"
+            android:text="@string/fragment_first_time_setup_sms_no_telephony_next_button"/>
 
     </RelativeLayout>
 

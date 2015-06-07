@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- First Time Setup Fragment -->
-    <!-- If fragment_first_time_setup_navigation_arrow_alpha is changed also change the values in FirstTimeSetupFragment.switchPage -->
-    <item name="fragment_first_time_setup_navigation_arrow_alpha" format="float" type="dimen">0.5</item>
-</resources>

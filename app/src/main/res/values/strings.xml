@@ -9,8 +9,12 @@
 
     <!-- First Time Setup Fragment SMS -->
     <string name="fragment_first_time_setup_sms_set_default_prompt">Use Reflect as your default SMS app?</string>
+
     <string name="fragment_first_time_setup_sms_is_default_prompt">Reflect is your default SMS app</string>
     <string name="fragment_first_time_setup_sms_is_default_next_button">Next</string>
+
+    <string name="fragment_first_time_setup_sms_no_telephony_prompt">SMS is not available on your phone, as a result some features of Reflect will not be available</string>
+    <string name="fragment_first_time_setup_sms_no_telephony_next_button">Next</string>
 
     <!-- First Time Setup Fragment Navigation Buttons -->
     <string name="fragment_first_time_setup_navigation_buttons_yes">Yes</string>

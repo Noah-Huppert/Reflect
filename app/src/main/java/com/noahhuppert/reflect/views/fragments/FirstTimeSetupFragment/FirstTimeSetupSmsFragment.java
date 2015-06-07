@@ -25,29 +25,30 @@ public class FirstTimeSetupSmsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_first_time_setup_sms, container, false);
 
-        //TODO Detect when phone doesn't have Telephony and disable this page
+        Button notDefaultYesButton = (Button) rootView.findViewById(R.id.fragment_first_time_setup_navigation_button_yes);
+        Button notDefaultNoButton = (Button) rootView.findViewById(R.id.fragment_first_time_setup_navigation_button_no);
+        Button isDefaultNextButton = (Button) rootView.findViewById(R.id.fragment_first_time_setup_is_default_next_button);
+        Button noTelephonyNextButton = (Button) rootView.findViewById(R.id.fragment_First_time_setup_no_telephony_next_button);
 
-        Button yesButton = (Button) rootView.findViewById(R.id.fragment_first_time_setup_navigation_button_yes);
-        Button noButton = (Button) rootView.findViewById(R.id.fragment_first_time_setup_navigation_button_no);
-
-        yesButton.setOnClickListener(new View.OnClickListener() {
+        notDefaultYesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Make default");
-
                 TelephonyUtils.SetAsDefaultSmsApp(getActivity());
-                //TODO only switch page after set default dialog is complete
-                pageSwitcher.switchPage(pageSwitcher.getCurrentPageIndex() + 1);
             }
         });
 
-        noButton.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener nextPageOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pageSwitcher.switchPage(pageSwitcher.getCurrentPageIndex() + 1);
             }
-        });
+        };
 
+        notDefaultNoButton.setOnClickListener(nextPageOnClickListener);
+
+        isDefaultNextButton.setOnClickListener(nextPageOnClickListener);
+
+        noTelephonyNextButton.setOnClickListener(nextPageOnClickListener);
 
         //Attach FirstTimeSetupPageSwitcher
         try{
@@ -56,24 +57,25 @@ public class FirstTimeSetupSmsFragment extends Fragment {
             throw new ClassCastException(getParentFragment().getClass().getSimpleName() + " must implement " + FirstTimeSetupPageSwitcher.class.getSimpleName());
         }
 
-        //setCorrectSmsPrompt();
-
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        setCorrectSmsPrompt();
-    }
 
-    private void setCorrectSmsPrompt(){
-        if(TelephonyUtils.IsDefaultSmsApp(getActivity())){
+        if(!TelephonyUtils.HasTelephony(getActivity())){
+            rootView.findViewById(R.id.fragment_first_time_setup_no_telephony).setVisibility(View.VISIBLE);
             rootView.findViewById(R.id.fragment_first_time_setup_sms_promp_view_not_default).setVisibility(View.GONE);
-            rootView.findViewById(R.id.fragment_first_time_setup_sms_promp_view_is_default).setVisibility(View.VISIBLE);
-        } else {
+            rootView.findViewById(R.id.fragment_first_time_setup_sms_promp_view_is_default).setVisibility(View.GONE);
+        } else if(!TelephonyUtils.IsDefaultSmsApp(getActivity())){
+            rootView.findViewById(R.id.fragment_first_time_setup_no_telephony).setVisibility(View.GONE);
             rootView.findViewById(R.id.fragment_first_time_setup_sms_promp_view_not_default).setVisibility(View.VISIBLE);
             rootView.findViewById(R.id.fragment_first_time_setup_sms_promp_view_is_default).setVisibility(View.GONE);
+        } else {
+            rootView.findViewById(R.id.fragment_first_time_setup_no_telephony).setVisibility(View.GONE);
+            rootView.findViewById(R.id.fragment_first_time_setup_sms_promp_view_not_default).setVisibility(View.GONE);
+            rootView.findViewById(R.id.fragment_first_time_setup_sms_promp_view_is_default).setVisibility(View.VISIBLE);
         }
     }
 }

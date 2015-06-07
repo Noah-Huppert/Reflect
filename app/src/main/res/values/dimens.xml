@@ -11,6 +11,10 @@
 
     <!-- First Time Setup Fragment SMS -->
     <dimen name="fragment_first_time_setup_sms_prompt_not_default_text_size">40dp</dimen>
+
     <dimen name="fragment_first_time_setup_sms_prompt_is_default_text_size">25dp</dimen>
     <dimen name="fragment_first_time_setup_sms_is_default_icon_size">150dp</dimen>
+
+    <dimen name="fragment_first_time_setup_sms_no_telephony_icon_size">150dp</dimen>
+    <dimen name="fragment_first_time_setup_sms_no_telephony_text_size">20dp</dimen>
 </resources>
