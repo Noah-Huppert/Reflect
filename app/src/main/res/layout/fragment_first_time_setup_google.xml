@@ -12,4 +12,7 @@
         android:layout_centerVertical="true"
         android:text="Google Account Setup"/>
 
+    <!-- TODO MAke on click listener -->
+    <include layout="@layout/fragment_first_time_setup_navigation_buttons"></include>
+
 </RelativeLayout>
