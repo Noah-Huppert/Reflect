@@ -1,10 +1,6 @@
 package com.noahhuppert.reflect.messaging.models;
 
-import android.database.Cursor;
-import android.provider.Telephony;
-
 import com.noahhuppert.reflect.messaging.CommunicationType;
-import com.venmo.cursor.IterableCursorWrapper;
 
 import java.util.List;
 
@@ -20,7 +16,7 @@ public class ReflectConversation {
     /**
      * The protocol used to get the conversation
      */
-    private CommunicationType protocol;
+    private @CommunicationType String protocol;
 
     /**
      * A snippet of the conversation
@@ -43,42 +39,12 @@ public class ReflectConversation {
                 "]";
     }
 
-    /* Cursor Wrappers */
-    /**
-     * A cursor wrapper for taking a SMS Conversation table query and converting it to a
-     * ReflectConversation
-     */
-    public static class SmsCursor extends IterableCursorWrapper<ReflectConversation> {
-        public static final String KEY_ID = Telephony.TextBasedSmsColumns.THREAD_ID;
-        public static final String KEY_SNIPPET = Telephony.Sms.Conversations.SNIPPET;
-
-        public SmsCursor(Cursor cursor) {
-            super(cursor);
-        }
-
-        @Override
-        public ReflectConversation peek() {
-            //Get information
-            String id = getString(KEY_ID, "");
-            CommunicationType protocol = CommunicationType.SMS;
-            String snippet = getString(KEY_SNIPPET, "");
-
-            //Set data
-            ReflectConversation reflectConversation = new ReflectConversation();
-            reflectConversation.setId(id);
-            reflectConversation.setProtocol(protocol);
-            reflectConversation.setSnippet(snippet);
-
-            return reflectConversation;
-        }
-    }
-
     /* Getters */
     public String getId() {
         return id;
     }
 
-    public CommunicationType getProtocol() {
+    public @CommunicationType String getProtocol() {
         return protocol;
     }
 
@@ -95,7 +61,7 @@ public class ReflectConversation {
         this.id = id;
     }
 
-    public void setProtocol(CommunicationType protocol) {
+    public void setProtocol(@CommunicationType String protocol) {
         this.protocol = protocol;
     }
 

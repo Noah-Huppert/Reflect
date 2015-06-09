@@ -1,13 +1,8 @@
 package com.noahhuppert.reflect.messaging.models;
 
-import android.database.Cursor;
-import android.provider.ContactsContract;
+import android.net.Uri;
 
 import com.noahhuppert.reflect.messaging.CommunicationType;
-import com.venmo.cursor.IterableCursorWrapper;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * A class for holding information about a general contact in Reflect. Every message provider must
@@ -22,7 +17,7 @@ public class ReflectContact {
     /**
      * The protocol used to get the contact
      */
-    private CommunicationType protocol;
+    private @CommunicationType String protocol;
 
     /**
      * The display name of the contact
@@ -32,7 +27,7 @@ public class ReflectContact {
     /**
      * The uri of the contact's avatar
      */
-    private URI avatarUri;
+    private Uri avatarUri;
 
     /**
      * The URI of the contact.
@@ -41,7 +36,7 @@ public class ReflectContact {
      *
      * For a XMPP contact this may be: jabber://username@host:port
      */
-    private URI uri;
+    private Uri uri;
 
     /* Actions */
     @Override
@@ -53,55 +48,15 @@ public class ReflectContact {
                 ", Uri: " + getUri() + "]";
     }
 
-    /* Cursor Wrappers */
-    /**
-     * A cursor wrapper for taking a Contacts table query and converting it into a cursor
-     */
-    public static class SmsCursor extends IterableCursorWrapper<ReflectContact>{
-        public static final String KEY_ID = ContactsContract.Contacts.LOOKUP_KEY;
-        public static final String KEY_DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY;
-        public static final String KEY_AVATAR_URI = ContactsContract.Contacts.PHOTO_URI;
-
-        public SmsCursor(Cursor cursor) {
-            super(cursor);
-        }
-
-        @Override
-        public ReflectContact peek() {
-            try {
-                //Get information
-                String id = getString(KEY_ID, "");
-                CommunicationType protocol = CommunicationType.SMS;
-                String displayName = getString(KEY_DISPLAY_NAME, "");
-
-                String avatarUriString = getString(KEY_AVATAR_URI, "");
-                URI avatarUri = null;
-                if(avatarUriString != null){
-                    avatarUri = new URI(avatarUriString);
-                }
-
-
-                //Set data
-                ReflectContact reflectContact = new ReflectContact();
-
-                reflectContact.setId(id);
-                reflectContact.setProtocol(protocol);
-                reflectContact.setDisplayName(displayName);
-                reflectContact.setAvatarUrl(avatarUri);
-
-                return reflectContact;
-            } catch (URISyntaxException e){
-                return null;
-            }
-        }
-    }
 
     /* Getters */
     public String getId() {
         return id;
     }
 
-    public CommunicationType getProtocol() {
+    public
+    @CommunicationType
+    String getProtocol() {
         return protocol;
     }
 
@@ -109,11 +64,11 @@ public class ReflectContact {
         return displayName;
     }
 
-    public URI getAvatarUrl() {
+    public Uri getAvatarUrl() {
         return avatarUri;
     }
 
-    public URI getUri() {
+    public Uri getUri() {
         return uri;
     }
 
@@ -122,7 +77,7 @@ public class ReflectContact {
         this.id = id;
     }
 
-    public void setProtocol(CommunicationType protocol) {
+    public void setProtocol(@CommunicationType String protocol) {
         this.protocol = protocol;
     }
 
@@ -130,11 +85,11 @@ public class ReflectContact {
         this.displayName = displayName;
     }
 
-    public void setAvatarUrl(URI avatarUrl) {
+    public void setAvatarUrl(Uri avatarUrl) {
         this.avatarUri = avatarUrl;
     }
 
-    public void setUri(URI uri) {
+    public void setUri(Uri uri) {
         this.uri = uri;
     }
 }

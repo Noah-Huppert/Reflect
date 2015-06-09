@@ -12,7 +12,13 @@
         android:layout_centerVertical="true"
         android:text="Google Account Setup"/>
 
-    <!-- TODO MAke on click listener -->
-    <include layout="@layout/fragment_first_time_setup_navigation_buttons"></include>
+    <Button
+        android:id="@+id/fragment_first_time_setup_google_next_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fragment_first_time_setup_navigation_buttons_height"
+        android:layout_margin="@dimen/fragment_first_time_setup_page_indicator_margin_side"
+        android:layout_alignParentBottom="true"
+        android:theme="@style/SecondaryColorButton"
+        android:text="Next"/>
 
 </RelativeLayout>
