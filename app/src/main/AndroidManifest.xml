@@ -29,9 +29,19 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="com.noahhuppert.reflect.intent.actions.SENT"></action>
-                <data android:scheme="messaging"></data>
+                <data android:scheme="content"></data>
             </intent-filter>
         </receiver>
+
+        <!-- Sms Delivered -->
+        <receiver android:name=".intents.SmsOutgoingDelivered"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.noahhuppert.reflect.intent.actions.DELIVERED"></action>
+                <data android:scheme="content"></data>
+            </intent-filter>
+        </receiver>
+
 
         <!-- Sms incoming -->
         <receiver android:name=".intents.SmsIncomingReceived"

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.noahhuppert.reflect.R;
+import com.noahhuppert.reflect.settings.Settings;
 import com.noahhuppert.reflect.views.FragmentId;
 import com.noahhuppert.reflect.views.FragmentSwitcher;
 
@@ -27,6 +28,8 @@ public class FirstTimeSetupXMPPFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 fragmentSwitcher.switchFragment(FragmentId.CONVERSATIONS_LIST);
+
+                Settings.getInstance().setBoolean(Settings.KEY_FIRST_TIME_SETUP_COMPLETE, true, getActivity());
             }
         });
 

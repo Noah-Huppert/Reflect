@@ -15,7 +15,9 @@ import com.noahhuppert.reflect.threading.ThreadResultHandler;
 
 public class SmsMessagingProvider implements MessagingProvider {
     public static final String SMS_URI_SCHEME = "sms";
-    public static final String SMS_CREATE_MESSAGE_URI_QUERY_TOTAL_MESSAGE_PARTS = "total_message_parts";
+    public static final String SMS_SENT_INTENT_EXTRA_TOTAL_MESSAGE_PARTS = "total_message_parts";
+    public static final String SMS_SENT_INTENT_EXTRA_MESSAGE_PART = "message_part";
+
     /**
      * A list of columns that should be retrieve by DB when getting a message
      *

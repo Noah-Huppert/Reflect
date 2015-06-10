@@ -1,12 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/fragment_conversations_list_phone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/fragment_conversations_list_receiver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_conversations_list_phone_number"
+        android:hint="Receiver Phone Number"/>
+
+    <EditText
+        android:id="@+id/fragment_conversations_list_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_conversations_list_receiver"
+        android:hint="Message Text"/>
+
+    <Button
+        android:id="@+id/fragment_conversations_list_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Conversations list"
-        android:layout_gravity="center_horizontal" />
+        android:layout_below="@+id/fragment_conversations_list_text"
+        android:theme="@style/SecondaryColorButton"
+        android:text="Send"/>
 
-</LinearLayout>
+</RelativeLayout>

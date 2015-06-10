@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.telephony.SmsManager;
 
 import com.noahhuppert.reflect.exceptions.InvalidMessagingCreationData;
+import com.noahhuppert.reflect.intents.SmsOutgoingDelivered;
 import com.noahhuppert.reflect.intents.SmsOutgoingSent;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.MessagingResourceType;
@@ -37,6 +38,7 @@ public class SmsCreateMessageRunnable extends ResultHandlerThread<ReflectMessage
         String receiverPhoneNumber;
         List<String> messageParts;
         List<PendingIntent> sentIntents;
+        List<PendingIntent> deliveryIntents;
 
         synchronized (reflectMessage) {
             if (reflectMessage == null) {
@@ -58,8 +60,8 @@ public class SmsCreateMessageRunnable extends ResultHandlerThread<ReflectMessage
 
             receiverPhoneNumber = reflectMessage.getReceiverUri().getAuthority();
             messageParts = SmsManager.getDefault().divideMessage(reflectMessage.getBody());
-            sentIntents = generateSentIntents(messageParts.size(), tempMessageId);
-            //TODO Make delivery intents
+            sentIntents = generateSentIntents(messageParts.size() - 1, tempMessageId);
+            deliveryIntents = generateDeliveryIntents(messageParts.size() - 1, tempMessageId);
             /*
             TODO Handle sent and delivery intents
             To handle sent intents maybe have a singleton that holds all messages pending delivery,
@@ -69,24 +71,28 @@ public class SmsCreateMessageRunnable extends ResultHandlerThread<ReflectMessage
              */
         }
 
+        for(int i = 0; i < messageParts.size(); i++){
+            SmsManager.getDefault().sendTextMessage(receiverPhoneNumber,
+                    null,
+                    messageParts.get(i),
+                    sentIntents.get(i),
+                    deliveryIntents.get(i));
+        }
+
         return null;
     }
 
     private List<PendingIntent> generateSentIntents(int messageParts, String tempMessageId){
         List<PendingIntent> sentIntents = new ArrayList<>();
 
-        Uri.Builder uriBuilder = new Uri.Builder()
+        Uri uri = new Uri.Builder()
                 .scheme(ContentResolver.SCHEME_CONTENT)
                 .authority(CommunicationType.SMS)
                 .appendPath(MessagingResourceType.MESSAGE)
-                .appendQueryParameter(SmsMessagingProvider.SMS_CREATE_MESSAGE_URI_QUERY_TOTAL_MESSAGE_PARTS, messageParts + "");
+                .appendPath(tempMessageId)
+                .build();
 
         for(int i = 0; i < messageParts; i++){
-            Uri uri = uriBuilder
-                    .appendPath(tempMessageId)
-                    .appendPath(i + "")
-                    .build();
-
             Intent intent;
 
             synchronized (context){
@@ -95,10 +101,42 @@ public class SmsCreateMessageRunnable extends ResultHandlerThread<ReflectMessage
                         context,
                         SmsOutgoingSent.class);
 
+                intent.putExtra(SmsMessagingProvider.SMS_SENT_INTENT_EXTRA_TOTAL_MESSAGE_PARTS, messageParts);
+                intent.putExtra(SmsMessagingProvider.SMS_SENT_INTENT_EXTRA_MESSAGE_PART, i);
+
                 sentIntents.add(PendingIntent.getBroadcast(context, 0, intent, 0));
             }
         }
 
         return sentIntents;
+    }
+
+    private List<PendingIntent> generateDeliveryIntents(int messageParts, String tempMessageId){
+        List<PendingIntent> deliveryIntents = new ArrayList<>();
+
+        Uri uri = new Uri.Builder()
+                .scheme(ContentResolver.SCHEME_CONTENT)
+                .authority(CommunicationType.SMS)
+                .appendPath(MessagingResourceType.MESSAGE)
+                .appendPath(tempMessageId)
+                .build();
+
+        for(int i = 0; i < messageParts; i++){
+            Intent intent;
+
+            synchronized (context){
+                intent = new Intent(SmsOutgoingDelivered.ACTION_DELIVERED,
+                        uri,
+                        context,
+                        SmsOutgoingDelivered.class);
+
+                intent.putExtra(SmsMessagingProvider.SMS_SENT_INTENT_EXTRA_TOTAL_MESSAGE_PARTS, messageParts);
+                intent.putExtra(SmsMessagingProvider.SMS_SENT_INTENT_EXTRA_MESSAGE_PART, i);
+
+                deliveryIntents.add(PendingIntent.getBroadcast(context, 0, intent, 0));
+            }
+        }
+
+        return deliveryIntents;
     }
 }

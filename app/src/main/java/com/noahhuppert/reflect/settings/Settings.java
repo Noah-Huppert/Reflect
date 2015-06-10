@@ -47,4 +47,13 @@ public class Settings {
 
         return GetSharedPreferences(context).getBoolean(key, defaultValue);
     }
+
+    /* Setters */
+    public void setString(String key, String value, Context context){
+        GetSharedPreferences(context).edit().putString(key, value);
+    }
+
+    public void setBoolean(String key, boolean value, Context context){
+        GetSharedPreferences(context).edit().putBoolean(key, value);
+    }
 }
