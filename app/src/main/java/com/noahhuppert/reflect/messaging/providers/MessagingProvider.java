@@ -2,7 +2,6 @@ package com.noahhuppert.reflect.messaging.providers;
 
 import android.content.Context;
 
-import com.noahhuppert.reflect.exceptions.InvalidMessagingProviderPushData;
 import com.noahhuppert.reflect.messaging.models.ReflectContact;
 import com.noahhuppert.reflect.messaging.models.ReflectConversation;
 import com.noahhuppert.reflect.messaging.models.ReflectMessage;
@@ -45,7 +44,7 @@ public interface MessagingProvider {
      * @param context The context of the application
      * @param threadResultHandler The result handler used to communicate between threads
      */
-    void getConversationIds(Context context, ThreadResultHandler<String> threadResultHandler);
+    void getConversationIds(Context context, ThreadResultHandler<String[]> threadResultHandler);
 
     /* Push */
     /**
@@ -54,7 +53,7 @@ public interface MessagingProvider {
      * @param context The context of the application
      * @param threadResultHandler The result handler used to communicate between threads
      */
-    void createMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) throws InvalidMessagingProviderPushData;
+    void createMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler);
 
     /**
      * Creates a conversation
@@ -62,7 +61,7 @@ public interface MessagingProvider {
      * @param context The context of the application
      * @param threadResultHandler The result handler used to communicate between threads
      */
-    void createConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) throws InvalidMessagingProviderPushData;
+    void createConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler);
 
     /**
      * Creates a contact
@@ -70,5 +69,5 @@ public interface MessagingProvider {
      * @param context The context of the application
      * @param threadResultHandler The result handler used to communicate between threads
      */
-    void createContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) throws InvalidMessagingProviderPushData;
+    void createContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler);
 }

@@ -6,7 +6,6 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
 
-import com.noahhuppert.reflect.exceptions.InvalidMessagingProviderPushData;
 import com.noahhuppert.reflect.messaging.models.ReflectContact;
 import com.noahhuppert.reflect.messaging.models.ReflectConversation;
 import com.noahhuppert.reflect.messaging.models.ReflectMessage;
@@ -16,6 +15,7 @@ import com.noahhuppert.reflect.threading.ThreadResultHandler;
 
 public class SmsMessagingProvider implements MessagingProvider {
     public static final String SMS_URI_SCHEME = "sms";
+    public static final String SMS_CREATE_MESSAGE_URI_QUERY_TOTAL_MESSAGE_PARTS = "total_message_parts";
     /**
      * A list of columns that should be retrieve by DB when getting a message
      *
@@ -75,22 +75,26 @@ public class SmsMessagingProvider implements MessagingProvider {
     }
 
     @Override
-    public void getConversationIds(Context context, ThreadResultHandler<String> threadResultHandler) {
-        //TODO Implement listing of conversation ids
+    public void getConversationIds(Context context, ThreadResultHandler<String[]> threadResultHandler) {
+        SmsGetConversationIdsRunnable smsGetConversationIdsRunnable = new SmsGetConversationIdsRunnable(context, threadResultHandler);
+
+        MainThreadPool.getInstance().getPool().submit(smsGetConversationIdsRunnable);
     }
 
     @Override
-    public void createMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) throws InvalidMessagingProviderPushData {
-        //TODO Re-Implement sending of messages
+    public void createMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
+        SmsCreateMessageRunnable smsCreateMessageRunnable = new SmsCreateMessageRunnable(reflectMessage, context, threadResultHandler);
+
+        MainThreadPool.getInstance().getPool().submit(smsCreateMessageRunnable);
     }
 
     @Override
-    public void createConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) throws InvalidMessagingProviderPushData {
+    public void createConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) {
 
     }
 
     @Override
-    public void createContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) throws InvalidMessagingProviderPushData {
+    public void createContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
 
     }
 }
