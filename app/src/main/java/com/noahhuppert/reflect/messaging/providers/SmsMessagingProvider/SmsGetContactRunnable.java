@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.provider.Telephony;
 import android.telephony.PhoneNumberUtils;
 
 import com.noahhuppert.reflect.exceptions.InvalidMessagingIdException;

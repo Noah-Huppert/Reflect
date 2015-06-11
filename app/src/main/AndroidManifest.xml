@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_MMS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
@@ -37,19 +39,21 @@
         <receiver android:name=".intents.SmsOutgoingDelivered"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.noahhuppert.reflect.intent.actions.DELIVERED"></action>
+                <action android:name="android.provider.Telephony.SMS_DELIVER"></action>
                 <data android:scheme="content"></data>
             </intent-filter>
         </receiver>
 
 
         <!-- Sms incoming -->
+        <!-- TODO Figure out why SMS are not receiving -->
         <receiver android:name=".intents.SmsIncomingReceived"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
             </intent-filter>
         </receiver>
+
 
         <!-- Mms incoming -->
         <receiver android:name=".intents.MmsIncomingReceived"

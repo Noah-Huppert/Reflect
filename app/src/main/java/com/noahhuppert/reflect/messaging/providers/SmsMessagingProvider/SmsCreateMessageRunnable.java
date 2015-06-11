@@ -5,8 +5,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.telephony.SmsManager;
+import android.util.Log;
 
 import com.noahhuppert.reflect.exceptions.InvalidMessagingCreationData;
 import com.noahhuppert.reflect.intents.SmsOutgoingDelivered;
@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class SmsCreateMessageRunnable extends ResultHandlerThread<ReflectMessage> {
+    private static final String TAG = SmsCreateMessageRunnable.class.getSimpleName();
+
     private ReflectMessage reflectMessage;
     private Context context;
 
@@ -60,8 +62,8 @@ public class SmsCreateMessageRunnable extends ResultHandlerThread<ReflectMessage
 
             receiverPhoneNumber = reflectMessage.getReceiverUri().getAuthority();
             messageParts = SmsManager.getDefault().divideMessage(reflectMessage.getBody());
-            sentIntents = generateSentIntents(messageParts.size() - 1, tempMessageId);
-            deliveryIntents = generateDeliveryIntents(messageParts.size() - 1, tempMessageId);
+            sentIntents = generateSentIntents(messageParts.size(), tempMessageId);
+            deliveryIntents = generateDeliveryIntents(messageParts.size(), tempMessageId);
             /*
             TODO Handle sent and delivery intents
             To handle sent intents maybe have a singleton that holds all messages pending delivery,
@@ -102,7 +104,7 @@ public class SmsCreateMessageRunnable extends ResultHandlerThread<ReflectMessage
                         SmsOutgoingSent.class);
 
                 intent.putExtra(SmsMessagingProvider.SMS_SENT_INTENT_EXTRA_TOTAL_MESSAGE_PARTS, messageParts);
-                intent.putExtra(SmsMessagingProvider.SMS_SENT_INTENT_EXTRA_MESSAGE_PART, i);
+                intent.putExtra(SmsMessagingProvider.SMS_SENT_INTENT_EXTRA_MESSAGE_PART, i + 1);
 
                 sentIntents.add(PendingIntent.getBroadcast(context, 0, intent, 0));
             }
@@ -131,7 +133,7 @@ public class SmsCreateMessageRunnable extends ResultHandlerThread<ReflectMessage
                         SmsOutgoingDelivered.class);
 
                 intent.putExtra(SmsMessagingProvider.SMS_SENT_INTENT_EXTRA_TOTAL_MESSAGE_PARTS, messageParts);
-                intent.putExtra(SmsMessagingProvider.SMS_SENT_INTENT_EXTRA_MESSAGE_PART, i);
+                intent.putExtra(SmsMessagingProvider.SMS_SENT_INTENT_EXTRA_MESSAGE_PART, i + 1);
 
                 deliveryIntents.add(PendingIntent.getBroadcast(context, 0, intent, 0));
             }

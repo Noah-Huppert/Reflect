@@ -19,7 +19,6 @@ import com.noahhuppert.reflect.utils.TelephonyUtils;
 import com.noahhuppert.reflect.utils.TimestampUtils;
 
 import java.sql.Timestamp;
-import java.util.Objects;
 
 public class SmsGetMessageRunnable extends ResultHandlerThread<ReflectMessage> {
     private final long messageId;

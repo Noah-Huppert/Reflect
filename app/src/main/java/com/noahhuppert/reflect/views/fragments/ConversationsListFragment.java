@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessa
 import com.noahhuppert.reflect.utils.TelephonyUtils;
 
 public class ConversationsListFragment extends Fragment {
+    private static final String TAG = ConversationsListFragment.class.getSimpleName();
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,16 +37,15 @@ public class ConversationsListFragment extends Fragment {
             String phoneNumberText = TelephonyUtils.GetTelephonyManager(getActivity()).getLine1Number();
             phoneNumber.setText(phoneNumberText);
 
-
-            phoneNumberText = phoneNumberText.substring(0, phoneNumberText.length() - 1);
+            String modPhoneNumberText = phoneNumberText.substring(0, phoneNumberText.length() - 1);
 
             if(phoneNumberText.endsWith("4")){
-                phoneNumberText += "6";
+                modPhoneNumberText += "6";
             } else {
-                phoneNumberText += "4";
+                modPhoneNumberText += "4";
             }
 
-            receiverNumber.setText(phoneNumberText);
+            receiverNumber.setText(modPhoneNumberText);
         } catch (NoTelephonyManagerException e){
             phoneNumber.setText("Error");
         }

@@ -2,7 +2,6 @@ package com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.BaseColumns;
 import android.provider.Telephony;
 
 import com.noahhuppert.reflect.threading.ResultHandlerThread;

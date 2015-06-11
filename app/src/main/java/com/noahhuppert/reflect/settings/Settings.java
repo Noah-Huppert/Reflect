@@ -50,10 +50,10 @@ public class Settings {
 
     /* Setters */
     public void setString(String key, String value, Context context){
-        GetSharedPreferences(context).edit().putString(key, value);
+        GetSharedPreferences(context).edit().putString(key, value).commit();
     }
 
     public void setBoolean(String key, boolean value, Context context){
-        GetSharedPreferences(context).edit().putBoolean(key, value);
+        GetSharedPreferences(context).edit().putBoolean(key, value).commit();
     }
 }
