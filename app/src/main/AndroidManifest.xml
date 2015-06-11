@@ -46,8 +46,7 @@
 
 
         <!-- Sms incoming -->
-        <!-- TODO Figure out why SMS are not receiving -->
-        <receiver android:name=".intents.SmsIncomingReceived"
+        <receiver android:name=".intents.SmsIncomingReceived.SmsIncomingReceived"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />

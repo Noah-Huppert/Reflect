@@ -1,4 +1,4 @@
-package com.noahhuppert.reflect.intents;
+package com.noahhuppert.reflect.intents.SmsIncomingReceived;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,18 +7,22 @@ import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
-import java.util.Set;
+import com.noahhuppert.reflect.threading.DebugThreadResultHandler;
+import com.noahhuppert.reflect.threading.MainThreadPool;
 
 public class SmsIncomingReceived extends BroadcastReceiver {
     private static final String TAG = SmsIncomingReceived.class.getSimpleName();
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        SmsMessage[] messageParts = Telephony.Sms.Intents.getMessagesFromIntent(intent);
+        SmsIncomingReceivedRunnable smsIncomingReceivedRunnable = new SmsIncomingReceivedRunnable(intent, context, new DebugThreadResultHandler(TAG));
+
+        MainThreadPool.getInstance().getPool().submit(smsIncomingReceivedRunnable);
+        /*SmsMessage[] messageParts = Telephony.Sms.Intents.getMessagesFromIntent(intent);
 
         for(int i = 0; i < messageParts.length; i++){
             Log.d(TAG, "(" + (i + 1) + "/" + messageParts.length + ") " + messageParts[i].getOriginatingAddress());
-        }
+        }*/
         //TODO Handle incoming sms messages
         //How do I figure out what this new message is?
         //There has to be a good way, there are tons of apps

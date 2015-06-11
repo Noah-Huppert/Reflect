@@ -60,7 +60,7 @@ dependencies {
     compile 'javax.validation:validation-api:1.1.0.Final'
 
     //Misc
-    compile 'org.igniterealtime.smack:smack-android:4.1.0'
+    //compile 'org.igniterealtime.smack:smack-android:4.1.0'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.2.2@aar') {
         transitive = true;
