@@ -2,8 +2,11 @@ package com.noahhuppert.reflect.intents.SmsIncomingReceived;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.util.Log;
@@ -35,32 +38,18 @@ public class SmsIncomingReceivedRunnable extends ResultHandlerThread {
 
         String senderPhoneNumber = messageParts[0].getDisplayOriginatingAddress();
 
-        String[] getConversationProjection = {Telephony.TextBasedSmsColumns.THREAD_ID, Telephony.ThreadsColumns.RECIPIENT_IDS};//ERROR Column recipient_ids not found
-        String getConversationQuery = Telephony.ThreadsColumns.RECIPIENT_IDS + " = ?";
-        String[] getConversationQueryArgs = {senderPhoneNumber};
+        String messageBody = "";
 
-        Cursor cursor;
-
-        synchronized (context){
-            cursor = context.getContentResolver().query(Telephony.Sms.Conversations.CONTENT_URI,
-                    getConversationProjection,
-                    getConversationQuery,
-                    getConversationQueryArgs,
-                    null);
+        for(int i = 0; i < messageParts.length; i++){
+            messageBody += messageParts[i].getDisplayMessageBody();
         }
 
-        if(cursor.getCount() < 0){
-            throw new WTFException("Could not find a conversation for the received sms message", "Sender phone number: " + senderPhoneNumber);
-        }
-
-        String[] threadIds = new String[cursor.getCount()];
-
-        for(int i = 0; i < cursor.getCount(); i++){
-            threadIds[i] = cursor.getString(0);
-        }
-
-        Log.d(TAG, threadIds + "");
-        //TODO Show notification and update UI
+        /*
+        Alright here's the deal. When a message comes in the SQL table has not been updated yet. So
+        we will set a ContentListener on the table for a new message. In this we will do what we wanted
+        to do here and then we will unregister it. A new ContentListerner will be created every time a
+        message is received
+         */
 
         return null;
     }
