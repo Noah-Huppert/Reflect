@@ -1,5 +1,6 @@
 package com.noahhuppert.reflect.intents.SmsIncomingReceived;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -11,6 +12,7 @@ import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
+import com.noahhuppert.reflect.database.IncomingMessagesTable;
 import com.noahhuppert.reflect.exceptions.WTFException;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 import com.noahhuppert.reflect.threading.ResultHandlerThread;
@@ -44,12 +46,16 @@ public class SmsIncomingReceivedRunnable extends ResultHandlerThread {
             messageBody += messageParts[i].getDisplayMessageBody();
         }
 
-        /*
-        Alright here's the deal. When a message comes in the SQL table has not been updated yet. So
-        we will set a ContentListener on the table for a new message. In this we will do what we wanted
-        to do here and then we will unregister it. A new ContentListerner will be created every time a
-        message is received
-         */
+        ContentValues incomingMessageValues = new ContentValues();
+        incomingMessageValues.put(IncomingMessagesTable.COLUMNS.SENDER_PHONE_NUMBER, senderPhoneNumber);
+        incomingMessageValues.put(IncomingMessagesTable.COLUMNS.MESSAGE_BODY, messageBody);
+        incomingMessageValues.put(IncomingMessagesTable.COLUMNS.NOTIFICATION_ID, -1);
+
+        synchronized (context) {
+            IncomingMessagesTable.getInstance(context).getWritableDatabase().insert(IncomingMessagesTable.TABLE_NAME,
+                    null,
+                    incomingMessageValues);
+        }
 
         return null;
     }
