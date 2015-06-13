@@ -69,6 +69,8 @@ public class ConversationsListFragment extends Fragment {
             }
         });
 
+        //TODO Check for Incoming sms messages
+
         return rootView;
     }
 }

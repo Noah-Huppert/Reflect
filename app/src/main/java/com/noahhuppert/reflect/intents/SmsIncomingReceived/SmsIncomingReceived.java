@@ -15,7 +15,7 @@ public class SmsIncomingReceived extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        SmsIncomingReceivedRunnable smsIncomingReceivedRunnable = new SmsIncomingReceivedRunnable(intent, context, new DebugThreadResultHandler(TAG));
+        SmsIncomingReceivedRunnable smsIncomingReceivedRunnable = new SmsIncomingReceivedRunnable(intent, context);
 
         MainThreadPool.getInstance().getPool().submit(smsIncomingReceivedRunnable);
         /*SmsMessage[] messageParts = Telephony.Sms.Intents.getMessagesFromIntent(intent);
