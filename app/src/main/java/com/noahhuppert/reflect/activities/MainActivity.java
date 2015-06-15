@@ -13,6 +13,7 @@ import com.crashlytics.android.Crashlytics;
 import com.noahhuppert.reflect.BuildConfig;
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.exceptions.WTFException;
+import com.noahhuppert.reflect.utils.TelephonyUtils;
 import com.noahhuppert.reflect.views.FragmentId;
 import com.noahhuppert.reflect.views.FragmentSwitcher;
 import com.noahhuppert.reflect.views.fragments.ConversationsListFragment;
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements FragmentSwitcher 
         if(savedInstanceState == null) {
             switchFragment(FragmentId.CONVERSATIONS_LIST);
         }
+
+        TelephonyUtils.SetAsDefaultSmsApp(this);
     }
 
     @Override

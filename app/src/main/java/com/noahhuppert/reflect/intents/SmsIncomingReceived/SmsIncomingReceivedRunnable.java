@@ -18,8 +18,10 @@ import android.telephony.SmsMessage;
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.activities.MainActivity;
 import com.noahhuppert.reflect.database.IncomingSmsTable;
+import com.noahhuppert.reflect.database.UnknownSmsMessagesTable;
 
 import java.io.IOException;
+import java.security.UnrecoverableKeyException;
 
 public class SmsIncomingReceivedRunnable implements Runnable {
     private static final String TAG = SmsIncomingReceivedRunnable.class.getSimpleName();
@@ -106,19 +108,20 @@ public class SmsIncomingReceivedRunnable implements Runnable {
 
         //Save text message in incoming message table
         ContentValues incomingMessageValues = new ContentValues();
-        incomingMessageValues.put(IncomingSmsTable.COLUMNS.SENDER_PHONE_NUMBER, senderPhoneNumber);
-        incomingMessageValues.put(IncomingSmsTable.COLUMNS.MESSAGE_BODY, messageBody);
-        incomingMessageValues.put(IncomingSmsTable.COLUMNS.NOTIFICATION_ID, notificationId);
+        //TODO Make message id and insert it
+        incomingMessageValues.put(UnknownSmsMessagesTable.COLUMNS.CONTENT, messageBody);
+        incomingMessageValues.put(UnknownSmsMessagesTable.COLUMNS.NOTIFICATION_ID, notificationId);
+        incomingMessageValues.put(UnknownSmsMessagesTable.COLUMNS.SMS_NUMBER, senderPhoneNumber);
+        incomingMessageValues.put(UnknownSmsMessagesTable.COLUMNS.STATE, UnknownSmsMessagesTable.MESSAGE_STATES.INCOMING_RECEIVED);
 
         SQLiteDatabase db;
 
-        synchronized (context) {
-            db = new IncomingSmsTable(context).getWritableDatabase();
+        synchronized (context){
+            db = new UnknownSmsMessagesTable(context).getWritableDatabase();
         }
 
-        db.insert(IncomingSmsTable.TABLE_NAME,
-                null,
-                incomingMessageValues);
+        db.insert(UnknownSmsMessagesTable.TABLE_NAME,
+                null, incomingMessageValues);
 
         db.close();
     }

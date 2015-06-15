@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.provider.Telephony;
 
-import com.noahhuppert.reflect.exceptions.InvalidMessagingIdException;
+import com.noahhuppert.reflect.exceptions.InvalidIdException;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.models.ReflectConversation;
 import com.noahhuppert.reflect.threading.ResultHandlerThread;
@@ -40,11 +40,11 @@ public class SmsGetConversationRunnable extends ResultHandlerThread<ReflectConve
             }
 
             if(cursor.getCount() == 0){
-                throw new InvalidMessagingIdException("The provided conversation id does not point to any conversations", conversationId + "");
+                throw new InvalidIdException("The provided conversation id does not point to any conversations", conversationId + "");
             }
 
             if(cursor.getCount() > 1){
-                throw new InvalidMessagingIdException("The provided conversation id points to more than one conversation", conversationId + "");
+                throw new InvalidIdException("The provided conversation id points to more than one conversation", conversationId + "");
             }
 
             return reflectConversationFromCursor(cursor);

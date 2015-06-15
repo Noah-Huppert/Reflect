@@ -16,7 +16,10 @@ import com.noahhuppert.reflect.exceptions.NoTelephonyManagerException;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.models.ReflectMessage;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviders;
+import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.CheckForIncomingSmsMessagesRunnable;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
+import com.noahhuppert.reflect.threading.DebugThreadResultHandler;
+import com.noahhuppert.reflect.threading.MainThreadPool;
 import com.noahhuppert.reflect.utils.TelephonyUtils;
 
 public class ConversationsListFragment extends Fragment {
@@ -68,7 +71,9 @@ public class ConversationsListFragment extends Fragment {
             }
         });
 
-        //TODO Check for Incoming sms messages
+        //Check for incoming sms message
+        CheckForIncomingSmsMessagesRunnable checkForIncomingSmsMessagesRunnable = new CheckForIncomingSmsMessagesRunnable(getActivity(), new DebugThreadResultHandler(TAG));
+        MainThreadPool.getInstance().getPool().submit(checkForIncomingSmsMessagesRunnable);
 
         return rootView;
     }

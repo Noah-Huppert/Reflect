@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
 
-import com.noahhuppert.reflect.exceptions.InvalidMessagingIdException;
+import com.noahhuppert.reflect.exceptions.InvalidIdException;
 import com.noahhuppert.reflect.exceptions.NoTelephonyManagerException;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.models.ReflectContact;
@@ -40,11 +40,11 @@ public class SmsGetContactRunnable extends ResultHandlerThread<ReflectContact> {
             }
 
             if(cursor.getCount() == 0){
-                throw new InvalidMessagingIdException("The provided contact id does not point to any contacts", contactId + "");
+                throw new InvalidIdException("The provided contact id does not point to any contacts", contactId + "");
             }
 
             if(cursor.getCount() > 1){
-                throw new InvalidMessagingIdException("The provided contact id points to more than one contact", contactId + "");
+                throw new InvalidIdException("The provided contact id points to more than one contact", contactId + "");
             }
 
             return reflectContactFromCursor(cursor);

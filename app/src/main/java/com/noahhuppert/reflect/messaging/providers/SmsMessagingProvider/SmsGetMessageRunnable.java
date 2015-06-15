@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.Telephony;
 
-import com.noahhuppert.reflect.exceptions.InvalidMessagingIdException;
+import com.noahhuppert.reflect.exceptions.InvalidIdException;
 import com.noahhuppert.reflect.exceptions.NoTelephonyManagerException;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.MessageState;
@@ -52,11 +52,11 @@ public class SmsGetMessageRunnable extends ResultHandlerThread<ReflectMessage> {
             }
 
             if (cursor.getCount() == 0) {
-                throw new InvalidMessagingIdException("The provided message id provided does not point to any messages", messageId + "");
+                throw new InvalidIdException("The provided message id provided does not point to any messages", messageId + "");
             }
 
             if (cursor.getCount() > 1) {
-                throw new InvalidMessagingIdException("The provided message id provided points to more than one message", messageId + "");
+                throw new InvalidIdException("The provided message id provided points to more than one message", messageId + "");
             }
 
             return reflectMessageFromCursor(cursor);
