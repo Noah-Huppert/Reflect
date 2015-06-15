@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+@Deprecated
 public class IncomingSmsTable extends SQLiteOpenHelper {
     private static final int SCHEMA_VERSION = 2;
     public static final String TABLE_NAME = "incoming_sms_messages";

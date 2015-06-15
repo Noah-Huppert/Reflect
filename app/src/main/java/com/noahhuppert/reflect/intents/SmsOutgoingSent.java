@@ -7,8 +7,6 @@ import android.util.Log;
 
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 
-import java.util.Set;
-
 /**
  * A class for receiving Sms related intents
  */

@@ -1,14 +1,11 @@
 package com.noahhuppert.reflect.activities;
 
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.Telephony;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,14 +13,9 @@ import com.crashlytics.android.Crashlytics;
 import com.noahhuppert.reflect.BuildConfig;
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.exceptions.WTFException;
-import com.noahhuppert.reflect.settings.Settings;
-import com.noahhuppert.reflect.utils.FragmentUtils;
-import com.noahhuppert.reflect.utils.TelephonyUtils;
 import com.noahhuppert.reflect.views.FragmentId;
 import com.noahhuppert.reflect.views.FragmentSwitcher;
 import com.noahhuppert.reflect.views.fragments.ConversationsListFragment;
-import com.noahhuppert.reflect.views.fragments.FirstTimeSetupFragment.FirstTimeSetupFragment;
-import com.noahhuppert.reflect.views.fragments.NavigationDrawerFragment;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -59,15 +51,9 @@ public class MainActivity extends AppCompatActivity implements FragmentSwitcher 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        FragmentUtils.SetFragment(new NavigationDrawerFragment(), R.id.activity_main_navigation_drawer, getSupportFragmentManager());
-
         //Setup main content
         if(savedInstanceState == null) {
-            if (!Settings.getInstance().getBoolean(Settings.KEY_FIRST_TIME_SETUP_COMPLETE, this) || !TelephonyUtils.IsDefaultSmsApp(this)) {
-                switchFragment(FragmentId.FIRST_TIME_SETUP);
-            } else {
-                switchFragment(FragmentId.CONVERSATIONS_LIST);
-            }
+            switchFragment(FragmentId.CONVERSATIONS_LIST);
         }
     }
 
@@ -117,10 +103,7 @@ public class MainActivity extends AppCompatActivity implements FragmentSwitcher 
         Fragment fragment = null;
         String name = "";
 
-        if(fragmentId == FragmentId.FIRST_TIME_SETUP){
-            fragment = new FirstTimeSetupFragment();
-            name = "First Time Setup";
-        } else if(fragmentId == FragmentId.CONVERSATIONS_LIST){
+        if(fragmentId == FragmentId.CONVERSATIONS_LIST){
             fragment = new ConversationsListFragment();
             name = "Conversation List";
         }

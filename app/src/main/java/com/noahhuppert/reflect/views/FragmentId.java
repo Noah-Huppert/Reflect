@@ -10,10 +10,8 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.SOURCE)
 @IntDef({
-        FragmentId.FIRST_TIME_SETUP,
         FragmentId.CONVERSATIONS_LIST
 })
 public @interface FragmentId{
-    int FIRST_TIME_SETUP = 0;
-    int CONVERSATIONS_LIST = 1;
+    int CONVERSATIONS_LIST = 0;
 }

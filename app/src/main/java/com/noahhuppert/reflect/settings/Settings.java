@@ -15,9 +15,6 @@ public class Settings {
      */
     private HashMap<String, Object> defaultValues;
 
-    /* Settings Keys */
-    public static final String KEY_FIRST_TIME_SETUP_COMPLETE = "KEY_FIRST_TIME_SETUP_COMPLETE";
-
     private static Settings ourInstance = new Settings();
 
     public static Settings getInstance() {
@@ -26,9 +23,6 @@ public class Settings {
 
     private Settings() {
         defaultValues = new HashMap<>();
-
-        /* Register Defaults */
-        defaultValues.put(KEY_FIRST_TIME_SETUP_COMPLETE, false);
     }
 
     /* Getters */

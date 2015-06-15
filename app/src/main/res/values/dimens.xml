@@ -1,22 +1,3 @@
 <resources>
-    <!-- Main Activity -->
-    <dimen name="navigation_drawer_width">240dp</dimen>
-
-    <!-- TODO Convert common values into one var instead of repeating -->
-
-    <!-- First Time Setup Fragment -->
-    <dimen name="fragment_first_time_setup_navigation_arrow_size">100dp</dimen>
-    <dimen name="fragment_first_time_setup_page_indicator_size">10dp</dimen>
-    <dimen name="fragment_first_time_setup_page_indicator_margin_bottom">10dp</dimen>
-    <dimen name="fragment_first_time_setup_page_indicator_margin_side">5dp</dimen>
-    <dimen name="fragment_first_time_setup_navigation_buttons_height">60dp</dimen>
-
-    <!-- First Time Setup Fragment SMS -->
-    <dimen name="fragment_first_time_setup_sms_prompt_not_default_text_size">40dp</dimen>
-
-    <dimen name="fragment_first_time_setup_sms_prompt_is_default_text_size">25dp</dimen>
-    <dimen name="fragment_first_time_setup_sms_is_default_icon_size">150dp</dimen>
-
-    <dimen name="fragment_first_time_setup_sms_no_telephony_icon_size">150dp</dimen>
-    <dimen name="fragment_first_time_setup_sms_no_telephony_text_size">20dp</dimen>
+    <dimen name="view_padding">16dp</dimen>
 </resources>

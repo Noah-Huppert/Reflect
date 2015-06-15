@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.telephony.SmsManager;
-import android.util.Log;
 
 import com.noahhuppert.reflect.exceptions.InvalidMessagingCreationData;
 import com.noahhuppert.reflect.intents.SmsOutgoingDelivered;

@@ -2,6 +2,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 
 buildscript {
     repositories {
+        maven { url 'repo1.maven.org/maven2' }
         maven { url 'https://maven.fabric.io/public' }
     }
 
@@ -51,7 +52,9 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //Support lib
-    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:cardview-v7:22.2.0'
+    compile 'com.android.support:design:22.2.0'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.2.2@aar') {
         transitive = true;

@@ -3,11 +3,7 @@ package com.noahhuppert.reflect.intents.SmsIncomingReceived;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.Telephony;
-import android.telephony.SmsMessage;
-import android.util.Log;
 
-import com.noahhuppert.reflect.threading.DebugThreadResultHandler;
 import com.noahhuppert.reflect.threading.MainThreadPool;
 
 public class SmsIncomingReceived extends BroadcastReceiver {

@@ -8,13 +8,14 @@
     <FrameLayout
         android:id="@+id/activity_main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:padding="@dimen/view_padding"/>
 
     <!-- Navigation Drawer -->
-    <FrameLayout
+    <android.support.design.widget.NavigationView
         android:id="@+id/activity_main_navigation_drawer"
-        android:layout_width="@dimen/navigation_drawer_width"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start" />
+        android:layout_gravity="start"/>
 
 </android.support.v4.widget.DrawerLayout>
