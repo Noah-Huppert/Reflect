@@ -17,11 +17,9 @@ import android.telephony.SmsMessage;
 
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.activities.MainActivity;
-import com.noahhuppert.reflect.database.IncomingSmsTable;
 import com.noahhuppert.reflect.database.UnknownSmsMessagesTable;
 
 import java.io.IOException;
-import java.security.UnrecoverableKeyException;
 import java.util.UUID;
 
 public class SmsIncomingReceivedRunnable implements Runnable {

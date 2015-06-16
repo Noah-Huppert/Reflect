@@ -9,7 +9,6 @@ import android.provider.Telephony;
 import android.util.Log;
 
 import com.noahhuppert.reflect.exceptions.InvalidIdException;
-import com.noahhuppert.reflect.messaging.models.ReflectMessage;
 
 public class UnknownSmsMessagesTable extends SQLiteOpenHelper {
     private static final int SCHEMA_VERSION = 1;

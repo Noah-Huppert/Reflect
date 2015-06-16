@@ -14,27 +14,8 @@ public class SmsIncomingReceived extends BroadcastReceiver {
         SmsIncomingReceivedRunnable smsIncomingReceivedRunnable = new SmsIncomingReceivedRunnable(intent, context);
 
         MainThreadPool.getInstance().getPool().submit(smsIncomingReceivedRunnable);
-        /*SmsMessage[] messageParts = Telephony.Sms.Intents.getMessagesFromIntent(intent);
 
-        for(int i = 0; i < messageParts.length; i++){
-            Log.d(TAG, "(" + (i + 1) + "/" + messageParts.length + ") " + messageParts[i].getOriginatingAddress());
-        }*/
-        //TODO Handle incoming sms messages
-        //How do I figure out what this new message is?
-        //There has to be a good way, there are tons of apps
-        /*
-        TODO See TextSecure way
-        GET THREAD ID
-        https://github.com/WhisperSystems/TextSecure/blob/master/src/org/thoughtcrime/securesms/jobs/SmsReceiveJob.java ln 71#insertMessageInbox
-        |
-        v
-        https://github.com/WhisperSystems/TextSecure/blob/e130d0a3e62d833e799f32a463de01e42f28b5ca/src/org/thoughtcrime/securesms/database/SmsDatabase.java ln 387#getThreadIdFor
-        |
-        v
-        https://github.com/WhisperSystems/TextSecure/blob/e130d0a3e62d833e799f32a463de01e42f28b5ca/src/org/thoughtcrime/securesms/database/ThreadDatabase.java ln 354#getThreadIdFor
-
-        GET MESSAGE ID
-        https://github.com/WhisperSystems/TextSecure/blob/e130d0a3e62d833e799f32a463de01e42f28b5ca/src/org/thoughtcrime/securesms/database/SmsDatabase.java ln 408#db.insert
-         */
+        //TODO Figure out why incoming messages arn't being stored, do I have to store them?
+        //https://github.com/android/platform_packages_apps_mms/blob/b047af4d846dea5d69e3b3d51cbf5f841dd65ca5/src/com/android/mms/transaction/SmsReceiverService.java#L377
     }
 }
