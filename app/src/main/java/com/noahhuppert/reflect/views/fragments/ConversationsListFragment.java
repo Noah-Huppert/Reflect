@@ -72,8 +72,15 @@ public class ConversationsListFragment extends Fragment {
         });
 
         //Check for incoming sms message
-        CheckForIncomingSmsMessagesRunnable checkForIncomingSmsMessagesRunnable = new CheckForIncomingSmsMessagesRunnable(getActivity(), new DebugThreadResultHandler(TAG));
-        MainThreadPool.getInstance().getPool().submit(checkForIncomingSmsMessagesRunnable);
+        Button check = (Button) rootView.findViewById(R.id.fragment_conversations_list_check);
+
+        check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckForIncomingSmsMessagesRunnable checkForIncomingSmsMessagesRunnable = new CheckForIncomingSmsMessagesRunnable(getActivity(), new DebugThreadResultHandler(TAG));
+                MainThreadPool.getInstance().getPool().submit(checkForIncomingSmsMessagesRunnable);
+            }
+        });
 
         return rootView;
     }

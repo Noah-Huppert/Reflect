@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.provider.Telephony;
+import android.util.Log;
 
 import com.noahhuppert.reflect.exceptions.InvalidIdException;
 import com.noahhuppert.reflect.messaging.models.ReflectMessage;
@@ -51,7 +52,6 @@ public class UnknownSmsMessagesTable extends SQLiteOpenHelper {
     }
 
     /* Actions */
-
     /**
      * Queryies the system SMS tables to try and resolve a unknown message
      * @param unknownMessageId The unknown message id to resolve
@@ -60,72 +60,69 @@ public class UnknownSmsMessagesTable extends SQLiteOpenHelper {
      * @throws InvalidIdException If the unknown message id is invalid or no sms messages exist with
      * the unknown message content
      */
-    public static String[] ResolveSmsMessage(String unknownMessageId, Context context) throws InvalidIdException{
+    public static String[][] ResolveSmsMessage(String unknownMessageId, Context context) throws InvalidIdException{
         //Get Unknown message
-        String[] getUnknownSmsMessageProjection = {
-                COLUMNS._ID,
-                COLUMNS.SMS_NUMBER,
-                COLUMNS.CONTENT
-        };
-        String getUnknownSmsMessageQuery = COLUMNS._ID + " = ?";
-        String[] getUnknownSmsMessageQueryArgs = {unknownMessageId};
-
-        SQLiteDatabase unknownMessagesTable;
+        SQLiteDatabase unknownMessagesDatabase;
 
         synchronized (context){
-            unknownMessagesTable = new UnknownSmsMessagesTable(context).getReadableDatabase();
+            unknownMessagesDatabase = new UnknownSmsMessagesTable(context).getReadableDatabase();
         }
 
-        Cursor unknownMessageQueryCursor = unknownMessagesTable.query(TABLE_NAME,
-                getUnknownSmsMessageProjection,
-                getUnknownSmsMessageQuery,
-                getUnknownSmsMessageQueryArgs,
+        String[] getUnknownMessageProjection = {COLUMNS.CONTENT, COLUMNS.SMS_NUMBER};
+        String getUnknownMessageQuery = COLUMNS._ID + " = ?";
+        String[] getUnknownMessageQueryArgs = {unknownMessageId};
+
+        Cursor getUnknownMessageCursor = unknownMessagesDatabase.query(UnknownSmsMessagesTable.TABLE_NAME,
+                getUnknownMessageProjection,
+                getUnknownMessageQuery,
+                getUnknownMessageQueryArgs,
                 null, null, null);
 
-        if(unknownMessageQueryCursor.getCount() == 0){
-            throw new InvalidIdException("The provided unknown message id does not point to any message", unknownMessageId);
+        if(getUnknownMessageCursor.getCount() == 0){
+            throw new InvalidIdException("The provided unknown message id does not exist", unknownMessageId);
         }
 
-        unknownMessageQueryCursor.moveToFirst();
+        getUnknownMessageCursor.moveToFirst();
 
-        String unknownMessageSenderPhoneNumber = unknownMessageQueryCursor.getString(1);
-        String unknownMessageBody = unknownMessageQueryCursor.getString(2);
+        String unknownMessageContent = getUnknownMessageCursor.getString(0);
+        String unknownMessageSmsNumber = getUnknownMessageCursor.getString(1);
 
-        unknownMessageQueryCursor.close();
-        unknownMessagesTable.close();
+        getUnknownMessageCursor.close();
+        unknownMessagesDatabase.close();
 
-        //Query SMS tables
-        String[] getSmsMessageProjection = {
-                BaseColumns._ID,
-                Telephony.TextBasedSmsColumns.THREAD_ID
-        };
-        String getSmsMessageQuery = Telephony.TextBasedSmsColumns.ADDRESS + " = ? AND " +
-                Telephony.TextBasedSmsColumns.BODY + " = ?";
-        String[] getSmsMessageQueryArgs = {
-                unknownMessageSenderPhoneNumber,
-                unknownMessageBody
-        };
+        //Query SMS database
+        String[] getSmsMessagesProjection = {BaseColumns._ID, Telephony.TextBasedSmsColumns.THREAD_ID};
+        String getSmsMessagesQuery = Telephony.TextBasedSmsColumns.ADDRESS + " = ? AND " +
+                                    Telephony.TextBasedSmsColumns.BODY + " = ?";
+        String[] getSmsMessagesQueryArgs = {unknownMessageSmsNumber, unknownMessageContent};
 
-        Cursor smsMessageQueryCursor;
+        Cursor getSmsMessagesCursor;
 
         synchronized (context){
-            smsMessageQueryCursor = context.getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI,
-                    getSmsMessageProjection,
-                    getSmsMessageQuery,
-                    getSmsMessageQueryArgs,
+            getSmsMessagesCursor = context.getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI,
+                    getSmsMessagesProjection,
+                    getSmsMessagesQuery,
+                    getSmsMessagesQueryArgs,
                     null);
         }
 
-        if(smsMessageQueryCursor.getCount() == 0){
-            throw new InvalidIdException("The provided unknown message content and sender do not point to any message",
-                    "Sender: \"" + unknownMessageSenderPhoneNumber + "\" Content: \"" + unknownMessageBody + "\"");
+        Log.d("OMG", getSmsMessagesCursor.toString());
+
+        if(getSmsMessagesCursor.getCount() == 0){
+            throw new InvalidIdException("The retrieved unknown sms message does match a stored sms message",
+                    "\"Sender Phone Number: \"" + unknownMessageSmsNumber + "\" Content: \"" + unknownMessageContent + "\"");
         }
 
-        smsMessageQueryCursor.moveToFirst();
+        String[][] smsMessagesData = new String[getSmsMessagesCursor.getCount()][2];
 
-        String smsMessageId = smsMessageQueryCursor.getString(0);
-        String smsThreadId = smsMessageQueryCursor.getString(1);
+        for(int i = 0; i < getSmsMessagesCursor.getCount(); i++){
+            getSmsMessagesCursor.moveToPosition(i);
+            smsMessagesData[i][0] = getSmsMessagesCursor.getString(0);
+            smsMessagesData[i][1] = getSmsMessagesCursor.getString(1);
+        }
 
-        return new String[]{smsMessageId, smsThreadId};
+        getSmsMessagesCursor.close();
+
+        return smsMessagesData;
     }
 }

@@ -22,6 +22,7 @@ import com.noahhuppert.reflect.database.UnknownSmsMessagesTable;
 
 import java.io.IOException;
 import java.security.UnrecoverableKeyException;
+import java.util.UUID;
 
 public class SmsIncomingReceivedRunnable implements Runnable {
     private static final String TAG = SmsIncomingReceivedRunnable.class.getSimpleName();
@@ -108,7 +109,7 @@ public class SmsIncomingReceivedRunnable implements Runnable {
 
         //Save text message in incoming message table
         ContentValues incomingMessageValues = new ContentValues();
-        //TODO Make message id and insert it
+        incomingMessageValues.put(UnknownSmsMessagesTable.COLUMNS._ID, UUID.randomUUID().toString());
         incomingMessageValues.put(UnknownSmsMessagesTable.COLUMNS.CONTENT, messageBody);
         incomingMessageValues.put(UnknownSmsMessagesTable.COLUMNS.NOTIFICATION_ID, notificationId);
         incomingMessageValues.put(UnknownSmsMessagesTable.COLUMNS.SMS_NUMBER, senderPhoneNumber);

@@ -8,6 +8,9 @@ import com.noahhuppert.reflect.database.UnknownSmsMessagesTable;
 import com.noahhuppert.reflect.threading.ResultHandlerThread;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CheckForIncomingSmsMessagesRunnable extends ResultHandlerThread<String[][]> {
     private Context context;
 
@@ -18,47 +21,56 @@ public class CheckForIncomingSmsMessagesRunnable extends ResultHandlerThread<Str
 
     @Override
     protected String[][] execute() throws Exception {
-        String[] getUnknownIncomingMessageProjection = {
-                UnknownSmsMessagesTable.COLUMNS._ID
-        };
-        String getUnknownIncomingMessageQuery = UnknownSmsMessagesTable.COLUMNS.STATE + " = ?";
-        String[] getUnknownIncomingMessagesQueryArgs = {UnknownSmsMessagesTable.MESSAGE_STATES.INCOMING_RECEIVED};
+        //Get sms messages
+        String[] getUnknownMessagesProjection = {UnknownSmsMessagesTable.COLUMNS._ID};
+        String getUnknownMessagesQuery = UnknownSmsMessagesTable.COLUMNS.STATE + " = ?";
+        String[] getUnknownMessagesQueryArgs = {UnknownSmsMessagesTable.MESSAGE_STATES.INCOMING_RECEIVED};
 
-        SQLiteDatabase unknownMessagesDb;
+        SQLiteDatabase unknownMessagesDatabase;
 
         synchronized (context){
-            unknownMessagesDb = new UnknownSmsMessagesTable(context).getReadableDatabase();
+            unknownMessagesDatabase = new UnknownSmsMessagesTable(context).getReadableDatabase();
         }
 
-        Cursor getUnknownMessagesCursor = unknownMessagesDb.query(UnknownSmsMessagesTable.TABLE_NAME,
-                getUnknownIncomingMessageProjection,
-                getUnknownIncomingMessageQuery,
-                getUnknownIncomingMessagesQueryArgs,
+        Cursor getUnknownMessagesCursor = unknownMessagesDatabase.query(UnknownSmsMessagesTable.TABLE_NAME,
+                getUnknownMessagesProjection,
+                getUnknownMessagesQuery,
+                getUnknownMessagesQueryArgs,
                 null, null, null);
 
         if(getUnknownMessagesCursor.getCount() == 0){
-            return new String[0][];
+            return new String[0][2];
         }
 
         String[] unknownMessageIds = new String[getUnknownMessagesCursor.getCount()];
 
         for(int i = 0; i < getUnknownMessagesCursor.getCount(); i++){
             getUnknownMessagesCursor.moveToPosition(i);
-
             unknownMessageIds[i] = getUnknownMessagesCursor.getString(0);
         }
 
-        String[][] incomingMessageData = new String[unknownMessageIds.length][2];
+        getUnknownMessagesCursor.close();
+        unknownMessagesDatabase.close();
 
-        synchronized (context) {
-            for (int i = 0; i < unknownMessageIds.length; i++) {
-                incomingMessageData[i] = UnknownSmsMessagesTable.ResolveSmsMessage(
-                        unknownMessageIds[i],
-                        context
-                );
+        //Resolve sms messages
+        List<String[]> smsMessagesData = new ArrayList<>();
+
+        synchronized (context){
+            for(int i = 0; i < unknownMessageIds.length; i++){
+                String[][] resolvedSmsMessagesData = UnknownSmsMessagesTable.ResolveSmsMessage(unknownMessageIds[i], context);
+
+                for(int ii = 0; ii < resolvedSmsMessagesData.length; ii++){
+                    smsMessagesData.add(resolvedSmsMessagesData[ii]);
+                }
             }
         }
 
-        return incomingMessageData;
+        String[][] smsMessagesDataArray = new String[smsMessagesData.size()][2];
+
+        for(int i = 0; i < smsMessagesData.size(); i++){
+            smsMessagesDataArray[i] = smsMessagesData.get(i);
+        }
+
+        return smsMessagesDataArray;
     }
 }

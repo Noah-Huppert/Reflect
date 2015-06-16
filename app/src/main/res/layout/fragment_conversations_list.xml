@@ -56,4 +56,12 @@
         android:theme="@style/SecondaryColorButton"
         android:text="Send"/>
 
+    <Button
+        android:id="@+id/fragment_conversations_list_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_conversations_list_send"
+        android:theme="@style/SecondaryColorButton"
+        android:text="Check"/>
+
 </RelativeLayout>
