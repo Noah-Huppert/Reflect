@@ -23,8 +23,8 @@ import java.util.UUID;
 public class SmsCreateMessageRunnable extends ResultHandlerThread<ReflectMessage> {
     private static final String TAG = SmsCreateMessageRunnable.class.getSimpleName();
 
-    private ReflectMessage reflectMessage;
-    private Context context;
+    private final ReflectMessage reflectMessage;
+    private final Context context;
 
     public SmsCreateMessageRunnable(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler){
         super(threadResultHandler);

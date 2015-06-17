@@ -8,7 +8,7 @@ import com.noahhuppert.reflect.threading.ResultHandlerThread;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 
 public class SmsGetConversationIdsRunnable extends ResultHandlerThread<String[]> {
-    private Context context;
+    private final Context context;
 
     public SmsGetConversationIdsRunnable(Context context, ThreadResultHandler<String[]> threadResultHandler) {
         super(threadResultHandler);

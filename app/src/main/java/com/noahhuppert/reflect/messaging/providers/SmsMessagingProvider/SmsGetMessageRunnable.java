@@ -22,7 +22,7 @@ import java.sql.Timestamp;
 
 public class SmsGetMessageRunnable extends ResultHandlerThread<ReflectMessage> {
     private final long messageId;
-    private Object messageIdLock;
+    private final Object messageIdLock;
 
     private final Context context;
 

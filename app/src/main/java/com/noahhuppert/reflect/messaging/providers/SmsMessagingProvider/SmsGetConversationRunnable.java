@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SmsGetConversationRunnable extends ResultHandlerThread<ReflectConversation> {
-    private long conversationId;
-    private Context context;
+    private final long conversationId;
+    private final Context context;
 
     public SmsGetConversationRunnable(long conversationId, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) {
         super(threadResultHandler);

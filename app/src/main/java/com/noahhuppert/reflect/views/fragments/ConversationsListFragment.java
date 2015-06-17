@@ -18,8 +18,6 @@ import com.noahhuppert.reflect.messaging.models.ReflectMessage;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviders;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.CheckForIncomingSmsMessagesRunnable;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
-import com.noahhuppert.reflect.threading.DebugThreadResultHandler;
-import com.noahhuppert.reflect.threading.MainThreadPool;
 import com.noahhuppert.reflect.utils.TelephonyUtils;
 
 public class ConversationsListFragment extends Fragment {
@@ -77,8 +75,8 @@ public class ConversationsListFragment extends Fragment {
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CheckForIncomingSmsMessagesRunnable checkForIncomingSmsMessagesRunnable = new CheckForIncomingSmsMessagesRunnable(getActivity(), new DebugThreadResultHandler(TAG));
-                MainThreadPool.getInstance().getPool().submit(checkForIncomingSmsMessagesRunnable);
+                //CheckForIncomingSmsMessagesRunnable checkForIncomingSmsMessagesRunnable = new CheckForIncomingSmsMessagesRunnable(getActivity(), new DebugThreadResultHandler(TAG));
+                //MainThreadPool.getInstance().getPool().submit(checkForIncomingSmsMessagesRunnable);
             }
         });
 

@@ -16,8 +16,8 @@ import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.utils.TelephonyUtils;
 
 public class SmsGetContactRunnable extends ResultHandlerThread<ReflectContact> {
-    private long contactId;
-    private Context context;
+    private final long contactId;
+    private final Context context;
 
     public SmsGetContactRunnable(long contactId, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
         super(threadResultHandler);
