@@ -63,13 +63,6 @@ public class SmsCreateMessageRunnable extends ResultHandlerThread<ReflectMessage
             messageParts = SmsManager.getDefault().divideMessage(reflectMessage.getBody());
             sentIntents = generateSentIntents(messageParts.size(), tempMessageId);
             deliveryIntents = generateDeliveryIntents(messageParts.size(), tempMessageId);
-            /*
-            TODO Handle sent and delivery intents
-            To handle sent intents maybe have a singleton that holds all messages pending delivery,
-            find a way to store these in memory in case the app is closed. Once a sent intent is
-            received look at the singleton and mark the message status appropriately and then call
-            for conversation update or something
-             */
         }
 
         for(int i = 0; i < messageParts.size(); i++){

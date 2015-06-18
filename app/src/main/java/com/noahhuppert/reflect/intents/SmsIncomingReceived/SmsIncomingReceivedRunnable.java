@@ -1,24 +1,20 @@
 package com.noahhuppert.reflect.intents.SmsIncomingReceived;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.activities.QuickReplyActivity;
-import com.noahhuppert.reflect.database.IncomingSmsNotificationIdsTable;
 import com.noahhuppert.reflect.exceptions.Errors;
 import com.noahhuppert.reflect.exceptions.WTFException;
 
@@ -38,6 +34,7 @@ public class SmsIncomingReceivedRunnable implements Runnable {
 
     @Override
     public void run(){
+        //TODO Split this mega method into smaller method calls
         int errorCode;
 
         synchronized (intent){
@@ -110,33 +107,6 @@ public class SmsIncomingReceivedRunnable implements Runnable {
 
         getSenderContactCursor.close();
 
-        //Get stored notification id
-        String[] getNotificationIdProjection = {IncomingSmsNotificationIdsTable.COLUMNS.NOTIFICATION_ID};
-        String getNotificationIdQuery = IncomingSmsNotificationIdsTable.COLUMNS.SENDER + " = ?";
-        String[] getNotificationIdQueryArgs = {message[ASSEMBLE_MESSAGE_SENDER_INDEX]};
-
-        SQLiteDatabase getNotificationIdDatabase;
-
-        synchronized (context){
-            getNotificationIdDatabase = new IncomingSmsNotificationIdsTable(context).getWritableDatabase();
-        }
-
-        Cursor getNotificationIdCursor = getNotificationIdDatabase.query(IncomingSmsNotificationIdsTable.TABLE_NAME,
-                getNotificationIdProjection,
-                getNotificationIdQuery,
-                getNotificationIdQueryArgs,
-                null, null, null);
-
-        int messageNotificationId = -1;
-
-        if(getNotificationIdCursor.getCount() != 0){
-            getNotificationIdCursor.moveToFirst();
-            messageNotificationId = getNotificationIdCursor.getInt(0);
-
-            getNotificationIdCursor.close();
-            getNotificationIdDatabase.close();
-        }
-
         //Get previous unread messages
         String[] getRelatedUnreadMessagesProjection = {Telephony.TextBasedSmsColumns.BODY};
         String getRelatedUnreadMessagesQuery = Telephony.TextBasedSmsColumns.ADDRESS + " = ? AND " +
@@ -173,8 +143,18 @@ public class SmsIncomingReceivedRunnable implements Runnable {
             NotificationCompat.InboxStyle messageNotificationIndexBoxStyle = new NotificationCompat.InboxStyle()
                     .setBigContentTitle(messageSenderDisplayName);
 
-            for (int i = 0; i < relatedUnreadMessages.length; i++) {
+            int messageNotificationLines = 7;
+
+            if(relatedUnreadMessages.length < 7){
+                messageNotificationLines = relatedUnreadMessages.length;
+            }
+
+            for (int i = 0; i < messageNotificationLines; i++) {
                 messageNotificationIndexBoxStyle.addLine(relatedUnreadMessages[i]);
+            }
+
+            if(relatedUnreadMessages.length > 7){
+                messageNotificationIndexBoxStyle.setSummaryText("+" + (relatedUnreadMessages.length - 7) + " more");
             }
 
             messageNotificationBuilder.setStyle(messageNotificationIndexBoxStyle);
@@ -209,19 +189,8 @@ public class SmsIncomingReceivedRunnable implements Runnable {
             notificationManager = NotificationManagerCompat.from(context);
         }
 
-        notificationManager.notify(messageNotificationId, messageNotificationBuilder.build());
-
-        if(getNotificationIdCursor.getCount() == 0){
-            ContentValues insertNotificationIdValues = new ContentValues();
-            insertNotificationIdValues.put(IncomingSmsNotificationIdsTable.COLUMNS.SENDER, message[ASSEMBLE_MESSAGE_SENDER_INDEX]);
-            insertNotificationIdValues.put(IncomingSmsNotificationIdsTable.COLUMNS.NOTIFICATION_ID, messageNotificationId);
-
-            getNotificationIdDatabase.insert(IncomingSmsNotificationIdsTable.TABLE_NAME,
-                    null, insertNotificationIdValues);
-
-            getNotificationIdCursor.close();
-            getNotificationIdDatabase.close();
-        }
+        //TODO Am I abusing the notification tag?
+        notificationManager.notify(message[ASSEMBLE_MESSAGE_SENDER_INDEX], 0, messageNotificationBuilder.build());
     }
 
     private String[] assembleMessage(Intent intent){

@@ -17,6 +17,7 @@ import com.noahhuppert.reflect.utils.TelephonyUtils;
 import com.noahhuppert.reflect.views.FragmentId;
 import com.noahhuppert.reflect.views.FragmentSwitcher;
 import com.noahhuppert.reflect.views.fragments.ConversationsListFragment;
+import com.noahhuppert.reflect.views.fragments.DebugSendFragment;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -91,6 +92,10 @@ public class MainActivity extends AppCompatActivity implements FragmentSwitcher 
             return true;
         }
 
+        if (item.getItemId() == R.id.main_menu_debug_send){
+            switchFragment(FragmentId.DEBUG_SEND);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -109,6 +114,9 @@ public class MainActivity extends AppCompatActivity implements FragmentSwitcher 
         if(fragmentId == FragmentId.CONVERSATIONS_LIST){
             fragment = new ConversationsListFragment();
             name = "Conversation List";
+        } else if(fragmentId == FragmentId.DEBUG_SEND){
+            fragment = new DebugSendFragment();
+            name = "Debug Send";
         }
 
         if(fragment == null){
