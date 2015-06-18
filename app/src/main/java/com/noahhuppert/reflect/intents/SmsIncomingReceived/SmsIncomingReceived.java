@@ -3,6 +3,7 @@ package com.noahhuppert.reflect.intents.SmsIncomingReceived;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.noahhuppert.reflect.threading.MainThreadPool;
 

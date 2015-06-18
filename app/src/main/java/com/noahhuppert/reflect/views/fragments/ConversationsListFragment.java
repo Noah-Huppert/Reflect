@@ -16,7 +16,6 @@ import com.noahhuppert.reflect.exceptions.NoTelephonyManagerException;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.models.ReflectMessage;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviders;
-import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.CheckForIncomingSmsMessagesRunnable;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 import com.noahhuppert.reflect.utils.TelephonyUtils;
 
