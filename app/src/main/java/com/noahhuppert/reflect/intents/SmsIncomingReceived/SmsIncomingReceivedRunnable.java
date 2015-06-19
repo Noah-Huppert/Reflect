@@ -17,6 +17,7 @@ import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.activities.QuickReplyActivity;
 import com.noahhuppert.reflect.exceptions.Errors;
 import com.noahhuppert.reflect.exceptions.WTFException;
+import com.noahhuppert.reflect.utils.SmsThreadUtils;
 
 public class SmsIncomingReceivedRunnable implements Runnable {
     private static final String TAG = SmsIncomingReceivedRunnable.class.getSimpleName();
@@ -34,55 +35,60 @@ public class SmsIncomingReceivedRunnable implements Runnable {
 
     @Override
     public void run(){
-        //TODO Split this mega method into smaller method calls
+        String[] message = assembleMessage(intent);
+        long messageThreadId = SmsThreadUtils.getOrCreateThreadId(context, message[ASSEMBLE_MESSAGE_SENDER_INDEX]);
+
+        insertMessage(message, messageThreadId);
+
+        String messageSenderDisplayName = getSenderDisplayName(message);
+
+        String[] relatedUnreadMessages = getRelatedUnreadMessages(message);
+
+        showNotification(message, relatedUnreadMessages, messageSenderDisplayName, messageThreadId);
+    }
+
+    private String[] assembleMessage(Intent intent){
+        SmsMessage[] messageParts;
+
+        synchronized (intent){
+            messageParts = Telephony.Sms.Intents.getMessagesFromIntent(intent);
+        }
+
+        String messageSender = messageParts[0].getDisplayOriginatingAddress();
+        String messageBody = "";
+
+
+        for(int i = 0; i <messageParts.length; i++){
+            messageBody += messageParts[i].getDisplayMessageBody();
+        }
+
+        String[] messageData = new String[2];
+
+        messageData[ASSEMBLE_MESSAGE_BODY_INDEX] = messageBody;
+        messageData[ASSEMBLE_MESSAGE_SENDER_INDEX] = messageSender;
+
+        return messageData;
+    }
+
+    private void insertMessage(String[] message, long messageThreadId){
         int errorCode;
 
         synchronized (intent){
             errorCode = intent.getIntExtra("errorCode", Errors.ERROR_OK);
         }
 
-        String[] message = assembleMessage(intent);
-
-        //Get THREAD_ID
-        Uri getThreadIdUri = Uri.parse("content://mms-sms/threadID").buildUpon()
-                .appendQueryParameter("recipient", message[ASSEMBLE_MESSAGE_SENDER_INDEX])
-                .build();
-
-        String[] getThreadIdProjection = {Telephony.Sms.Conversations.THREAD_ID};
-
-        Cursor getThreadIdCursor;
-
-        synchronized (context){
-            getThreadIdCursor = context.getContentResolver().query(getThreadIdUri,
-                    getThreadIdProjection,
-                    null, null, null);
-        }
-
-        if(getThreadIdCursor == null || getThreadIdCursor.getCount() == 0){
-            throw new WTFException("Failed to get or create conversation for incoming sms message",
-                    "Message body: " + message[ASSEMBLE_MESSAGE_BODY_INDEX] + " Message Sender: " + message[ASSEMBLE_MESSAGE_SENDER_INDEX]);
-        }
-
-        getThreadIdCursor.moveToFirst();
-
-        long messageThreadId = getThreadIdCursor.getLong(0);
-
-        getThreadIdCursor.close();
-
-        //Insert message and get _ID
         ContentValues insertMessageValues = new ContentValues();
         insertMessageValues.put(Telephony.TextBasedSmsColumns.ERROR_CODE, errorCode);
         insertMessageValues.put(Telephony.TextBasedSmsColumns.BODY, message[ASSEMBLE_MESSAGE_BODY_INDEX]);
         insertMessageValues.put(Telephony.TextBasedSmsColumns.ADDRESS, message[ASSEMBLE_MESSAGE_SENDER_INDEX]);
         insertMessageValues.put(Telephony.TextBasedSmsColumns.THREAD_ID, messageThreadId);
 
-        Uri insertedMessageUri;
-
         synchronized (context){
-            insertedMessageUri = context.getContentResolver().insert(Telephony.Sms.Inbox.CONTENT_URI, insertMessageValues);
+            context.getContentResolver().insert(Telephony.Sms.Inbox.CONTENT_URI, insertMessageValues);
         }
+    }
 
-        //Get message sender contact DISPLAY_NAME
+    private String getSenderDisplayName(String[] message){
         String[] getSenderContactProjection = {ContactsContract.Contacts.DISPLAY_NAME};
         Uri getSenderContactUri = ContactsContract.PhoneLookup.CONTENT_FILTER_URI.buildUpon()
                 .appendEncodedPath(message[ASSEMBLE_MESSAGE_SENDER_INDEX])
@@ -96,21 +102,22 @@ public class SmsIncomingReceivedRunnable implements Runnable {
                     null, null, null);
         }
 
-        String messageSenderDisplayName;
+        String messageSenderDisplayName = message[ASSEMBLE_MESSAGE_SENDER_INDEX];
 
         if(getSenderContactCursor.getCount() != 0){
             getSenderContactCursor.moveToFirst();
             messageSenderDisplayName = getSenderContactCursor.getString(0);
-        } else{
-            messageSenderDisplayName = message[ASSEMBLE_MESSAGE_SENDER_INDEX];
         }
 
         getSenderContactCursor.close();
 
-        //Get previous unread messages
+        return messageSenderDisplayName;
+    }
+
+    private String[] getRelatedUnreadMessages(String[] message){
         String[] getRelatedUnreadMessagesProjection = {Telephony.TextBasedSmsColumns.BODY};
         String getRelatedUnreadMessagesQuery = Telephony.TextBasedSmsColumns.ADDRESS + " = ? AND " +
-                                               Telephony.TextBasedSmsColumns.SEEN + " = ?";
+                Telephony.TextBasedSmsColumns.SEEN + " = ?";
         String[] getRelatedUnreadMessagesQueryArgs = {message[ASSEMBLE_MESSAGE_SENDER_INDEX], "0"};
 
         Cursor getRelatedUnreadMessagesCursor;
@@ -132,7 +139,10 @@ public class SmsIncomingReceivedRunnable implements Runnable {
 
         getRelatedUnreadMessagesCursor.close();
 
-        //Show Notification
+        return relatedUnreadMessages;
+    }
+
+    private void showNotification(String[] message, String[] relatedUnreadMessages, String messageSenderDisplayName, long messageThreadId){
         NotificationCompat.Builder messageNotificationBuilder;
 
         synchronized (context){
@@ -181,6 +191,7 @@ public class SmsIncomingReceivedRunnable implements Runnable {
                 .setSmallIcon(R.drawable.ic_message_white_48dp)
                 .setCategory(Notification.CATEGORY_MESSAGE)
                 .setPriority(Notification.PRIORITY_HIGH)
+                .setContentTitle(messageSenderDisplayName)
                 .addAction(R.drawable.ic_reply_white_48dp, "Reply", replyPendingIntent);
 
         NotificationManagerCompat notificationManager;
@@ -191,28 +202,5 @@ public class SmsIncomingReceivedRunnable implements Runnable {
 
         //TODO Am I abusing the notification tag?
         notificationManager.notify(message[ASSEMBLE_MESSAGE_SENDER_INDEX], 0, messageNotificationBuilder.build());
-    }
-
-    private String[] assembleMessage(Intent intent){
-        SmsMessage[] messageParts;
-
-        synchronized (intent){
-            messageParts = Telephony.Sms.Intents.getMessagesFromIntent(intent);
-        }
-
-        String messageSender = messageParts[0].getDisplayOriginatingAddress();
-        String messageBody = "";
-
-
-        for(int i = 0; i <messageParts.length; i++){
-            messageBody += messageParts[i].getDisplayMessageBody();
-        }
-
-        String[] messageData = new String[2];
-
-        messageData[ASSEMBLE_MESSAGE_BODY_INDEX] = messageBody;
-        messageData[ASSEMBLE_MESSAGE_SENDER_INDEX] = messageSender;
-
-        return messageData;
     }
 }

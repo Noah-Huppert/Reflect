@@ -2,19 +2,25 @@ package com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider;
 
 import android.app.PendingIntent;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.Telephony;
 import android.telephony.SmsManager;
 
+import com.noahhuppert.reflect.exceptions.Errors;
 import com.noahhuppert.reflect.exceptions.InvalidMessagingCreationData;
 import com.noahhuppert.reflect.intents.SmsOutgoingDelivered;
-import com.noahhuppert.reflect.intents.SmsOutgoingSent;
+import com.noahhuppert.reflect.intents.SmsOutgoingSent.SmsOutgoingSent;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.MessagingResourceType;
 import com.noahhuppert.reflect.messaging.models.ReflectMessage;
 import com.noahhuppert.reflect.threading.ResultHandlerThread;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
+import com.noahhuppert.reflect.utils.SmsThreadUtils;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,12 +71,24 @@ public class SmsCreateMessageRunnable extends ResultHandlerThread<ReflectMessage
             deliveryIntents = generateDeliveryIntents(messageParts.size(), tempMessageId);
         }
 
+        long threadId = SmsThreadUtils.getOrCreateThreadId(context, receiverPhoneNumber);
+
         for(int i = 0; i < messageParts.size(); i++){
             SmsManager.getDefault().sendTextMessage(receiverPhoneNumber,
                     null,
                     messageParts.get(i),
                     sentIntents.get(i),
                     deliveryIntents.get(i));
+
+            ContentValues insertMessageValues = new ContentValues();
+            insertMessageValues.put(Telephony.TextBasedSmsColumns.ERROR_CODE, Errors.ERROR_OK);
+            insertMessageValues.put(Telephony.TextBasedSmsColumns.BODY, messageParts.get(i));
+            insertMessageValues.put(Telephony.TextBasedSmsColumns.ADDRESS, receiverPhoneNumber);
+            insertMessageValues.put(Telephony.TextBasedSmsColumns.THREAD_ID, threadId);
+
+            synchronized (context){
+                context.getContentResolver().insert(Telephony.Sms.Sent.CONTENT_URI, insertMessageValues);
+            }
         }
 
         return null;

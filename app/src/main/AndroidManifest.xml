@@ -37,7 +37,7 @@
         </activity>
 
         <!-- Sms Sent -->
-        <receiver android:name=".intents.SmsOutgoingSent"
+        <receiver android:name=".intents.SmsOutgoingSent.SmsOutgoingSent"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.noahhuppert.reflect.intent.actions.SENT"></action>

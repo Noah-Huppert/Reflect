@@ -16,7 +16,8 @@ import com.noahhuppert.reflect.exceptions.WTFException;
 import com.noahhuppert.reflect.utils.TelephonyUtils;
 import com.noahhuppert.reflect.views.FragmentId;
 import com.noahhuppert.reflect.views.FragmentSwitcher;
-import com.noahhuppert.reflect.views.fragments.ConversationsListFragment;
+import com.noahhuppert.reflect.views.fragments.ConversationViewFragment.ConversationViewFragment;
+import com.noahhuppert.reflect.views.fragments.ConversationsListFragment.ConversationsListFragment;
 import com.noahhuppert.reflect.views.fragments.DebugSendFragment;
 
 import io.fabric.sdk.android.Fabric;
@@ -108,6 +109,11 @@ public class MainActivity extends AppCompatActivity implements FragmentSwitcher 
 
     @Override
     public void switchFragment(@FragmentId int fragmentId) {
+        switchFragment(fragmentId, new Bundle());
+    }
+
+    @Override
+    public void switchFragment(@FragmentId int fragmentId, Bundle extras) {
         Fragment fragment = null;
         String name = "";
 
@@ -117,11 +123,16 @@ public class MainActivity extends AppCompatActivity implements FragmentSwitcher 
         } else if(fragmentId == FragmentId.DEBUG_SEND){
             fragment = new DebugSendFragment();
             name = "Debug Send";
+        } else if(fragmentId == FragmentId.CONVERSATION_VIEW){
+            fragment = new ConversationViewFragment();
+            name = "Conversation";
         }
 
         if(fragment == null){
             throw new WTFException("A fragment instance should be created for supplied fragmentId", fragmentId + "");
         }
+
+        fragment.setArguments(extras);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content, fragment).addToBackStack(name).commit();
     }

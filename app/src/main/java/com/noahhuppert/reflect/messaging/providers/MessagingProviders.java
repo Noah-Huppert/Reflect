@@ -10,6 +10,7 @@ import com.noahhuppert.reflect.messaging.providers.XMPPMessagingProvider.XMPPMes
 /**
  * A class that holds singleton instances of all {@link MessagingProvider}s
  */
+@Deprecated
 public class MessagingProviders {
     private static SimpleArrayMap<String, MessagingProvider> messagingProvidersCache;
 

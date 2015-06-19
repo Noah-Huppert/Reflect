@@ -64,10 +64,10 @@ public class SmsGetConversationRunnable extends ResultHandlerThread<ReflectConve
         String snippet = cursor.getString(1);
         List<String> messageIds = getConversationMessageIds();
 
-        reflectConversation.setId(id);
+        /*reflectConversation.setId(id);
         reflectConversation.setProtocol(CommunicationType.SMS);
         reflectConversation.setSnippet(snippet);
-        reflectConversation.setMessageIds(messageIds);
+        reflectConversation.setMessageIds(messageIds);*/
 
         return reflectConversation;
     }
