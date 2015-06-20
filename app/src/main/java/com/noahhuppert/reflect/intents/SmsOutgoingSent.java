@@ -1,4 +1,4 @@
-package com.noahhuppert.reflect.intents.SmsOutgoingSent;
+package com.noahhuppert.reflect.intents;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
-import com.noahhuppert.reflect.threading.MainThreadPool;
 
 /**
  * A class for receiving Sms related intents

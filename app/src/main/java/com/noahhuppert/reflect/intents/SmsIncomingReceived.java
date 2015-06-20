@@ -1,4 +1,4 @@
-package com.noahhuppert.reflect.intents.SmsIncomingReceived;
+package com.noahhuppert.reflect.intents;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,9 +11,6 @@ public class SmsIncomingReceived extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        SmsIncomingReceivedRunnable smsIncomingReceivedRunnable = new SmsIncomingReceivedRunnable(intent, context);
-
-        MainThreadPool.getInstance().getPool().submit(smsIncomingReceivedRunnable);
         //https://github.com/android/platform_packages_apps_mms/blob/b047af4d846dea5d69e3b3d51cbf5f841dd65ca5/src/com/android/mms/transaction/SmsReceiverService.java#L377
     }
 }

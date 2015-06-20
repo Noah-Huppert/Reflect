@@ -28,16 +28,8 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activities.QuickReplyActivity"
-            android:parentActivityName=".activities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
-        </activity>
-
         <!-- Sms Sent -->
-        <receiver android:name=".intents.SmsOutgoingSent.SmsOutgoingSent"
+        <receiver android:name=".intents.SmsOutgoingSent"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.noahhuppert.reflect.intent.actions.SENT"></action>
@@ -56,7 +48,7 @@
 
 
         <!-- Sms incoming -->
-        <receiver android:name=".intents.SmsIncomingReceived.SmsIncomingReceived"
+        <receiver android:name=".intents.SmsIncomingReceived"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />

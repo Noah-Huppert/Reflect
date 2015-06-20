@@ -16,7 +16,6 @@ import com.noahhuppert.reflect.messaging.models.ReflectMessage;
 import com.noahhuppert.reflect.threading.ResultHandlerThread;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.utils.TelephonyUtils;
-import com.noahhuppert.reflect.utils.TimestampUtils;
 
 import java.sql.Timestamp;
 
@@ -93,8 +92,8 @@ public class SmsGetMessageRunnable extends ResultHandlerThread<ReflectMessage> {
                 .appendPath(cursor.getString(1))
                 .build();
         String body = cursor.getString(2);
-        Timestamp sentTimestamp = TimestampUtils.FromLong(cursor.getLong(3));
-        Timestamp receivedTimestamp = TimestampUtils.FromLong(cursor.getLong(4));
+        Timestamp sentTimestamp = new Timestamp(cursor.getLong(3));
+        Timestamp receivedTimestamp = new Timestamp(cursor.getLong(4));
         boolean read = cursor.getInt(5) == 1;
         @MessageState int messagingState = read ? MessageState.READ : MessageState.RECEIVED;
 

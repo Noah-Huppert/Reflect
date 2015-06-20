@@ -12,15 +12,12 @@ import android.telephony.SmsManager;
 import com.noahhuppert.reflect.exceptions.Errors;
 import com.noahhuppert.reflect.exceptions.InvalidMessagingCreationData;
 import com.noahhuppert.reflect.intents.SmsOutgoingDelivered;
-import com.noahhuppert.reflect.intents.SmsOutgoingSent.SmsOutgoingSent;
+import com.noahhuppert.reflect.intents.SmsOutgoingSent;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.MessagingResourceType;
 import com.noahhuppert.reflect.messaging.models.ReflectMessage;
 import com.noahhuppert.reflect.threading.ResultHandlerThread;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
-import com.noahhuppert.reflect.utils.SmsThreadUtils;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +68,7 @@ public class SmsCreateMessageRunnable extends ResultHandlerThread<ReflectMessage
             deliveryIntents = generateDeliveryIntents(messageParts.size(), tempMessageId);
         }
 
-        long threadId = SmsThreadUtils.getOrCreateThreadId(context, receiverPhoneNumber);
+        long threadId = 1;//SmsThreadUtils.getOrCreateThreadId(context, receiverPhoneNumber);
 
         for(int i = 0; i < messageParts.size(); i++){
             SmsManager.getDefault().sendTextMessage(receiverPhoneNumber,

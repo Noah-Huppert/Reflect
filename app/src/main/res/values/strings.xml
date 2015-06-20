@@ -6,8 +6,4 @@
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open_description">open drawer</string>
     <string name="navigation_drawer_close_description">close drawer</string>
-
-    <!-- Conversation View -->
-    <string name="fragment_conversation_view_new_message_body_hint">Send message</string>
-    <string name="fragment_conversation_view_new_message_send_text">Send</string>
 </resources>
