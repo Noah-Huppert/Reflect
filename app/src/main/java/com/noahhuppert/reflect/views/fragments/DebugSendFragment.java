@@ -1,7 +1,6 @@
 package com.noahhuppert.reflect.views.fragments;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,10 +14,6 @@ import android.widget.TextView;
 
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.exceptions.NoTelephonyManagerException;
-import com.noahhuppert.reflect.messaging.CommunicationType;
-import com.noahhuppert.reflect.messaging.models.ReflectMessage;
-import com.noahhuppert.reflect.messaging.providers.MessagingProviders;
-import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 import com.noahhuppert.reflect.utils.TelephonyUtils;
 import com.noahhuppert.reflect.views.FragmentId;
 import com.noahhuppert.reflect.views.FragmentSwitcher;
@@ -52,27 +47,10 @@ public class DebugSendFragment extends Fragment {
 
             receiverNumber.setText(modPhoneNumberText);
         } catch (NoTelephonyManagerException e){
-            phoneNumber.setText("Error");
+            phoneNumber.setText("Errors");
         }
 
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ReflectMessage reflectMessage = new ReflectMessage();
-                reflectMessage.setProtocol(CommunicationType.SMS);
-                reflectMessage.setReceiverUri(
-                        new Uri.Builder()
-                                .scheme(SmsMessagingProvider.SMS_URI_SCHEME)
-                                .authority(receiverNumber.getText().toString())
-                                .build()
-                );
-                reflectMessage.setBody(text.getText().toString());
-
-                MessagingProviders.getMessagingProvider(CommunicationType.SMS).createMessage(reflectMessage,
-                        getActivity(),
-                        null);
-            }
-        });
+        //TODO Send message
 
         Button back = (Button) rootView.findViewById(R.id.fragment_debug_send_back);
 

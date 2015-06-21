@@ -1,73 +1,26 @@
 package com.noahhuppert.reflect.messaging.providers;
 
 import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 
-import com.noahhuppert.reflect.messaging.models.ReflectContact;
-import com.noahhuppert.reflect.messaging.models.ReflectConversation;
-import com.noahhuppert.reflect.messaging.models.ReflectMessage;
-import com.noahhuppert.reflect.threading.ThreadResultHandler;
+import com.noahhuppert.reflect.messaging.models.Conversation;
 
 /**
- * A interface to provide a framework for fetching messaging resources.
- *
- * It is important to note that a MessagingProvider should be stateless. This is because a new
- * instance of a MessagingProvider can and will be created every time it needs to be used.
+ * A Messaging Provider is a class that performs operations on a messaging resource(Like SMS or XMPP)
+ * to get data like conversations, or individual messages
  */
 public interface MessagingProvider {
-    /* Fetch */
     /**
-     * Gets a message from a messaging resource
-     * @param id The id of the message
-     * @param context The context of the application
-     * @param threadResultHandler The result handler used to communicate between threads
+     * Retrieves a list of conversations from the messaging resource
+     * @param context The application context used to perform operations
+     * @return All conversations available from the messaging resource
      */
-    void getMessage(String id, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler);
+    @WorkerThread
+    Conversation[] getConversations(@NonNull Context context);
 
-    /**
-     * Gets a conversation from a messaging resource
-     * @param id The id of the conversation
-     * @param context The context of the application
-     * @param threadResultHandler The result handler used to communicate between threads
-     */
-    void getConversation(String id, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler);
-
-    /**
-     * Gets a contact from a messaging resource
-     * @param id The id of the contact
-     * @param context The context of the application
-     * @param threadResultHandler The result handler used to communicate between threads
-     */
-    void getContact(String id, Context context, ThreadResultHandler<ReflectContact> threadResultHandler);
-
-    /**
-     * Gets all conversation ids
-     * @param context The context of the application
-     * @param threadResultHandler The result handler used to communicate between threads
-     */
-    void getConversationIds(Context context, ThreadResultHandler<String[]> threadResultHandler);
-
-    /* Push */
-    /**
-     * Creates a message
-     * @param reflectMessage The {@link ReflectMessage} to push to the messaging resource
-     * @param context The context of the application
-     * @param threadResultHandler The result handler used to communicate between threads
-     */
-    void createMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler);
-
-    /**
-     * Creates a conversation
-     * @param reflectConversation The {@link ReflectConversation} to push to the messaging resource
-     * @param context The context of the application
-     * @param threadResultHandler The result handler used to communicate between threads
-     */
-    void createConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler);
-
-    /**
-     * Creates a contact
-     * @param reflectContact The {@link ReflectContact} to push to the messaging resource
-     * @param context The context of the application
-     * @param threadResultHandler The result handler used to communicate between threads
-     */
-    void createContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler);
+    @WorkerThread
+    @NonNull String getContactDisplayNameForUri(@NonNull Context context, @NonNull Uri contactUri);
 }

@@ -40,7 +40,6 @@
     <inspection_tool class="AndroidLintOverride" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AndroidLintOverrideAbstract" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AndroidLintPackagedPrivateKey" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="AndroidLintPrivateResource" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AndroidLintProguard" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AndroidLintPropertyEscape" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AndroidLintProtectedPermissions" enabled="true" level="WARNING" enabled_by_default="true" />

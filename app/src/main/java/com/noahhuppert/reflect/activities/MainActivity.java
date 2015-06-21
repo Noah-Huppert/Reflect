@@ -16,7 +16,7 @@ import com.noahhuppert.reflect.exceptions.WTFException;
 import com.noahhuppert.reflect.utils.TelephonyUtils;
 import com.noahhuppert.reflect.views.FragmentId;
 import com.noahhuppert.reflect.views.FragmentSwitcher;
-import com.noahhuppert.reflect.views.fragments.ConversationsListFragment;
+import com.noahhuppert.reflect.views.fragments.ConversationsListFragment.ConversationsListFragment;
 import com.noahhuppert.reflect.views.fragments.DebugSendFragment;
 
 import io.fabric.sdk.android.Fabric;

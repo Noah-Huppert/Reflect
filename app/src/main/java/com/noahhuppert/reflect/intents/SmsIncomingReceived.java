@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.noahhuppert.reflect.threading.MainThreadPool;
-
 public class SmsIncomingReceived extends BroadcastReceiver {
     private static final String TAG = SmsIncomingReceived.class.getSimpleName();
 

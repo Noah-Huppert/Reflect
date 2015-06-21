@@ -12,6 +12,7 @@ buildscript {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.android.databinding'
 apply plugin: 'io.fabric'
 
 repositories {
@@ -52,6 +53,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //Support lib
+    compile 'com.android.support:support-annotations:22.2.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:cardview-v7:22.2.0'
     compile 'com.android.support:recyclerview-v7:21.0.0'

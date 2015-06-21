@@ -7,8 +7,10 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.SOURCE)
 @IntDef({
-        Errors.ERROR_OK
+        Errors.OK,
+        Errors.FAILED
 })
 public @interface Errors {
-    int ERROR_OK = 0;
+    int OK = 0;
+    int FAILED  = 1;
 }
