@@ -10,6 +10,7 @@
 
     <!-- Pallet Colors -->
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
     <color name="gray">#AAAAAA</color>
     <color name="light_green">#00C853</color>
     <color name="red">#F44336</color>

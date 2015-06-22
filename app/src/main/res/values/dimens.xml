@@ -1,3 +1,9 @@
 <resources>
     <dimen name="view_padding">16dp</dimen>
+
+    <!-- View Holder Conversation -->
+    <dimen name="view_holder_conversation_padding">10dp</dimen>
+    <dimen name="view_holder_conversation_avatar_size">60dp</dimen>
+    <dimen name="view_holder_conversation_avatar_margin">10dp</dimen>
+    <dimen name="view_holder_conversation_contacts_name_text_size">20sp</dimen>
 </resources>

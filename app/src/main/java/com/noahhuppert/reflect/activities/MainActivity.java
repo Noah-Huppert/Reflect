@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements FragmentSwitcher 
             switchFragment(FragmentId.CONVERSATIONS_LIST);
         }
 
-        TelephonyUtils.SetAsDefaultSmsApp(this);
+        //TelephonyUtils.SetAsDefaultSmsApp(this);
     }
 
     @Override

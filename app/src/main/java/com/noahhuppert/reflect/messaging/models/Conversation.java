@@ -1,7 +1,15 @@
 package com.noahhuppert.reflect.messaging.models;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.view.View;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 
 import java.sql.Timestamp;
@@ -18,14 +26,9 @@ public class Conversation {
     public String id;
 
     /**
-     * An array of contact display names
+     * An array of {@link Contact}s assoicated with the covnersation
      */
-    public String[] contactNames;
-
-    /**
-     * An array of Uris for the contacts involved in the conversation
-     */
-    public Uri[] contactUris;
+    public Contact[] contacts;
 
     /**
      * A snippet of the conversation
@@ -43,37 +46,11 @@ public class Conversation {
     public @CommunicationType String communicationType;
 
     /* Actions */
-
     @Override
     public String toString() {
-        String contactNamesToString = "[";
-
-        for(int i = 0; i < contactNames.length; i++){
-            contactNamesToString += "\"" + contactNames[i] + "\"";
-
-            if(i != contactNames.length - 1){
-                contactNamesToString += ", ";
-            } else{
-                contactNamesToString += "]";
-            }
-        }
-
-        String contactUrisToString = "[";
-
-        for(int i = 0; i < contactUris.length; i++){
-            contactUrisToString += "\"" + contactUris[i].toString() + "\"";
-
-            if(i != contactUris.length - 1){
-                contactUrisToString += ", ";
-            } else{
-                contactUrisToString += "]";
-            }
-        }
-
         return "[" +
                     "id => \"" + id + "\"" +
-                    ", contactNames => " + Arrays.toString(contactNames) +
-                    ", contactUris => " + Arrays.toString(contactUris) +
+                    ", contacts => " + Arrays.toString(contacts) +
                     ", snippet => \"" + snippet + "\"" +
                     ", lastMessageTimestamp => " + lastMessageTimestamp +
                     ", communicationType => " + communicationType +

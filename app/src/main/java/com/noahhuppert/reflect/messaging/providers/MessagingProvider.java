@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
+import com.noahhuppert.reflect.messaging.models.Contact;
 import com.noahhuppert.reflect.messaging.models.Conversation;
 
 /**
@@ -22,5 +23,6 @@ public interface MessagingProvider {
     Conversation[] getConversations(@NonNull Context context);
 
     @WorkerThread
-    @NonNull String getContactDisplayNameForUri(@NonNull Context context, @NonNull Uri contactUri);
+    @NonNull
+    Contact getContactFromUri(@NonNull Context context, @NonNull Uri uri);
 }

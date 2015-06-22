@@ -1,5 +1,7 @@
 package com.noahhuppert.reflect.messaging.providers;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -7,14 +9,14 @@ import android.provider.ContactsContract;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 
-import com.noahhuppert.reflect.exceptions.NoTelephonyManagerException;
 import com.noahhuppert.reflect.exceptions.WTFException;
 import com.noahhuppert.reflect.messaging.CommunicationType;
+import com.noahhuppert.reflect.messaging.models.Contact;
 import com.noahhuppert.reflect.messaging.models.Conversation;
-import com.noahhuppert.reflect.utils.TelephonyUtils;
 
 import java.sql.Timestamp;
 
@@ -27,7 +29,7 @@ public class SmsMessagingProvider implements MessagingProvider {
     public static final String SMS_CONTACT_URI_SCHEME = "sms";
 
     @Override
-    public Conversation[] getConversations(@NonNull Context context) {
+    public Conversation[] getConversations(@NonNull final Context context) {
         //Get Conversation.id and Conversation.snippet
         String[] getConversationsProjection = {
                 Telephony.Sms.Conversations.THREAD_ID,
@@ -75,7 +77,7 @@ public class SmsMessagingProvider implements MessagingProvider {
             getOneReceivedConversationMessageQueryArgs[0] = conversations[i].id;
 
             synchronized (context) {
-                getOneReceivedConversationMessageCursor = context.getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI,
+                getOneReceivedConversationMessageCursor = context.getContentResolver().query(Telephony.Sms.CONTENT_URI,
                         getOneReceivedConversationMessageProjection,
                         getOneReceivedConversationMessageQuery,
                         getOneReceivedConversationMessageQueryArgs,
@@ -83,11 +85,9 @@ public class SmsMessagingProvider implements MessagingProvider {
             }
 
             if(getOneReceivedConversationMessageCursor.getCount() == 0){
-                try {
-                    throw new WTFException("Every SMS conversation should have at least one message", "THREAD_ID => " + conversations[i].id);
-                } finally {
-                    getOneReceivedConversationMessageCursor.close();
-                }
+                getOneReceivedConversationMessageCursor.close();
+                Log.e("Every SMS conversation should have at least one message", "THREAD_ID => " + conversations[i].id);
+                continue;
             } else if(getOneReceivedConversationMessageCursor.getCount() > 1){
                 Log.e(TAG, "Query to retrieve ONE conversation message is returning more than one message (" +
                         "THREAD_ID => " + conversations[i].id +
@@ -97,8 +97,9 @@ public class SmsMessagingProvider implements MessagingProvider {
 
             getOneReceivedConversationMessageCursor.moveToFirst();
 
-            conversations[i].contactUris = new Uri[1];
-            conversations[i].contactUris[0] = contactUriBuilder
+            conversations[i].contacts = new Contact[1];
+            conversations[i].contacts[0] = new Contact();
+            conversations[i].contacts[0].uri = contactUriBuilder
                     .scheme(SMS_CONTACT_URI_SCHEME)
                     .authority(getOneReceivedConversationMessageCursor.getString(0))
                     .build();
@@ -108,8 +109,7 @@ public class SmsMessagingProvider implements MessagingProvider {
 
         //Get Conversation.contactNames
         for(int i = 0; i < conversations.length; i++){
-            conversations[i].contactNames = new String[1];
-            conversations[i].contactNames[0] = getContactDisplayNameForUri(context, conversations[i].contactUris[0]);
+            conversations[i].contacts[0] = getContactFromUri(context, conversations[i].contacts[0].uri);
         }
 
         //Get Conversation.lastMessageTimestamp
@@ -124,7 +124,7 @@ public class SmsMessagingProvider implements MessagingProvider {
             getLastConversationMessageQueryArgs[0] = conversations[i].id;
 
             synchronized (context){
-                getLastConversationMessageCursor = context.getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI,
+                getLastConversationMessageCursor = context.getContentResolver().query(Telephony.Sms.CONTENT_URI,
                         getLastConversationMessageProjection,
                         getLastConversationMessageQuery,
                         getLastConversationMessageQueryArgs,
@@ -135,10 +135,10 @@ public class SmsMessagingProvider implements MessagingProvider {
                 getLastConversationMessageCursor.close();
                 throw new WTFException("Every SMS conversation should have at least one message", "THREAD_ID => " + conversations[i].id);
             } else if(getLastConversationMessageCursor.getCount() > 1){
-                Log.e(TAG, "Query to retrieve ONE conversation message is returning more than one message (" +
+                /*Log.e(TAG, "Query to retrieve ONE conversation message is returning more than one message (" +
                         "THREAD_ID => " + conversations[i].id +
                         " Count => " + getLastConversationMessageCursor.getCount() +
-                        ")");
+                        ")");*/
             }
 
             getLastConversationMessageCursor.moveToFirst();
@@ -152,30 +152,76 @@ public class SmsMessagingProvider implements MessagingProvider {
     }
 
     @Override
-    public @NonNull String getContactDisplayNameForUri(@NonNull Context context, @NonNull Uri contactUri) {
-        String[] getContactNameProjection = {ContactsContract.PhoneLookup.DISPLAY_NAME};
-        Uri getContactNameUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, contactUri.getAuthority());
+    public @NonNull Contact getContactFromUri(@NonNull final Context context, @NonNull Uri uri) {
+        String[] getContactProjection = {
+                ContactsContract.PhoneLookup.LOOKUP_KEY,
+                ContactsContract.PhoneLookup.DISPLAY_NAME,
+                ContactsContract.PhoneLookup.PHOTO_ID,
+                ContactsContract.PhoneLookup.PHOTO_THUMBNAIL_URI
+        };
+        Uri getContactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+                Uri.encode(uri.getAuthority()));
 
-        Cursor getContactNameCursor;
+        Cursor getContactCursor;
 
         synchronized (context){
-            getContactNameCursor = context.getContentResolver().query(getContactNameUri,
-                    getContactNameProjection,
+            getContactCursor = context.getContentResolver().query(getContactUri,
+                    getContactProjection,
                     null, null, null);
         }
 
-        if(getContactNameCursor.getCount() == 0){
-            getContactNameCursor.close();
+        Contact contact = new Contact();
+        contact.uri = uri;
+        contact.communicationType = CommunicationType.SMS;
 
-            return PhoneNumberUtils.formatNumber(contactUri.getAuthority());
+        if(getContactCursor.getCount() == 0){
+            getContactCursor.close();
+            return contact;
         }
 
-        getContactNameCursor.moveToFirst();
+        getContactCursor.moveToFirst();
+
+        contact.id = getContactCursor.getString(0);
+        contact.name = getContactCursor.getString(1);
+
+        if(getContactCursor.getString(2) != null){
+            contact.avatarUri = getContactPhotoUriFromPhotoId(context, getContactCursor.getString(2));
+        } else if(getContactCursor.getString(3) != null){
+            contact.avatarUri = Uri.parse(getContactCursor.getString(3));
+        }
+
+        getContactCursor.close();
+
+        return contact;
+    }
+
+    @WorkerThread
+    public @Nullable Uri getContactPhotoUriFromPhotoId(@NonNull final Context context, String photoId){
+        String[] getContactPhotoProjection = {ContactsContract.Data.PHOTO_THUMBNAIL_URI};
+        String getContactPhotoQuery = ContactsContract.Data.PHOTO_ID + " = ?";
+        String[] getContactPhotoQueryArgs = {photoId};
+
+        Cursor getContactPhotoCursor;
+
+        synchronized (context){
+            getContactPhotoCursor = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
+                    getContactPhotoProjection,
+                    getContactPhotoQuery,
+                    getContactPhotoQueryArgs,
+                    null);
+        }
+
+        if(getContactPhotoCursor.getCount() == 0){
+            getContactPhotoCursor.close();
+            return null;
+        }
+
+        getContactPhotoCursor.moveToFirst();
 
         try {
-            return getContactNameCursor.getString(0);
+            return Uri.parse(getContactPhotoCursor.getString(0));
         } finally {
-            getContactNameCursor.close();
+            getContactPhotoCursor.close();
         }
     }
 }
