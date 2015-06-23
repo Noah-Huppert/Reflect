@@ -1,15 +1,5 @@
 package com.noahhuppert.reflect.messaging.models;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.view.View;
-
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 
 import java.sql.Timestamp;

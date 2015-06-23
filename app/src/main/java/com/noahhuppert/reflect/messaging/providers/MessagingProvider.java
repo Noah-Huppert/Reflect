@@ -11,18 +11,32 @@ import com.noahhuppert.reflect.messaging.models.Conversation;
 
 /**
  * A Messaging Provider is a class that performs operations on a messaging resource(Like SMS or XMPP)
- * to get data like conversations, or individual messages
+ * to get data like conversationIds, or individual messages
  */
 public interface MessagingProvider {
     /**
-     * Retrieves a list of conversations from the messaging resource
-     * @param context The application context used to perform operations
-     * @return All conversations available from the messaging resource
+     * Retrieves a list of conversation ids, sorted from most to least recent
+     * @param context Application context
+     * @return An array of conversation ids
      */
     @WorkerThread
-    Conversation[] getConversations(@NonNull Context context);
+    @NonNull String[] getConversationIds(@NonNull final Context context);
 
+    /**
+     * Retrieves a single conversation which is specified by the {@code conversationId}
+     * @param context Application context
+     * @param conversationId The id of the conversation to get
+     * @return The specified conversation
+     */
     @WorkerThread
-    @NonNull
-    Contact getContactFromUri(@NonNull Context context, @NonNull Uri uri);
+    @Nullable Conversation getConversation(@NonNull final Context context, @NonNull String conversationId);
+
+    /**
+     * Retrieves a contact
+     * @param context Application context
+     * @param uri Uri of the contact
+     * @return The specified contact
+     */
+    @WorkerThread
+    @NonNull Contact getContactFromUri(@NonNull final Context context, @NonNull Uri uri);
 }

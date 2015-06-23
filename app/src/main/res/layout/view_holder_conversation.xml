@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/view_holder_conversation_padding"
-    android:paddingLeft="@dimen/view_holder_conversation_padding">
+    android:paddingTop="@dimen/view_holder_conversation_padding_top"
+    android:paddingStart="@dimen/view_holder_conversation_padding_start">
 
     <ImageView
         android:id="@+id/contacts_avatar"
@@ -21,8 +21,29 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/contacts_avatar"
-        android:layout_marginLeft="@dimen/view_holder_conversation_avatar_margin"
+        android:layout_marginStart="@dimen/view_holder_conversation_avatar_margin"
         android:textSize="@dimen/view_holder_conversation_contacts_name_text_size"
         android:text="Contacts name" />
+
+
+    <TextView
+        android:id="@+id/conversation_snippet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/contacts_avatar"
+        android:layout_below="@+id/contacts_name"
+        android:layout_marginStart="@dimen/view_holder_conversation_avatar_margin"
+        android:text="Snippet of conversation"/>
+
+    <TextView
+        android:id="@+id/conversation_last_message_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/contacts_avatar"
+        android:layout_below="@+id/conversation_snippet"
+        android:layout_marginStart="@dimen/view_holder_conversation_avatar_margin"
+        android:text="X time ago"/>
+
+    <!-- TODO Size item better to look better -->
 
 </RelativeLayout>

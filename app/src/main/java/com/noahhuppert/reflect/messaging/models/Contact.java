@@ -5,16 +5,10 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.util.Log;
 
 import com.noahhuppert.reflect.caches.CircleTileDrawableLruCache;
 import com.noahhuppert.reflect.caches.ContactAvatarLruCache;
 import com.noahhuppert.reflect.messaging.CommunicationType;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 /**
  * A class for storing information about a {@link com.noahhuppert.reflect.messaging.MessagingResourceType#CONTACT}
@@ -69,12 +63,6 @@ public class Contact {
     }
 
     /* Getters */
-    /**
-     * Guaranted to return some sort of name that can be shown to the user to identify the contact
-     *
-     * If {@link #name} is {@code null} then the authority of the {@link #uri} will be used
-     * @return A name to identify the contact by
-     */
     public @NonNull String getNonNullName(){
         if(name != null){
             return name;
@@ -82,31 +70,6 @@ public class Contact {
             return uri.getAuthority();
         } else {
             return "Unknown";
-        }
-    }
-
-    public boolean willReturnCircleTileWithLetter(){
-        return Character.isLetter(getNonNullName().charAt(0));
-    }
-
-    @WorkerThread
-    public @NonNull Drawable getCircleTileDrawable(){
-        String circleTileText = "";
-        if(willReturnCircleTileWithLetter()) {
-            circleTileText = getNonNullName().charAt(0) + "";
-        }
-
-        return CircleTileDrawableLruCache.getInstance().get(getNonNullName(), circleTileText);
-    }
-
-    @WorkerThread
-    public @NonNull Drawable getNonNullAvatarDrawable(final Context context){
-        if(avatarUri == null || avatarUri.getAuthority() == null){
-            return getCircleTileDrawable();
-        } else {
-            Drawable avatarDrawable = ContactAvatarLruCache.getInstance().get(avatarUri, context);
-
-            return avatarDrawable != null ? avatarDrawable : getCircleTileDrawable();
         }
     }
 }

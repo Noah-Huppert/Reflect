@@ -1,6 +1,5 @@
 package com.noahhuppert.reflect.views.fragments.ConversationsListFragment;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,11 +12,11 @@ import android.view.ViewGroup;
 
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.messaging.models.Conversation;
-import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider;
+import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsGetConversationIdsRunnable;
+import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsGetConversationRunnable;
+import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 import com.noahhuppert.reflect.threading.MainThreadPool;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
-
-import java.util.Arrays;
 
 public class ConversationsListFragment extends Fragment {
     private static final String TAG = ConversationsListFragment.class.getSimpleName();
@@ -34,15 +33,21 @@ public class ConversationsListFragment extends Fragment {
 
         conversationsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        GetSmsConversationsThread getSmsConversationsThread = new GetSmsConversationsThread(getActivity(), new ThreadResultHandler<Conversation[]>() {
+        SmsGetConversationIdsRunnable smsGetConversationIdsRunnable = new SmsGetConversationIdsRunnable(getActivity(), new ThreadResultHandler<String[]>() {
             @Override
-            public void onDone(final Conversation[] data) {
+            public void onDone(final String[] conversationIds) {
+                conversationListAdapter.conversationIds = conversationIds;
 
-                for(int i = 0; i < data.length; i ++){
-                    Log.d(TAG, data[i].toString());
+                for(int i = 0; i < conversationIds.length; i++){
+                    conversationListAdapter.conversationsCache.put(conversationIds[i], new SmsMessagingProvider().getConversation(getActivity(), conversationIds[i]));
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            conversationListAdapter.notifyDataSetChanged();
+                        }
+                    });
                 }
 
-                conversationListAdapter.conversations = data;
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -53,13 +58,12 @@ public class ConversationsListFragment extends Fragment {
 
             @Override
             public void onError(Exception exception) {
-                Log.d(TAG, "Exception when getting sms conversations", exception);
+                Log.e(TAG, "Failed to fetch SMS conversation ids", exception);
             }
         });
+        MainThreadPool.getInstance().getPool().submit(smsGetConversationIdsRunnable);
 
-        MainThreadPool.getInstance().getPool().submit(getSmsConversationsThread);
-
-        conversationListAdapter = new ConversationListAdapter(new Conversation[0], getActivity());
+        conversationListAdapter = new ConversationListAdapter(new String[0], getActivity());
 
         conversationsList.setAdapter(conversationListAdapter);
 
