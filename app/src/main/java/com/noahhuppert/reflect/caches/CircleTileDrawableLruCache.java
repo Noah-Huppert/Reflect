@@ -3,6 +3,7 @@ package com.noahhuppert.reflect.caches;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.WorkerThread;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;

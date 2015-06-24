@@ -8,6 +8,7 @@ import android.support.annotation.WorkerThread;
 
 import com.noahhuppert.reflect.messaging.models.Contact;
 import com.noahhuppert.reflect.messaging.models.Conversation;
+import com.noahhuppert.reflect.threading.StreamingResultHandler;
 
 /**
  * A Messaging Provider is a class that performs operations on a messaging resource(Like SMS or XMPP)

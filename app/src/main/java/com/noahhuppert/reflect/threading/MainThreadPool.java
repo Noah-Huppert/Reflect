@@ -1,41 +1,44 @@
 package com.noahhuppert.reflect.threading;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
 
-/**
- * A singleton class that holds the applications main thread pool. Run all threads through this
- * pool.
- */
+import java.util.Arrays;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 public class MainThreadPool {
-    /**
-     * The private singleton instance of the MainThreadPool
-     */
-    private static final MainThreadPool ourInstance = new MainThreadPool();
+    private static MainThreadPool instance;
 
-    /**
-     * The actual thread pool
-     */
-    private final ExecutorService pool;
+    private ThreadPoolExecutor threadPoolExecutor;
+    private final BlockingQueue<Runnable> workQueue;
 
-    /**
-     * Gets the singleton instance of the MainThreadPool
-     * @return Singleton instance of the MainThreadPool
-     */
-    public static MainThreadPool getInstance() {
-        return ourInstance;
+    private static MainThreadPool getInstance(){
+        if(instance == null){
+            instance = new MainThreadPool();
+        }
+
+        return instance;
     }
 
-    /**
-     * Creates a new MainThreadPool singleton. This constructor is marked as private to make sure there
-     * is only one MainThreadPool
-     */
-    private MainThreadPool() {
-        pool = Executors.newCachedThreadPool();
+    private MainThreadPool(){
+        workQueue = new LinkedBlockingQueue<>();
+
+        threadPoolExecutor = new ThreadPoolExecutor(
+                Runtime.getRuntime().availableProcessors(),
+                Runtime.getRuntime().availableProcessors(),
+                1,
+                TimeUnit.SECONDS,
+                workQueue
+        );
     }
 
     /* Getters */
-    public ExecutorService getPool() {
-        return pool;
+    public static ThreadPoolExecutor getThreadPoolExecutor() {
+        return getInstance().threadPoolExecutor;
     }
 }

@@ -11,8 +11,7 @@
 
         android:layout_height="@dimen/view_holder_conversation_avatar_size"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:src="@drawable/circle"/>
+        android:layout_alignParentStart="true"/>
 
 
     <TextView
@@ -23,7 +22,7 @@
         android:layout_toEndOf="@+id/contacts_avatar"
         android:layout_marginStart="@dimen/view_holder_conversation_avatar_margin"
         android:textSize="@dimen/view_holder_conversation_contacts_name_text_size"
-        android:text="Contacts name" />
+        android:text="" />
 
 
     <TextView
@@ -33,7 +32,7 @@
         android:layout_toEndOf="@+id/contacts_avatar"
         android:layout_below="@+id/contacts_name"
         android:layout_marginStart="@dimen/view_holder_conversation_avatar_margin"
-        android:text="Snippet of conversation"/>
+        android:text=""/>
 
     <TextView
         android:id="@+id/conversation_last_message_timestamp"
@@ -42,7 +41,7 @@
         android:layout_toEndOf="@+id/contacts_avatar"
         android:layout_below="@+id/conversation_snippet"
         android:layout_marginStart="@dimen/view_holder_conversation_avatar_margin"
-        android:text="X time ago"/>
+        android:text=""/>
 
     <!-- TODO Size item better to look better -->
 

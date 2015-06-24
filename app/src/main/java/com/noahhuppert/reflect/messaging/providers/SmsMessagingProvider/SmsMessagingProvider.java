@@ -5,15 +5,19 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
+import android.util.Log;
 
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.models.Contact;
 import com.noahhuppert.reflect.messaging.models.Conversation;
 import com.noahhuppert.reflect.messaging.providers.MessagingProvider;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.sql.Timestamp;
 
 /**
@@ -22,6 +26,17 @@ import java.sql.Timestamp;
 public class SmsMessagingProvider implements MessagingProvider {
     private static final String TAG = SmsMessagingProvider.class.getSimpleName();
 
+    private static final int snippetLimit = 35;
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({
+            HandlerMessagePayload.CONVERSATION_IDS
+    })
+    public @interface HandlerMessagePayload{
+        int CONVERSATION_IDS = 0;
+        int CONVERSATION = 1;
+    }
+
     @NonNull
     @Override
     public String[] getConversationIds(@NonNull final Context context) {
@@ -29,14 +44,10 @@ public class SmsMessagingProvider implements MessagingProvider {
         String[] getConversationIdsProjection = {Telephony.Sms.Conversations.THREAD_ID};
         String getConversationIdsOrderBy = Telephony.Sms.Conversations.DATE + " DESC";
 
-        Cursor getConversationIdsCursor;
-
-        synchronized (context){
-            getConversationIdsCursor = context.getContentResolver().query(Telephony.Sms.Conversations.CONTENT_URI,
+        Cursor getConversationIdsCursor = context.getContentResolver().query(Telephony.Sms.Conversations.CONTENT_URI,
                     getConversationIdsProjection,
                     null, null,
                     getConversationIdsOrderBy);
-        }
 
         if(getConversationIdsCursor.getCount() == 0){
             getConversationIdsCursor.close();
@@ -62,15 +73,11 @@ public class SmsMessagingProvider implements MessagingProvider {
         String getSnippetQuery = Telephony.Sms.Conversations.THREAD_ID + " = ?";
         String[] getSnippetQueryArgs = {threadId};
 
-        Cursor getSnippetCursor;
-
-        synchronized (context){
-            getSnippetCursor = context.getContentResolver().query(Telephony.Sms.Conversations.CONTENT_URI,
+        Cursor getSnippetCursor = getSnippetCursor = context.getContentResolver().query(Telephony.Sms.Conversations.CONTENT_URI,
                     getSnippetProjection,
                     getSnippetQuery,
                     getSnippetQueryArgs,
                     null);
-        }
 
         if(getSnippetCursor.getCount() == 0){
             getSnippetCursor.close();
@@ -82,7 +89,13 @@ public class SmsMessagingProvider implements MessagingProvider {
         Conversation conversation = new Conversation();
         conversation.id = threadId;
         conversation.communicationType = CommunicationType.SMS;
-        conversation.snippet = getSnippetCursor.getString(0);
+
+        conversation.snippet = "";
+        String[] snippetParts = getSnippetCursor.getString(0).split(" ");
+
+        for(int i = 0; i < snippetParts.length && conversation.snippet.length() < snippetLimit; i++){
+            conversation.snippet += snippetParts[i] + " ";
+        }
 
         getSnippetCursor.close();
 
@@ -97,13 +110,13 @@ public class SmsMessagingProvider implements MessagingProvider {
 
         Cursor getRecentMessageCursor;
 
-        synchronized (context){
+        //synchronized (context){
             getRecentMessageCursor = context.getContentResolver().query(Telephony.Sms.CONTENT_URI,
                     getRecentMessageProjection,
                     getRecentMessageQuery,
                     getRecentMessageQueryArgs,
                     getRecentMessageOrderBy);
-        }
+        //}
 
         if(getRecentMessageCursor.getCount() == 0){
             getRecentMessageCursor.close();
@@ -138,13 +151,9 @@ public class SmsMessagingProvider implements MessagingProvider {
         Uri getContactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
                 Uri.encode(uri.getAuthority()));
 
-        Cursor getContactCursor;
-
-        synchronized (context){
-            getContactCursor = context.getContentResolver().query(getContactUri,
+        Cursor getContactCursor = getContactCursor = context.getContentResolver().query(getContactUri,
                     getContactProjection,
                     null, null, null);
-        }
 
         Contact contact = new Contact();
         contact.uri = uri;
@@ -177,15 +186,11 @@ public class SmsMessagingProvider implements MessagingProvider {
         String getContactPhotoQuery = ContactsContract.Data.PHOTO_ID + " = ?";
         String[] getContactPhotoQueryArgs = {photoId};
 
-        Cursor getContactPhotoCursor;
-
-        synchronized (context){
-            getContactPhotoCursor = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
+        Cursor getContactPhotoCursor = getContactPhotoCursor = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
                     getContactPhotoProjection,
                     getContactPhotoQuery,
                     getContactPhotoQueryArgs,
                     null);
-        }
 
         if(getContactPhotoCursor.getCount() == 0){
             getContactPhotoCursor.close();

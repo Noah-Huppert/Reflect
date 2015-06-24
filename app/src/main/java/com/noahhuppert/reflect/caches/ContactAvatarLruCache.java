@@ -53,13 +53,9 @@ public class ContactAvatarLruCache extends LruCache<Uri, Drawable> {
         }
 
         try {
-            InputStream inputStream;
-            RoundedBitmapDrawable roundedBitmapDrawable;
+            InputStream inputStream = inputStream = context.getContentResolver().openInputStream(key);
+            RoundedBitmapDrawable roundedBitmapDrawable = roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), inputStream);
 
-            synchronized (context){
-                inputStream = context.getContentResolver().openInputStream(key);
-                roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), inputStream);
-            }
 
             roundedBitmapDrawable.setCornerRadius(Math.max(roundedBitmapDrawable.getIntrinsicWidth(), roundedBitmapDrawable.getIntrinsicHeight() / 1.25f));
             roundedBitmapDrawable.setAntiAlias(true);

@@ -19,6 +19,8 @@ import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.models.Contact;
 import com.noahhuppert.reflect.messaging.models.Conversation;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.sql.Timestamp;
 
 
@@ -66,6 +68,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
             }
         }
 
+        @Retention(RetentionPolicy.SOURCE)
         @IntDef({
                 AvatarLayoutType.NO_PADDING,
                 AvatarLayoutType.PADDING
@@ -92,15 +95,16 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
         if(conversationsCache.containsKey(conversationIds[i])){
             conversation = conversationsCache.get(conversationIds[i]);
         } else {
-            conversation = new Conversation();
+            return;
+            /*conversation = new Conversation();
             conversation.lastMessageTimestamp = new Timestamp(System.currentTimeMillis());
             conversation.communicationType = CommunicationType.SMS;
             conversation.contacts = new Contact[1];
             conversation.contacts[0] = new Contact();
-            conversation.contacts[0].name = "Loading";
-            conversation.snippet = "Loading";
+            conversation.contacts[0].name = "";//"Loading";
+            conversation.snippet = "";//"Loading";
 
-            conversationsCache.put(conversationIds[i], conversation);
+            conversationsCache.put(conversationIds[i], conversation);*/
         }
 
         String contactNames = "";
