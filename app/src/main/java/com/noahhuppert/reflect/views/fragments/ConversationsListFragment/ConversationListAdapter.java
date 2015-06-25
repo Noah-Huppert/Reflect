@@ -5,7 +5,6 @@ import android.support.annotation.IntDef;
 import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +14,12 @@ import android.widget.TextView;
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.caches.CircleTileDrawableLruCache;
 import com.noahhuppert.reflect.caches.ContactAvatarLruCache;
-import com.noahhuppert.reflect.messaging.CommunicationType;
-import com.noahhuppert.reflect.messaging.models.Contact;
 import com.noahhuppert.reflect.messaging.models.Conversation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ConversationListAdapter extends RecyclerView.Adapter<ConversationListAdapter.ViewHolder> {

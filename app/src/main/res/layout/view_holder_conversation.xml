@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="@dimen/view_holder_conversation_padding_top"
-    android:paddingStart="@dimen/view_holder_conversation_padding_start">
+    android:layout_height="@dimen/spec_list_item3_height">
 
     <ImageView
         android:id="@+id/contacts_avatar"
-        android:layout_width="@dimen/view_holder_conversation_avatar_size"
+        android:layout_width="@dimen/spec_avatar_width_height"
+        android:layout_height="@dimen/spec_avatar_width_height"
+        android:layout_marginStart="@dimen/spec_list_item_avatar_margin_left_right"
+        android:layout_alignTop="@+id/text"
+        tools:src="@drawable/circle"
+        tools:tint="@color/primary"/>
 
-        android:layout_height="@dimen/view_holder_conversation_avatar_size"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
-
-
-    <TextView
-        android:id="@+id/contacts_name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/text"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/contacts_avatar"
-        android:layout_marginStart="@dimen/view_holder_conversation_avatar_margin"
-        android:textSize="@dimen/view_holder_conversation_contacts_name_text_size"
-        android:text="" />
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/spec_list_item_text_margin_top"
+        android:paddingStart="@dimen/spec_list_item_avatar_margin_left_right"
+        android:paddingEnd="@dimen/spec_list_item_avatar_margin_left_right"
+        android:layout_toEndOf="@+id/contacts_avatar">
+        <TextView
+            android:id="@+id/contacts_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textSize="@dimen/spec_list_item_text_primary_size"
+            tools:text="Contacts name"/>
 
+        <TextView
+            android:id="@+id/conversation_snippet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/spec_list_item_text_secondary_size"
+            tools:text="Conversation snippet"/>
 
-    <TextView
-        android:id="@+id/conversation_snippet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/contacts_avatar"
-        android:layout_below="@+id/contacts_name"
-        android:layout_marginStart="@dimen/view_holder_conversation_avatar_margin"
-        android:text=""/>
-
-    <TextView
-        android:id="@+id/conversation_last_message_timestamp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/contacts_avatar"
-        android:layout_below="@+id/conversation_snippet"
-        android:layout_marginStart="@dimen/view_holder_conversation_avatar_margin"
-        android:text=""/>
-
-    <!-- TODO Size item better to look better -->
+        <TextView
+            android:id="@+id/conversation_last_message_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/spec_list_item_text_secondary_size"
+            tools:text="X units"/>
+    </LinearLayout>
 
 </RelativeLayout>

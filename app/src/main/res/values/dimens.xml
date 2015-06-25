@@ -1,10 +1,18 @@
 <resources>
-    <dimen name="view_padding">16dp</dimen>
+    <!-- Spec -->
+    <dimen name="spec_avatar_width_height">50dp</dimen>
+
+    <dimen name="spec_list_item_avatar_margin_left_right">16dp</dimen>
+    <dimen name="spec_list_item_text_margin_top">16dp</dimen>
+    <dimen name="spec_list_item_text_primary_size">16sp</dimen>
+    <dimen name="spec_list_item_text_secondary_size">14sp</dimen>
+
+    <dimen name="spec_list_item3_height">88dp</dimen>
 
     <!-- View Holder Conversation -->
-    <dimen name="view_holder_conversation_padding_top">25dp</dimen>
-    <dimen name="view_holder_conversation_padding_start">15dp</dimen>
+    <!--
     <dimen name="view_holder_conversation_avatar_size">60dp</dimen>
     <dimen name="view_holder_conversation_avatar_margin">10dp</dimen>
     <dimen name="view_holder_conversation_contacts_name_text_size">16sp</dimen>
+    -->
 </resources>
