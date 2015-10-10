@@ -8,6 +8,7 @@ import android.support.annotation.WorkerThread;
 
 import com.noahhuppert.reflect.messaging.models.Contact;
 import com.noahhuppert.reflect.messaging.models.Conversation;
+import com.noahhuppert.reflect.messaging.models.Message;
 import com.noahhuppert.reflect.threading.StreamingResultHandler;
 
 /**
@@ -40,4 +41,22 @@ public interface MessagingProvider {
      */
     @WorkerThread
     @NonNull Contact getContactFromUri(@NonNull final Context context, @NonNull Uri uri);
+
+    /**
+     * Retrieves a list of message ids, sorted from most to least recent
+     * @param context Application context
+     * @param conversationId The id of the conversation to retrieve message ids for
+     * @return An array of message ids for a conversation
+     */
+    @WorkerThread
+    @NonNull String[] getConversationMessageIds(@NonNull final Context context, @NonNull String conversationId);
+
+    /**
+     * Retrieves the specified message
+     * @param context Application context
+     * @param messageId The id of the message
+     * @return The specified message
+     */
+    @WorkerThread
+    @NonNull Message getMessage(@NonNull final Context context, @NonNull String messageId);
 }

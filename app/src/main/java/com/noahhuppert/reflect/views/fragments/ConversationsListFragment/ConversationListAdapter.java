@@ -5,6 +5,7 @@ import android.support.annotation.IntDef;
 import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +16,13 @@ import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.caches.CircleTileDrawableLruCache;
 import com.noahhuppert.reflect.caches.ContactAvatarLruCache;
 import com.noahhuppert.reflect.messaging.models.Conversation;
+import com.noahhuppert.reflect.views.RecyclerView.RecyclerViewOnItemClickAdapter;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
-import java.util.List;
 
 
-public class ConversationListAdapter extends RecyclerView.Adapter<ConversationListAdapter.ViewHolder> {
+public class ConversationListAdapter extends RecyclerViewOnItemClickAdapter<ConversationListAdapter.ViewHolder> {
     private static final String TAG = ConversationListAdapter.class.getSimpleName();
 
     public String[] conversationIds;
@@ -86,23 +86,16 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int i) {
+        super.onBindViewHolder(viewHolder, i);
+
         String contactsName = "";
 
         Conversation conversation;
 
         if(conversationsCache.containsKey(conversationIds[i])){
             conversation = conversationsCache.get(conversationIds[i]);
-        } else {
+        } else {// Conversation still loading
             return;
-            /*conversation = new Conversation();
-            conversation.lastMessageTimestamp = new Timestamp(System.currentTimeMillis());
-            conversation.communicationType = CommunicationType.SMS;
-            conversation.contacts = new Contact[1];
-            conversation.contacts[0] = new Contact();
-            conversation.contacts[0].name = "";//"Loading";
-            conversation.snippet = "";//"Loading";
-
-            conversationsCache.put(conversationIds[i], conversation);*/
         }
 
         String contactNames = "";

@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.exceptions.NoTelephonyManagerException;
+import com.noahhuppert.reflect.messaging.providers.MessagingProviderCache;
+import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 import com.noahhuppert.reflect.utils.TelephonyUtils;
 import com.noahhuppert.reflect.views.FragmentId;
 import com.noahhuppert.reflect.views.FragmentSwitcher;

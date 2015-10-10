@@ -7,9 +7,9 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +20,11 @@ import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsGetCo
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsGetConversationRunnable;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 import com.noahhuppert.reflect.threading.MainThreadPool;
+import com.noahhuppert.reflect.views.RecyclerView.RecyclerViewOnItemClickListener;
 
 import java.util.Arrays;
+
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
 public class ConversationsListFragment extends Fragment {
     private static final String TAG = ConversationsListFragment.class.getSimpleName();
@@ -77,7 +80,15 @@ public class ConversationsListFragment extends Fragment {
 
         conversationListAdapter = new ConversationListAdapter(new String[0], getActivity());
         conversationsList.setAdapter(conversationListAdapter);
-        conversationsList.setItemAnimator(new DefaultItemAnimator());
+        conversationsList.setItemAnimator(new SlideInLeftAnimator());
+
+        conversationListAdapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
+            @Override
+            public void onClick(RecyclerView.ViewHolder viewHolder, int index) {
+                // TODO Handle conversation list item click
+                Log.d(TAG, conversationListAdapter.conversationsCache.get(conversationListAdapter.conversationIds[index]).toString());
+            }
+        });
 
         conversationsHandler = new ConversationsHandler(getActivity(), conversationListAdapter);
 

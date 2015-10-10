@@ -14,6 +14,7 @@ import android.util.Log;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.models.Contact;
 import com.noahhuppert.reflect.messaging.models.Conversation;
+import com.noahhuppert.reflect.messaging.models.Message;
 import com.noahhuppert.reflect.messaging.providers.MessagingProvider;
 
 import java.lang.annotation.Retention;
@@ -204,5 +205,19 @@ public class SmsMessagingProvider implements MessagingProvider {
         } finally {
             getContactPhotoCursor.close();
         }
+    }
+
+    @NonNull
+    @Override
+    public String[] getConversationMessageIds(@NonNull Context context, @NonNull String conversationId) {
+        // TODO Get conversation message ids query, uri => Sms.Messages.ContentUri, projection => [_ID], query => THREAD_ID = conversationId
+        return new String[0];
+    }
+
+    @NonNull
+    @Override
+    public Message getMessage(@NonNull Context context, @NonNull String messageId) {
+        // TODO Get message query
+        return null;
     }
 }
