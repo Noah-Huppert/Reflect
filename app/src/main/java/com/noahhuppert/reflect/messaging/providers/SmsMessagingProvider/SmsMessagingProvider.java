@@ -73,7 +73,7 @@ public class SmsMessagingProvider implements MessagingProvider {
         String getSnippetQuery = Telephony.Sms.Conversations.THREAD_ID + " = ?";
         String[] getSnippetQueryArgs = {threadId};
 
-        Cursor getSnippetCursor = getSnippetCursor = context.getContentResolver().query(Telephony.Sms.Conversations.CONTENT_URI,
+        Cursor getSnippetCursor = context.getContentResolver().query(Telephony.Sms.Conversations.CONTENT_URI,
                     getSnippetProjection,
                     getSnippetQuery,
                     getSnippetQueryArgs,

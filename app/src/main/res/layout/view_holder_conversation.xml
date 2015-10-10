@@ -10,6 +10,7 @@
         android:layout_height="@dimen/spec_avatar_width_height"
         android:layout_marginStart="@dimen/spec_list_item_avatar_margin_left_right"
         android:layout_alignTop="@+id/text"
+        android:contentDescription="@string/view_holder_conversation_contacts_avatar_description"
         tools:src="@drawable/circle"
         tools:tint="@color/primary"/>
 

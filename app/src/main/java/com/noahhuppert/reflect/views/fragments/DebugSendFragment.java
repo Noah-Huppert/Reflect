@@ -1,6 +1,7 @@
 package com.noahhuppert.reflect.views.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -64,13 +65,13 @@ public class DebugSendFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         try{
-            fragmentSwitcher = (FragmentSwitcher) activity;
+            fragmentSwitcher = (FragmentSwitcher) context;
         } catch(ClassCastException e){
-            Log.e(TAG, activity.getClass().getSimpleName() + " must implement " + FragmentSwitcher.class.getSimpleName());
+            Log.e(TAG, context.getClass().getSimpleName() + " must implement " + FragmentSwitcher.class.getSimpleName());
         }
     }
 }

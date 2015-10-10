@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements FragmentSwitcher 
             return true;
         }
 
-        if (item.getItemId() == R.id.main_menu_debug_send){
+        if (id == R.id.main_menu_debug_send){
             switchFragment(FragmentId.DEBUG_SEND);
         }
 
