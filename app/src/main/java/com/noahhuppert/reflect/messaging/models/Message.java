@@ -22,8 +22,11 @@ public class Message {
      * The Uris of the other party associated with the message
      *
      * Base on the {@link #messageType} it will be:
-     *      - {@link MessageType#DRAFT} | {@link MessageType#SENDING | {@link MessageType#SENT}}: An array of Uris to send the message to
+     *      - {@link MessageType#DRAFT} | {@link MessageType#SENDING | {@link MessageType#SENT}}
+     *          - otherPartyUris = [recipient1, recipient2, ...]
      *      - {@link MessageType#RECEIVED}: An array with one element which is the sender uri
+     *          - otherPartyUris = [sender]
+     *
      */
     public Uri[] otherPartyUris;
 
@@ -41,6 +44,11 @@ public class Message {
      * The {@link CommunicationType} that the message was retrieved from
      */
     public @CommunicationType String communicationType;
+
+    /**
+     * The timestamp marking when the message was sent
+     */
+    public Timestamp sentTimestamp;
 
     /**
      * The timestamp marking when the message was received
@@ -62,6 +70,7 @@ public class Message {
                     ", messageType => " + messageType +
                     ", error => " + error +
                     ", communicationType => " + communicationType +
+                    ", sentTimestamp => " + sentTimestamp +
                     ", receivedTimestamp => " + receivedTimestamp +
                     ", read => " + read +
                 "]";

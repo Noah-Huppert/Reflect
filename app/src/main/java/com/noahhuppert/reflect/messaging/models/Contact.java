@@ -72,4 +72,22 @@ public class Contact {
             return "Unknown";
         }
     }
+
+    public static @NonNull Uri BuildSmsUri(String smsNumber) {
+        Uri uri = new Uri.Builder()
+                        .scheme(SMS_SCHEME)
+                        .authority(smsNumber)
+                        .build();
+
+        return uri;
+    }
+
+    public static @NonNull Uri BuildXMPPUri(String user, String host) {
+        Uri uri = new Uri.Builder()
+                        .scheme(XMPP_SCHEME)
+                        .authority(host)
+                        .build();
+
+        return uri;
+    }
 }

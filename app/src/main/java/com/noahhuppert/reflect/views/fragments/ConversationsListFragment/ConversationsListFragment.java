@@ -1,10 +1,12 @@
 package com.noahhuppert.reflect.views.fragments.ConversationsListFragment;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.Telephony;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.messaging.models.Conversation;
+import com.noahhuppert.reflect.messaging.providers.MessagingProviderCache;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsGetConversationIdsRunnable;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsGetConversationRunnable;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
@@ -86,7 +89,8 @@ public class ConversationsListFragment extends Fragment {
             @Override
             public void onClick(RecyclerView.ViewHolder viewHolder, int index) {
                 // TODO Handle conversation list item click
-                Log.d(TAG, conversationListAdapter.conversationsCache.get(conversationListAdapter.conversationIds[index]).toString());
+                String[] messageIds = MessagingProviderCache.get(SmsMessagingProvider.class).getConversationMessageIds(getContext(), conversationListAdapter.conversationIds[index]);
+                MessagingProviderCache.get(SmsMessagingProvider.class).getMessage(getContext(), messageIds[1]);
             }
         });
 
