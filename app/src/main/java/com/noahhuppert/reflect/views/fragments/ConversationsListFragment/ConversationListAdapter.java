@@ -109,7 +109,7 @@ public class ConversationListAdapter extends RecyclerViewOnItemClickAdapter<Conv
         viewHolder.contactsName.setText(contactNames);
 
         if(conversation.contacts.length > 1 || !Character.isLetter(contactNames.charAt(0))){
-            viewHolder.contactsAvatar.setBackground(CircleTileDrawableLruCache.getInstance().get(contactNames, ""));
+            viewHolder.contactsAvatar.setBackground(CircleTileDrawableLruCache.getInstance().get(new CircleTileDrawableLruCache.CircleTileDrawableKey(contactNames, "")));
 
             viewHolder.switchToAvatarLayoutType(ViewHolder.AvatarLayoutType.PADDING);
 
@@ -121,11 +121,11 @@ public class ConversationListAdapter extends RecyclerViewOnItemClickAdapter<Conv
         } else if(conversation.contacts[0].avatarUri != null){
             viewHolder.switchToAvatarLayoutType(ViewHolder.AvatarLayoutType.NO_PADDING);
 
-            viewHolder.contactsAvatar.setImageDrawable(ContactAvatarLruCache.getInstance().get(conversation.contacts[0].avatarUri, context));
+            viewHolder.contactsAvatar.setImageDrawable(ContactAvatarLruCache.getInstance().get(new ContactAvatarLruCache.ContactAvatarKey(conversation.contacts[0].avatarUri, context)));
         }else{
             viewHolder.switchToAvatarLayoutType(ViewHolder.AvatarLayoutType.NO_PADDING);
 
-            viewHolder.contactsAvatar.setImageDrawable(CircleTileDrawableLruCache.getInstance().get(contactNames, contactNames.charAt(0) + ""));
+            viewHolder.contactsAvatar.setImageDrawable(CircleTileDrawableLruCache.getInstance().get(new CircleTileDrawableLruCache.CircleTileDrawableKey(contactNames, contactNames.charAt(0) + "")));
         }
 
         viewHolder.conversationSnippet.setText(conversation.snippet);

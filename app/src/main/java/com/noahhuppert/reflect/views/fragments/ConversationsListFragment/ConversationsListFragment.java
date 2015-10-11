@@ -1,12 +1,10 @@
 package com.noahhuppert.reflect.views.fragments.ConversationsListFragment;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.provider.Telephony;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,13 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.noahhuppert.reflect.R;
+import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.models.Conversation;
-import com.noahhuppert.reflect.messaging.providers.MessagingProviderCache;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsGetConversationIdsRunnable;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsGetConversationRunnable;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 import com.noahhuppert.reflect.threading.MainThreadPool;
+import com.noahhuppert.reflect.views.FragmentId;
+import com.noahhuppert.reflect.views.FragmentSwitcher;
 import com.noahhuppert.reflect.views.RecyclerView.RecyclerViewOnItemClickListener;
+import com.noahhuppert.reflect.views.fragments.ConversationFragment.ConversationFragment;
 
 import java.util.Arrays;
 
@@ -31,6 +32,8 @@ import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
 public class ConversationsListFragment extends Fragment {
     private static final String TAG = ConversationsListFragment.class.getSimpleName();
+
+    private FragmentSwitcher fragmentSwitcher;
 
     private RecyclerView conversationsList;
     private ConversationListAdapter conversationListAdapter;
@@ -88,9 +91,12 @@ public class ConversationsListFragment extends Fragment {
         conversationListAdapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
             @Override
             public void onClick(RecyclerView.ViewHolder viewHolder, int index) {
-                // TODO Handle conversation list item click
-                String[] messageIds = MessagingProviderCache.get(SmsMessagingProvider.class).getConversationMessageIds(getContext(), conversationListAdapter.conversationIds[index]);
-                Log.d(TAG, MessagingProviderCache.get(SmsMessagingProvider.class).getMessage(getContext(), messageIds[1]).toString());
+                Bundle arguments = new Bundle();
+
+                arguments.putString(ConversationFragment.ARGUMENT_CONVERSATION_COMMUNICATION_TYPE, CommunicationType.SMS);
+                arguments.putString(ConversationFragment.ARGUMENT_CONVERSATION_ID, conversationListAdapter.conversationIds[index]);
+
+                fragmentSwitcher.switchFragment(FragmentId.CONVERSATION, arguments);
             }
         });
 
@@ -99,5 +105,16 @@ public class ConversationsListFragment extends Fragment {
         MainThreadPool.getThreadPoolExecutor().execute(new SmsGetConversationIdsRunnable(getActivity(), conversationsHandler));
 
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            fragmentSwitcher = (FragmentSwitcher) context;
+        } catch(ClassCastException e) {
+            Log.e(TAG, context.getClass().getSimpleName() + " must implement " + FragmentSwitcher.class.getSimpleName());
+        }
     }
 }

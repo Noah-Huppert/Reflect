@@ -5,11 +5,12 @@ import android.net.Uri;
 import com.noahhuppert.reflect.exceptions.Errors;
 import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.MessageType;
+import com.noahhuppert.reflect.messaging.MessagingResourceType;
 
 import java.sql.Timestamp;
 
 /**
- * A class used to store information about a {@link com.noahhuppert.reflect.messaging.MessagingResourceType#MESSAGE}
+ * A class used to store information about a {@link MessagingResourceType#MESSAGE}
  * retrieved by a {@link com.noahhuppert.reflect.messaging.providers.MessagingProvider}
  */
 public class Message {

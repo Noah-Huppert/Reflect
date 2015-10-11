@@ -10,6 +10,7 @@ public class EnumUtils {
      * @param e The enum to turn into a lowercase string
      * @return The provided enum in the form of a lowercase string.
      */
+    @Deprecated
     public static String PartEnumToString(Enum e){
         return e.toString().toLowerCase();
     }

@@ -1,17 +1,13 @@
 package com.noahhuppert.reflect.messaging.models;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.WorkerThread;
 
-import com.noahhuppert.reflect.caches.CircleTileDrawableLruCache;
-import com.noahhuppert.reflect.caches.ContactAvatarLruCache;
 import com.noahhuppert.reflect.messaging.CommunicationType;
+import com.noahhuppert.reflect.messaging.MessagingResourceType;
 
 /**
- * A class for storing information about a {@link com.noahhuppert.reflect.messaging.MessagingResourceType#CONTACT}
+ * A class for storing information about a {@link MessagingResourceType#CONTACT}
  * retrieved by a {@link com.noahhuppert.reflect.messaging.providers.MessagingProvider}
  */
 public class Contact {
@@ -21,7 +17,7 @@ public class Contact {
     /**
      * The id of the contact
      *
-     * If the {@link #communicationType} is {@link com.noahhuppert.reflect.messaging.CommunicationType#SMS}
+     * If the {@link #communicationType} is {@link CommunicationType#SMS}
      * then the id will be the {@link android.provider.ContactsContract.Contacts#LOOKUP_KEY}
      */
     public String id;

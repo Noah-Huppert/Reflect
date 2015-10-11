@@ -1,6 +1,5 @@
 package com.noahhuppert.reflect.views.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,8 +14,6 @@ import android.widget.TextView;
 
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.exceptions.NoTelephonyManagerException;
-import com.noahhuppert.reflect.messaging.providers.MessagingProviderCache;
-import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 import com.noahhuppert.reflect.utils.TelephonyUtils;
 import com.noahhuppert.reflect.views.FragmentId;
 import com.noahhuppert.reflect.views.FragmentSwitcher;
@@ -60,7 +57,7 @@ public class DebugSendFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragmentSwitcher.switchFragment(FragmentId.CONVERSATIONS_LIST);
+                fragmentSwitcher.switchFragment(FragmentId.CONVERSATIONS_LIST, null);
             }
         });
         return rootView;

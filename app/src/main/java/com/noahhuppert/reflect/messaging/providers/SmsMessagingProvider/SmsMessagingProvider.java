@@ -10,7 +10,6 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
-import android.util.Log;
 
 import com.noahhuppert.reflect.exceptions.Errors;
 import com.noahhuppert.reflect.messaging.CommunicationType;
@@ -23,17 +22,14 @@ import com.noahhuppert.reflect.messaging.providers.MessagingProvider;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * A Messaging Provider that uses Sms as its messaging resource
  */
 public class SmsMessagingProvider implements MessagingProvider {
     private static final String TAG = SmsMessagingProvider.class.getSimpleName();
-    
+
     private static final int snippetLimit = 45;
 
     @Retention(RetentionPolicy.SOURCE)

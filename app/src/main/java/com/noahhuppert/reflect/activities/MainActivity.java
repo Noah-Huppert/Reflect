@@ -15,6 +15,7 @@ import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.exceptions.WTFException;
 import com.noahhuppert.reflect.views.FragmentId;
 import com.noahhuppert.reflect.views.FragmentSwitcher;
+import com.noahhuppert.reflect.views.fragments.ConversationFragment.ConversationFragment;
 import com.noahhuppert.reflect.views.fragments.ConversationsListFragment.ConversationsListFragment;
 import com.noahhuppert.reflect.views.fragments.DebugSendFragment;
 
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements FragmentSwitcher 
 
         //Setup main content
         if(savedInstanceState == null) {
-            switchFragment(FragmentId.CONVERSATIONS_LIST);
+            switchFragment(FragmentId.CONVERSATIONS_LIST, null);
         }
 
         //TelephonyUtils.SetAsDefaultSmsApp(this);
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements FragmentSwitcher 
         }
 
         if (id == R.id.main_menu_debug_send){
-            switchFragment(FragmentId.DEBUG_SEND);
+            switchFragment(FragmentId.DEBUG_SEND, null);
         }
 
         return super.onOptionsItemSelected(item);
@@ -106,17 +107,23 @@ public class MainActivity extends AppCompatActivity implements FragmentSwitcher 
     }
 
     @Override
-    public void switchFragment(@FragmentId int fragmentId) {
+    public void switchFragment(@FragmentId int fragmentId, Bundle arguments) {
         Fragment fragment = null;
 
         if(fragmentId == FragmentId.CONVERSATIONS_LIST) {
             fragment = new ConversationsListFragment();
-        }else if(fragmentId == FragmentId.DEBUG_SEND){
+        } else if(fragmentId == FragmentId.CONVERSATION) {
+            fragment = new ConversationFragment();
+        } else if(fragmentId == FragmentId.DEBUG_SEND){
             fragment = new DebugSendFragment();
         }
 
         if(fragment == null){
             throw new WTFException("A fragment instance should be created for supplied fragmentId", fragmentId + "");
+        }
+
+        if(arguments != null) {
+            fragment.setArguments(arguments);
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_content, fragment).addToBackStack(fragment.getClass().getSimpleName()).commit();

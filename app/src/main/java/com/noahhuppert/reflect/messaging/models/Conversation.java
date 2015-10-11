@@ -1,12 +1,13 @@
 package com.noahhuppert.reflect.messaging.models;
 
 import com.noahhuppert.reflect.messaging.CommunicationType;
+import com.noahhuppert.reflect.messaging.MessagingResourceType;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
 
 /**
- * A class for storing information about a {@link com.noahhuppert.reflect.messaging.MessagingResourceType#CONVERSATION}
+ * A class for storing information about a {@link MessagingResourceType#CONVERSATION}
  * retrieved by a {@link com.noahhuppert.reflect.messaging.providers.MessagingProvider}
  */
 public class Conversation {

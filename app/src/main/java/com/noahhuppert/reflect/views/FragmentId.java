@@ -11,9 +11,11 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.SOURCE)
 @IntDef({
         FragmentId.CONVERSATIONS_LIST,
+        FragmentId.CONVERSATION,
         FragmentId.DEBUG_SEND
 })
 public @interface FragmentId{
     int CONVERSATIONS_LIST = 0;
-    int DEBUG_SEND = 1;
+    int CONVERSATION = 1;
+    int DEBUG_SEND = 2;
 }

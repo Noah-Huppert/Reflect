@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.*;
 import android.os.Process;
 
+import com.noahhuppert.reflect.messaging.CommunicationType;
 import com.noahhuppert.reflect.messaging.models.Conversation;
 import com.noahhuppert.reflect.messaging.providers.MessagingProviderCache;
 
@@ -22,7 +23,7 @@ public class SmsGetConversationRunnable implements Runnable {
     public void run() {
         android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
-        Conversation conversation = MessagingProviderCache.get(SmsMessagingProvider.class).getConversation(context, threadId);
+        Conversation conversation = MessagingProviderCache.get(CommunicationType.SMS).getConversation(context, threadId);
 
         Message message = handler.obtainMessage(SmsMessagingProvider.HandlerMessagePayload.CONVERSATION, conversation);
         handler.sendMessage(message);
