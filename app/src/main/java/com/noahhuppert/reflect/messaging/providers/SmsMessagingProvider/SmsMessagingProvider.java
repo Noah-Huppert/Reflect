@@ -24,6 +24,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,13 +33,7 @@ import java.util.List;
  */
 public class SmsMessagingProvider implements MessagingProvider {
     private static final String TAG = SmsMessagingProvider.class.getSimpleName();
-
-    private static final Uri[] messageContentUris = {
-            Telephony.Sms.Draft.CONTENT_URI,
-            Telephony.Sms.Inbox.CONTENT_URI,
-            Telephony.Sms.Outbox.CONTENT_URI,
-            Telephony.Sms.Sent.CONTENT_URI
-    };
+    
     private static final int snippetLimit = 45;
 
     @Retention(RetentionPolicy.SOURCE)
@@ -62,9 +57,9 @@ public class SmsMessagingProvider implements MessagingProvider {
         @Override
         public int compareTo(TempMessageId another) {
             if(this.date > another.date) {
-                return 1;
-            } else if(this.date < another.date) {
                 return -1;
+            } else if(this.date < another.date) {
+                return 1;
             } else {
                 return 0;
             }
@@ -82,6 +77,10 @@ public class SmsMessagingProvider implements MessagingProvider {
                     getConversationIdsProjection,
                     null, null,
                     getConversationIdsOrderBy);
+
+        if(getConversationIdsCursor == null) {
+            return new String[0];
+        }
 
         if(getConversationIdsCursor.getCount() == 0){
             getConversationIdsCursor.close();
@@ -112,6 +111,10 @@ public class SmsMessagingProvider implements MessagingProvider {
                     getSnippetQuery,
                     getSnippetQueryArgs,
                     null);
+
+        if(getSnippetCursor == null) {
+            return null;
+        }
 
         if(getSnippetCursor.getCount() == 0){
             getSnippetCursor.close();
@@ -150,13 +153,15 @@ public class SmsMessagingProvider implements MessagingProvider {
 
         Cursor getRecentMessageCursor;
 
-        //synchronized (context){
-            getRecentMessageCursor = context.getContentResolver().query(Telephony.Sms.CONTENT_URI,
-                    getRecentMessageProjection,
-                    getRecentMessageQuery,
-                    getRecentMessageQueryArgs,
-                    getRecentMessageOrderBy);
-        //}
+        getRecentMessageCursor = context.getContentResolver().query(Telephony.Sms.CONTENT_URI,
+                getRecentMessageProjection,
+                getRecentMessageQuery,
+                getRecentMessageQueryArgs,
+                getRecentMessageOrderBy);
+
+        if(getRecentMessageCursor == null) {
+            return null;
+        }
 
         if(getRecentMessageCursor.getCount() == 0){
             getRecentMessageCursor.close();
@@ -168,12 +173,7 @@ public class SmsMessagingProvider implements MessagingProvider {
         conversation.lastMessageTimestamp = new Timestamp(getRecentMessageCursor.getLong(1));
 
         conversation.contacts = new Contact[1];
-        conversation.contacts[0] = getContactFromUri(context,
-                new Uri.Builder()
-                    .scheme(Contact.SMS_SCHEME)
-                    .authority(getRecentMessageCursor.getString(0))
-                    .build()
-        );
+        conversation.contacts[0] = getContactFromUri(context, Contact.BuildSmsUri(getRecentMessageCursor.getString(0)));
 
         getRecentMessageCursor.close();
 
@@ -191,13 +191,17 @@ public class SmsMessagingProvider implements MessagingProvider {
         Uri getContactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
                 Uri.encode(uri.getAuthority()));
 
-        Cursor getContactCursor = getContactCursor = context.getContentResolver().query(getContactUri,
+        Cursor getContactCursor = context.getContentResolver().query(getContactUri,
                     getContactProjection,
                     null, null, null);
 
         Contact contact = new Contact();
         contact.uri = uri;
         contact.communicationType = CommunicationType.SMS;
+
+        if(getContactCursor == null) {
+            return contact;
+        }
 
         if(getContactCursor.getCount() == 0){
             getContactCursor.close();
@@ -232,6 +236,10 @@ public class SmsMessagingProvider implements MessagingProvider {
                     getContactPhotoQueryArgs,
                     null);
 
+        if(getContactPhotoCursor == null) {
+            return null;
+        }
+
         if(getContactPhotoCursor.getCount() == 0){
             getContactPhotoCursor.close();
             return null;
@@ -239,128 +247,99 @@ public class SmsMessagingProvider implements MessagingProvider {
 
         getContactPhotoCursor.moveToFirst();
 
-        try {
-            return Uri.parse(getContactPhotoCursor.getString(0));
-        } finally {
-            getContactPhotoCursor.close();
-        }
+        Uri contactPhotoUri = Uri.parse(getContactPhotoCursor.getString(0));
+
+        getContactPhotoCursor.close();
+
+        return contactPhotoUri;
     }
 
     @NonNull
     @Override
     public String[] getConversationMessageIds(@NonNull Context context, @NonNull String conversationId) {
-        List<TempMessageId> tempMessageIds = new ArrayList<>();
-
-        for(int i = 0; i < messageContentUris.length; i++) {
-            tempMessageIds.addAll(
-                getConversationMessageIdsFromContentUri(context, conversationId, messageContentUris[i])
-            );
-        }
-
-        Collections.sort(tempMessageIds);
-
-        String[] messageIds = new String[tempMessageIds.size()];
-
-        for(int i = 0; i < tempMessageIds.size(); i++) {
-            messageIds[i] = tempMessageIds.get(i).id;
-        }
-
-        return messageIds;
-    }
-
-    @WorkerThread
-    @NonNull
-    private List<TempMessageId> getConversationMessageIdsFromContentUri(@NonNull Context context, @NonNull String conversationId, @NonNull Uri contentUri) {
         String[] getConversationMessageIdsProjection = {
                 BaseColumns._ID,
-                Telephony.TextBasedSmsColumns.DATE_SENT
+                Telephony.TextBasedSmsColumns.DATE
         };
         String getConversationMessageIdsQuery = Telephony.TextBasedSmsColumns.THREAD_ID + " = ?";
         String[] getConversationMessageIdsQueryArgs = {conversationId};
         String getConversationMessageIdsOrderBy = Telephony.TextBasedSmsColumns.DATE + " DESC";
 
-        Cursor getConversationMessageIdsCursor = context.getContentResolver().query(contentUri,,
+        Cursor getConversationMessageIdsCursor = context.getContentResolver().query(Telephony.Sms.CONTENT_URI,
                 getConversationMessageIdsProjection,
                 getConversationMessageIdsQuery,
                 getConversationMessageIdsQueryArgs,
                 getConversationMessageIdsOrderBy);
 
-        if(getConversationMessageIdsCursor.getCount() == 0) {
-            getConversationMessageIdsCursor.close();
-            return new ArrayList<>();
+        if(getConversationMessageIdsCursor == null) {
+            return new String[0];
         }
 
-        List<TempMessageId> tempMessageIds = new ArrayList<>();
+        if(getConversationMessageIdsCursor.getCount() == 0) {
+            getConversationMessageIdsCursor.close();
+            return new String[0];
+        }
+
+        TempMessageId[] tempMessageIds = new TempMessageId[getConversationMessageIdsCursor.getCount()];
 
         for(int i = 0; i < getConversationMessageIdsCursor.getCount(); i++) {
             getConversationMessageIdsCursor.moveToPosition(i);
 
-            tempMessageIds.add(
-                    new TempMessageId(
+            tempMessageIds[i] = new TempMessageId(
                             getConversationMessageIdsCursor.getString(0),
                             getConversationMessageIdsCursor.getLong(1)
-                    )
-            );
+                    );
         }
 
-        return tempMessageIds;
+        Arrays.sort(tempMessageIds);
+
+        String[] messageIds = new String[tempMessageIds.length];
+
+        for(int i = 0; i < tempMessageIds.length; i++) {
+            messageIds[i] = tempMessageIds[i].id;
+        }
+
+        getConversationMessageIdsCursor.close();
+
+        return messageIds;
     }
 
     @Nullable
     @Override
     public Message getMessage(@NonNull Context context, @NonNull String messageId) {
-        for(int i = 0; i < messageContentUris.length; i++) {
-            Message message = getMessageFromContentUri(context, messageId, messageContentUris[i]);
-
-            if(message != null) {
-                return message;
-            }
-        }
-
-        return null;
-    }
-
-    @WorkerThread
-    @Nullable
-    private Message getMessageFromContentUri(@NonNull Context context, @NonNull String messageId, @NonNull Uri contentUri) {
         /**
          * Message.id                = BaseColumns._ID                         = DB[0]
          * Message.otherPartyUris    = Telephony.TextBasedSmsColumns.ADDRESS   = DB[1]
-         * Message.messageType       = Switch:
-         *                                      contentUri == Draft
-         *                                          = MessageType.DRAFT
-         *                                      contentUri == Inbox
-         *                                          = MessageType.RECEIVED
-         *                                      contentUri == Outbox
-         *                                          = MessageType.SENDING
-         *                                      contentUri == Sent
-         *                                          = MessageType.SENT
-         * Message.error             = Switch:                                 = DB[2]
-         *                                      ERROR == 0
-         *                                          = Error.OK
-         *                                      ERROR != 0
-         *                                          = Error.FAILED
+         * Message.messageType       = Telephony.TextBasedSmsColumns.TYPE      = DB[2]
+         * Message.error             = Int to bool                             = DB[3]
          * Message.communicationType = CommunicationType.SMS
-         * Message.sentTimestamp     = Telephony.TextBasedSmsColumns.DATE_SENT = DB[3]
-         * Message.receivedTimestamp = Telephony.TextBasedSmsColumns.DATE      = DB[4]
-         * Message.read              = Telephony.TextBasedSmsColumns.READ      = DB[5]
+         * Message.sentTimestamp     = Telephony.TextBasedSmsColumns.DATE_SENT = DB[4]
+         * Message.receivedTimestamp = Telephony.TextBasedSmsColumns.DATE      = DB[5]
+         * Message.body              = Telephony.TextBasedSmsColumns.BODY      = DB[6]
+         * Message.read              = Telephony.TextBasedSmsColumns.READ      = DB[7]
          */
         String[] getMessageProjection = {
                 BaseColumns._ID,
                 Telephony.TextBasedSmsColumns.ADDRESS,
+                Telephony.TextBasedSmsColumns.TYPE,
                 Telephony.TextBasedSmsColumns.ERROR_CODE,
                 Telephony.TextBasedSmsColumns.DATE_SENT,
                 Telephony.TextBasedSmsColumns.DATE,
+                Telephony.TextBasedSmsColumns.BODY,
                 Telephony.TextBasedSmsColumns.READ
         };
         String getMessageQuery = BaseColumns._ID + " = ?";
         String[] getMessageQueryArgs = {messageId};
 
-        Cursor getMessageCursor = context.getContentResolver().query(contentUri,
+        Cursor getMessageCursor = context.getContentResolver().query(Telephony.Sms.CONTENT_URI,
                 getMessageProjection,
                 getMessageQuery,
                 getMessageQueryArgs,
                 null);
+
+        if(getMessageCursor == null) {
+            return null;
+        }
 
         if(getMessageCursor.getCount() == 0) {
             getMessageCursor.close();
@@ -376,28 +355,31 @@ public class SmsMessagingProvider implements MessagingProvider {
                 Contact.BuildSmsUri(getMessageCursor.getString(1))
         };
 
-        if(contentUri == Telephony.Sms.Draft.CONTENT_URI) {
+        int type = getMessageCursor.getInt(2);
+
+        if(type == Telephony.TextBasedSmsColumns.MESSAGE_TYPE_DRAFT) {
             message.messageType = MessageType.DRAFT;
-        } else if(contentUri == Telephony.Sms.Inbox.CONTENT_URI) {
-            message.messageType = MessageType.RECEIVED;
-        } else if(contentUri == Telephony.Sms.Outbox.CONTENT_URI) {
+        } else if(type == Telephony.TextBasedSmsColumns.MESSAGE_TYPE_OUTBOX || type == Telephony.TextBasedSmsColumns.MESSAGE_TYPE_FAILED || type == Telephony.TextBasedSmsColumns.MESSAGE_TYPE_QUEUED) {
             message.messageType = MessageType.SENDING;
-        } else if(contentUri == Telephony.Sms.Sent.CONTENT_URI) {
+        } else if(type == Telephony.TextBasedSmsColumns.MESSAGE_TYPE_INBOX) {
+            message.messageType = MessageType.RECEIVED;
+        } else if(type == Telephony.TextBasedSmsColumns.MESSAGE_TYPE_SENT) {
             message.messageType = MessageType.SENT;
-        } else {
-            Log.wtf(TAG, "Unknown MessageType for Uri \"" + contentUri + "\"");
         }
 
-        if(getMessageCursor.getInt(2) == 0) {
+        if(getMessageCursor.getInt(3) == 0) {
             message.error = Errors.OK;
         } else {
             message.error = Errors.FAILED;
         }
 
         message.communicationType = CommunicationType.SMS;
-        message.sentTimestamp = new Timestamp(getMessageCursor.getLong(3));
-        message.receivedTimestamp = new Timestamp(getMessageCursor.getLong(4));
-        message.read = getMessageCursor.getInt(5) == 1;
+        message.sentTimestamp = new Timestamp(getMessageCursor.getLong(4));
+        message.receivedTimestamp = new Timestamp(getMessageCursor.getLong(5));
+        message.body = getMessageCursor.getString(6);
+        message.read = getMessageCursor.getInt(7) == 1;
+
+        getMessageCursor.close();
 
         return message;
     }

@@ -74,7 +74,7 @@ public class ConversationsListFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_conversations_list, container, false);
 
         conversationsList = (RecyclerView) rootView.findViewById(R.id.conversations_list);
@@ -90,7 +90,7 @@ public class ConversationsListFragment extends Fragment {
             public void onClick(RecyclerView.ViewHolder viewHolder, int index) {
                 // TODO Handle conversation list item click
                 String[] messageIds = MessagingProviderCache.get(SmsMessagingProvider.class).getConversationMessageIds(getContext(), conversationListAdapter.conversationIds[index]);
-                MessagingProviderCache.get(SmsMessagingProvider.class).getMessage(getContext(), messageIds[1]);
+                Log.d(TAG, MessagingProviderCache.get(SmsMessagingProvider.class).getMessage(getContext(), messageIds[1]).toString());
             }
         });
 

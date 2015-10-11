@@ -56,6 +56,11 @@ public class Message {
     public Timestamp receivedTimestamp;
 
     /**
+     * The message body
+     */
+    public String body;
+
+    /**
      * Whether the message has been read by the user
      */
     public boolean read;
@@ -72,6 +77,7 @@ public class Message {
                     ", communicationType => " + communicationType +
                     ", sentTimestamp => " + sentTimestamp +
                     ", receivedTimestamp => " + receivedTimestamp +
+                    ", body => " + body +
                     ", read => " + read +
                 "]";
     }
