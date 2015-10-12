@@ -3,7 +3,6 @@ package com.noahhuppert.reflect.views.fragments.ConversationsListFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,17 +15,13 @@ import android.view.ViewGroup;
 
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.messaging.CommunicationType;
-import com.noahhuppert.reflect.messaging.models.Conversation;
-import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsGetConversationIdsRunnable;
-import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsGetConversationRunnable;
-import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
+import com.noahhuppert.reflect.messaging.providers.threads.GetConversationIdsRunnable;
+import com.noahhuppert.reflect.messaging.providers.threads.base.HandlerMessagePayload;
 import com.noahhuppert.reflect.threading.MainThreadPool;
 import com.noahhuppert.reflect.views.FragmentId;
 import com.noahhuppert.reflect.views.FragmentSwitcher;
 import com.noahhuppert.reflect.views.RecyclerView.RecyclerViewOnItemClickListener;
 import com.noahhuppert.reflect.views.fragments.ConversationFragment.ConversationFragment;
-
-import java.util.Arrays;
 
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
@@ -38,39 +33,20 @@ public class ConversationsListFragment extends Fragment {
     private RecyclerView conversationsList;
     private ConversationListAdapter conversationListAdapter;
 
-    private Handler conversationsHandler;
-
-    private static class ConversationsHandler extends Handler{
-        private final Context context;
+    private static class FragmentHandler extends Handler {
         private ConversationListAdapter conversationListAdapter;
 
-        public ConversationsHandler(Context context, ConversationListAdapter conversationListAdapter) {
-            super(Looper.getMainLooper());
+        public FragmentHandler(ConversationListAdapter conversationListAdapter) {
             this.conversationListAdapter = conversationListAdapter;
-            this.context = context;
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
-            if(msg.what == SmsMessagingProvider.HandlerMessagePayload.CONVERSATION_IDS){
-                String[] conversationIds = (String[]) msg.obj;
-                conversationListAdapter.conversationIds = conversationIds;
-                conversationListAdapter.notifyItemRangeChanged(0, conversationIds.length);
-
-                for(int i = 0; i < conversationIds.length; i++){
-                    if(!conversationListAdapter.conversationsCache.containsKey(conversationIds[i])) {
-                        SmsGetConversationRunnable smsGetConversationRunnable = new SmsGetConversationRunnable(context, this, conversationIds[i]);
-                        MainThreadPool.getThreadPoolExecutor().execute(smsGetConversationRunnable);
-                    }
-                }
-            } else if(msg.what == SmsMessagingProvider.HandlerMessagePayload.CONVERSATION){
-                Conversation conversation = (Conversation) msg.obj;
-                conversationListAdapter.conversationsCache.put(conversation.id, conversation);
-                conversationListAdapter.notifyItemChanged(Arrays.asList(conversationListAdapter.conversationIds).indexOf(conversation.id));
-            } else {
-                msg.sendToTarget();
+            if(msg.what == HandlerMessagePayload.CONVERSATION_IDS) {
+                conversationListAdapter.conversationIds = (String[]) msg.obj;
+                conversationListAdapter.notifyItemRangeChanged(0, conversationListAdapter.conversationIds.length);
             }
         }
     }
@@ -80,6 +56,7 @@ public class ConversationsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_conversations_list, container, false);
 
+        // Conversation Recycler View
         conversationsList = (RecyclerView) rootView.findViewById(R.id.conversations_list);
 
         conversationsList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -100,9 +77,10 @@ public class ConversationsListFragment extends Fragment {
             }
         });
 
-        conversationsHandler = new ConversationsHandler(getActivity(), conversationListAdapter);
+        // Fetch data
+        FragmentHandler fragmentHandler = new FragmentHandler();
 
-        MainThreadPool.getThreadPoolExecutor().execute(new SmsGetConversationIdsRunnable(getActivity(), conversationsHandler));
+        MainThreadPool.getThreadPoolExecutor().execute(new GetConversationIdsRunnable(fragmentHandler, getContext(), CommunicationType.SMS));
 
         return rootView;
     }

@@ -5,12 +5,11 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
+import android.support.v4.util.LruCache;
 
-import com.noahhuppert.reflect.messaging.MessageType;
 import com.noahhuppert.reflect.messaging.models.Contact;
 import com.noahhuppert.reflect.messaging.models.Conversation;
 import com.noahhuppert.reflect.messaging.models.Message;
-import com.noahhuppert.reflect.threading.StreamingResultHandler;
 
 /**
  * A Messaging Provider is a class that performs operations on a messaging resource(Like SMS or XMPP)

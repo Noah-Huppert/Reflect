@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -19,8 +18,6 @@ import com.noahhuppert.reflect.messaging.models.Conversation;
 import com.noahhuppert.reflect.messaging.models.Message;
 import com.noahhuppert.reflect.messaging.providers.MessagingProvider;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.sql.Timestamp;
 import java.util.Arrays;
 
@@ -31,15 +28,6 @@ public class SmsMessagingProvider implements MessagingProvider {
     private static final String TAG = SmsMessagingProvider.class.getSimpleName();
 
     private static final int snippetLimit = 45;
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({
-            HandlerMessagePayload.CONVERSATION_IDS
-    })
-    public @interface HandlerMessagePayload{
-        int CONVERSATION_IDS = 0;
-        int CONVERSATION = 1;
-    }
 
     private static class TempMessageId implements Comparable<TempMessageId> {
         public String id;

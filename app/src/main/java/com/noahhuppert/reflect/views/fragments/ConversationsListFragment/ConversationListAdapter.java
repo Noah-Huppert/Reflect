@@ -122,7 +122,7 @@ public class ConversationListAdapter extends RecyclerViewOnItemClickAdapter<Conv
             viewHolder.switchToAvatarLayoutType(ViewHolder.AvatarLayoutType.NO_PADDING);
 
             viewHolder.contactsAvatar.setImageDrawable(ContactAvatarLruCache.getInstance().get(new ContactAvatarLruCache.ContactAvatarKey(conversation.contacts[0].avatarUri, context)));
-        }else{
+        } else {
             viewHolder.switchToAvatarLayoutType(ViewHolder.AvatarLayoutType.NO_PADDING);
 
             viewHolder.contactsAvatar.setImageDrawable(CircleTileDrawableLruCache.getInstance().get(new CircleTileDrawableLruCache.CircleTileDrawableKey(contactNames, contactNames.charAt(0) + "")));
