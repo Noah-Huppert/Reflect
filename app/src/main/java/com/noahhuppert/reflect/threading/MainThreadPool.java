@@ -12,6 +12,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class MainThreadPool {
+    private static final String TAG = MainThreadPool.class.getSimpleName();
+
     private static MainThreadPool instance;
 
     private ThreadPoolExecutor threadPoolExecutor;

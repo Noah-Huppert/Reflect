@@ -4,6 +4,7 @@ import android.support.v4.util.SimpleArrayMap;
 
 import com.noahhuppert.reflect.exceptions.WTFException;
 import com.noahhuppert.reflect.messaging.CommunicationType;
+import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsCacheMessagingProvider;
 import com.noahhuppert.reflect.messaging.providers.SmsMessagingProvider.SmsMessagingProvider;
 
 public class MessagingProviderManager {
@@ -33,7 +34,7 @@ public class MessagingProviderManager {
     public static MessagingProvider get(@CommunicationType String key){
         if(!getInstance().getMessagingProviderCacheMap().containsKey(key)){
             if(key.equals(CommunicationType.SMS)) {
-                getInstance().getMessagingProviderCacheMap().put(key, new SmsMessagingProvider());
+                getInstance().getMessagingProviderCacheMap().put(key, new SmsCacheMessagingProvider());
             } else {
                 throw new WTFException("Every CommunicationType must have a MessagingProvider mapped to it", key);
             }

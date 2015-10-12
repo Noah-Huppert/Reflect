@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
-import android.support.v4.util.LruCache;
 
 import com.noahhuppert.reflect.messaging.models.Contact;
 import com.noahhuppert.reflect.messaging.models.Conversation;
@@ -18,45 +17,60 @@ import com.noahhuppert.reflect.messaging.models.Message;
 public interface MessagingProvider {
     /**
      * Retrieves a list of conversation ids, sorted from most to least recent
+     *
      * @param context Application context
      * @return An array of conversation ids
      */
     @WorkerThread
-    @NonNull String[] getConversationIds(@NonNull final Context context);
+    public
+    @NonNull
+    String[] getConversationIds(@NonNull final Context context);
 
     /**
      * Retrieves a single conversation which is specified by the {@code conversationId}
-     * @param context Application context
+     *
+     * @param context        Application context
      * @param conversationId The id of the conversation to get
      * @return The specified conversation
      */
     @WorkerThread
-    @Nullable Conversation getConversation(@NonNull final Context context, @NonNull String conversationId);
+    public
+    @Nullable
+    Conversation getConversation(@NonNull final Context context, @NonNull String conversationId);
 
     /**
      * Retrieves a contact
+     *
      * @param context Application context
-     * @param uri Uri of the contact
+     * @param uri     Uri of the contact
      * @return The specified contact
      */
     @WorkerThread
-    @NonNull Contact getContactFromUri(@NonNull final Context context, @NonNull Uri uri);
+    public
+    @NonNull
+    Contact getContactFromUri(@NonNull final Context context, @NonNull Uri uri);
 
     /**
      * Retrieves a list of message ids, sorted from most to least recent
-     * @param context Application context
+     *
+     * @param context        Application context
      * @param conversationId The id of the conversation to retrieve message ids for
      * @return An array of message ids for a conversation
      */
     @WorkerThread
-    @NonNull String[] getConversationMessageIds(@NonNull final Context context, @NonNull String conversationId);
+    public
+    @NonNull
+    String[] getConversationMessageIds(@NonNull final Context context, @NonNull String conversationId);
 
     /**
      * Retrieves the specified message
-     * @param context Application context
+     *
+     * @param context   Application context
      * @param messageId The id of the message
      * @return The specified message
      */
     @WorkerThread
-    @Nullable Message getMessage(@NonNull final Context context, @NonNull String messageId);
+    public
+    @Nullable
+    Message getMessage(@NonNull final Context context, @NonNull String messageId);
 }

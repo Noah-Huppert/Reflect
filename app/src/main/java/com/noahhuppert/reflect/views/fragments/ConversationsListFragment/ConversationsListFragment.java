@@ -15,13 +15,17 @@ import android.view.ViewGroup;
 
 import com.noahhuppert.reflect.R;
 import com.noahhuppert.reflect.messaging.CommunicationType;
+import com.noahhuppert.reflect.messaging.models.Conversation;
 import com.noahhuppert.reflect.messaging.providers.threads.GetConversationIdsRunnable;
+import com.noahhuppert.reflect.messaging.providers.threads.GetConversationRunnable;
 import com.noahhuppert.reflect.messaging.providers.threads.base.HandlerMessagePayload;
 import com.noahhuppert.reflect.threading.MainThreadPool;
 import com.noahhuppert.reflect.views.FragmentId;
 import com.noahhuppert.reflect.views.FragmentSwitcher;
 import com.noahhuppert.reflect.views.RecyclerView.RecyclerViewOnItemClickListener;
 import com.noahhuppert.reflect.views.fragments.ConversationFragment.ConversationFragment;
+
+import java.util.Arrays;
 
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
@@ -34,9 +38,11 @@ public class ConversationsListFragment extends Fragment {
     private ConversationListAdapter conversationListAdapter;
 
     private static class FragmentHandler extends Handler {
+        private Context context;
         private ConversationListAdapter conversationListAdapter;
 
-        public FragmentHandler(ConversationListAdapter conversationListAdapter) {
+        public FragmentHandler(Context context, ConversationListAdapter conversationListAdapter) {
+            this.context = context;
             this.conversationListAdapter = conversationListAdapter;
         }
 
@@ -47,6 +53,14 @@ public class ConversationsListFragment extends Fragment {
             if(msg.what == HandlerMessagePayload.CONVERSATION_IDS) {
                 conversationListAdapter.conversationIds = (String[]) msg.obj;
                 conversationListAdapter.notifyItemRangeChanged(0, conversationListAdapter.conversationIds.length);
+
+                for(int i = 0; i < conversationListAdapter.conversationIds.length; i++) {
+                    MainThreadPool.getThreadPoolExecutor().execute(new GetConversationRunnable(this, context, CommunicationType.SMS, conversationListAdapter.conversationIds[i]));
+                }
+            } else if(msg.what == HandlerMessagePayload.CONVERSATION) {
+                Conversation conversation = (Conversation) msg.obj;
+                conversationListAdapter.conversationsCache.put(conversation.id, conversation);
+                conversationListAdapter.notifyItemChanged(Arrays.asList(conversationListAdapter.conversationIds).indexOf(conversation.id));
             }
         }
     }
@@ -78,7 +92,7 @@ public class ConversationsListFragment extends Fragment {
         });
 
         // Fetch data
-        FragmentHandler fragmentHandler = new FragmentHandler();
+        FragmentHandler fragmentHandler = new FragmentHandler(getContext(), conversationListAdapter);
 
         MainThreadPool.getThreadPoolExecutor().execute(new GetConversationIdsRunnable(fragmentHandler, getContext(), CommunicationType.SMS));
 
