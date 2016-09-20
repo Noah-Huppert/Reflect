@@ -1,3 +1,4 @@
+Project status: On hold until Website v2 and [Trak](https://github.com/Noah-Huppert/trak) are finished
 #[![Build Status](https://travis-ci.org/Noah-Huppert/Reflect.svg)](https://travis-ci.org/Noah-Huppert/Reflect)
 
 #![Reflect](/app/src/main/res/mipmap-xxhdpi/ic_launcher.png) Reflect
