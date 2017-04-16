@@ -1,29 +1,28 @@
 package com.noahhuppert.reflect;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
-import com.noahhuppert.reflect.exceptions.InvalidUriException;
-import com.noahhuppert.reflect.messaging.CommunicationType;
-import com.noahhuppert.reflect.messaging.MessagingResourceType;
-import com.noahhuppert.reflect.messaging.ReflectConversation;
-import com.noahhuppert.reflect.messaging.providers.MessagingProviderManager;
-import com.noahhuppert.reflect.threading.ThreadResultHandler;
-import com.noahhuppert.reflect.uri.MessagingUriBuilder;
-
-import java.net.URI;
-import java.net.URISyntaxException;
+import com.noahhuppert.reflect.settings.Settings;
+import com.noahhuppert.reflect.utils.FragmentUtils;
+import com.noahhuppert.reflect.views.FragmentSetter;
+import com.noahhuppert.reflect.views.fragments.NavigationDrawerFragment;
 
 import io.fabric.sdk.android.Fabric;
 
 
 public class MainActivity extends ActionBarActivity {
-
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    //Main UI Elements
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,28 +34,39 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-        Log.d(TAG, "---------- RESTART ----------");
-        //Test conversation
-        ThreadResultHandler<ReflectConversation> reflectConversationThreadResultHandler = new ThreadResultHandler<ReflectConversation>() {
-            @Override
-            public void onDone(ReflectConversation data) {
-                Log.d(TAG, data.toString());
-            }
+        //Setup fragment switcher event system
+        FragmentSetter.getInstance().register(this, getSupportFragmentManager());
 
-            @Override
-            public void onError(Exception exception) {
-                Log.e(TAG, "Thread Result Exception", exception);
-            }
-        };
+        //Setup navigation drawer
+        drawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
 
-        try {
-            URI conversationUri = MessagingUriBuilder.Build(MessagingResourceType.CONVERSATION, CommunicationType.SMS, "210");
-            MessagingProviderManager.getInstance().fetchConversation(conversationUri, getBaseContext(), reflectConversationThreadResultHandler);
-        } catch (InvalidUriException | URISyntaxException e){
-            Log.e(TAG, "Exception", e);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                R.string.navigation_drawer_open_description,
+                R.string.navigation_drawer_close_description);
+
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        FragmentUtils.SetFragment(new NavigationDrawerFragment(), R.id.activity_main_navigation_drawer, getSupportFragmentManager());
+
+        //Setup main content
+        if(Settings.getInstance().getBoolean(Settings.KEY_FIRST_TIME_SETUP_COMPLETE, getBaseContext())){
+
+        } else {
+            FragmentSetter.getInstance().setFragment(FragmentSetter.RegisteredFragment.FIRST_TIME_SETUP, this);
         }
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        actionBarDrawerToggle.syncState();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -65,13 +75,32 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        FragmentSetter.getInstance().unregister(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FragmentSetter.getInstance().register(this, getSupportFragmentManager());
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if(actionBarDrawerToggle.onOptionsItemSelected(item)){
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        actionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 }

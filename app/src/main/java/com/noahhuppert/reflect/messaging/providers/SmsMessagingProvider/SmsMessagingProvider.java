@@ -5,9 +5,11 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
 
-import com.noahhuppert.reflect.messaging.ReflectContact;
-import com.noahhuppert.reflect.messaging.ReflectConversation;
-import com.noahhuppert.reflect.messaging.ReflectMessage;
+import com.noahhuppert.reflect.exceptions.InvalidMessagingProviderPushData;
+import com.noahhuppert.reflect.exceptions.InvalidUriException;
+import com.noahhuppert.reflect.messaging.models.ReflectContact;
+import com.noahhuppert.reflect.messaging.models.ReflectConversation;
+import com.noahhuppert.reflect.messaging.models.ReflectMessage;
 import com.noahhuppert.reflect.messaging.providers.MessagingProvider;
 import com.noahhuppert.reflect.threading.MainThreadPool;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
@@ -17,7 +19,12 @@ import java.net.URI;
 /**
  * A messaging provider that fetches resources from SMS
  */
-public class SmsMessagingProvider extends MessagingProvider {
+public class SmsMessagingProvider implements MessagingProvider {
+    public static final String SMS_URI_SCHEME = "sms";
+
+    public static final String INTENT_EXTRA_TOTAL_MESSAGE_PARTS = "INTENT_EXTRA_TOTAL_MESSAGE_PARTS";
+    public static final String INTENT_EXTRA_MESSAGE_PART = "INTENT_EXTRA_MESSAGE_PART";
+
     public static final String[] SMS_MESSAGE_PROJECTION = {
             BaseColumns._ID,//ReflectMessage.id
             Telephony.TextBasedSmsColumns.ADDRESS,//ReflectMessage.receiverUri
@@ -41,36 +48,37 @@ public class SmsMessagingProvider extends MessagingProvider {
 
     /* Fetch */
     @Override
-    public void fetchMessage(URI uri, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
+    public void fetchMessage(URI uri, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) throws InvalidUriException {
         SmsFetchMessageRunnable smsFetchMessageRunnable = new SmsFetchMessageRunnable(uri, context, threadResultHandler);
         MainThreadPool.getInstance().getPool().submit(smsFetchMessageRunnable);
     }
 
     @Override
-    public void fetchConversation(URI uri, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) {
+    public void fetchConversation(URI uri, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) throws InvalidUriException {
         SmsFetchConversationRunnable smsFetchConversationRunnable = new SmsFetchConversationRunnable(uri, context, threadResultHandler);
         MainThreadPool.getInstance().getPool().submit(smsFetchConversationRunnable);
     }
 
     @Override
-    public void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
+    public void fetchContact(URI uri, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) throws InvalidUriException {
         SmsFetchContactRunnable smsFetchContactRunnable = new SmsFetchContactRunnable(uri, context, threadResultHandler);
         MainThreadPool.getInstance().getPool().submit(smsFetchContactRunnable);
     }
 
     /* Push */
     @Override
-    public void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) {
+    public void pushMessage(ReflectMessage reflectMessage, Context context, ThreadResultHandler<ReflectMessage> threadResultHandler) throws InvalidMessagingProviderPushData {
+        SmsPushMessageRunnable smsPushMessageRunnable = new SmsPushMessageRunnable(reflectMessage, context, threadResultHandler);
+        MainThreadPool.getInstance().getPool().submit(smsPushMessageRunnable);
+    }
+
+    @Override
+    public void pushConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) throws InvalidMessagingProviderPushData {
 
     }
 
     @Override
-    public void pushConversation(ReflectConversation reflectConversation, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) {
-
-    }
-
-    @Override
-    public void pushContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) {
+    public void pushContact(ReflectContact reflectContact, Context context, ThreadResultHandler<ReflectContact> threadResultHandler) throws InvalidMessagingProviderPushData {
 
     }
 }

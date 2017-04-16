@@ -11,24 +11,24 @@ import java.net.URI;
  * An abstract thread task for MessagingProvider fetch tasks
  * @param <DataType>
  */
-public abstract class MessagingProviderRunnable<DataType> extends ResultHandlerThread<DataType> {
+public abstract class MessagingProviderFetchRunnable<DataType> extends ResultHandlerThread<DataType> {
     /**
      * The Uri of the resource the runnable will fetch
      */
     protected final URI uri;
 
     /**
-     * The context to use in the runnable
+     * The Android context to use in the runnable
      */
     protected final Context context;
 
     /**
-     * Creates a new MessagingProviderRunnable, takes the basic arguments needed in a fetch task
+     * Creates a new MessagingProviderFetchRunnable, takes the basic arguments needed in a fetch task
      * @param uri The Uri of the resource that the runnable will fetch
      * @param context The Android Context to use
      * @param threadResultHandler The {@link ThreadResultHandler} to use
      */
-    public MessagingProviderRunnable(URI uri, Context context, ThreadResultHandler<DataType> threadResultHandler) {
+    public MessagingProviderFetchRunnable(URI uri, Context context, ThreadResultHandler<DataType> threadResultHandler) {
         super(threadResultHandler);
         this.uri = uri;
         this.context = context;

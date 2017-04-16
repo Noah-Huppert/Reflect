@@ -1,7 +1,6 @@
 package com.noahhuppert.reflect.utils;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.provider.Telephony;
 import android.telephony.TelephonyManager;
 
@@ -11,19 +10,21 @@ import com.noahhuppert.reflect.exceptions.NoTelephonyManagerException;
  * Class for determining feature availability like Telephony
  */
 public class TelephonyUtils {
+    public static final String TAG = TelephonyUtils.class.getSimpleName();
+
     /**
      * Determines weather or not the device has Telephony capability
      * @param context The context to get the package manager from
      * @return If the device has Telephony capability
      */
     public static boolean HasTelephony(Context context){
-        PackageManager packageManager = context.getPackageManager();
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
-        if(packageManager == null){
+        if(telephonyManager == null || telephonyManager.getLine1Number() == null){
             return false;
         }
 
-        return packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+        return true;
     }
 
     public static boolean IsDefaultSmsApp(Context context){

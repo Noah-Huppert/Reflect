@@ -6,8 +6,8 @@ import android.provider.BaseColumns;
 import android.provider.Telephony;
 
 import com.noahhuppert.reflect.exceptions.InvalidUriException;
-import com.noahhuppert.reflect.messaging.ReflectConversation;
-import com.noahhuppert.reflect.messaging.providers.MessagingProviderRunnable;
+import com.noahhuppert.reflect.messaging.models.ReflectConversation;
+import com.noahhuppert.reflect.messaging.providers.MessagingProviderFetchRunnable;
 import com.noahhuppert.reflect.threading.ThreadResultHandler;
 import com.noahhuppert.reflect.uri.MessagingUriUtils;
 import com.venmo.cursor.IterableCursor;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * A runnable thread that fetches a conversation based on the provided URI
  */
-public class SmsFetchConversationRunnable extends MessagingProviderRunnable<ReflectConversation> {
+public class SmsFetchConversationRunnable extends MessagingProviderFetchRunnable<ReflectConversation> {
     public SmsFetchConversationRunnable(URI uri, Context context, ThreadResultHandler<ReflectConversation> threadResultHandler) {
         super(uri, context, threadResultHandler);
     }

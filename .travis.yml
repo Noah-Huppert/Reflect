@@ -1,14 +1,50 @@
+#Language Setup
 language: android
+
+#Cache Gradle
+cache:
+  directories:
+    - ~/.gradle
+
 android:
   components:
-    # Latest Android SDK tools
+    #Latest Android SDK tools
     - platform-tools
     - tools
 
-    # BuildTools 22.0.1
+    #BuildTools 22.0.1
     - build-tools-22.0.1
 
-    # Compile With Android SDK 22
+    #Android Versions
+    - android-19
+    - android-21
     - android-22
+
+    #System Images
+    - sys-img-armeabi-v7a-android-19
+    - sys-img-armeabi-v7a-android-21
+    - sys-img-armeabi-v7a-android-22
+
+    #Support library
+    - extra
+    - extra-android-support
+
+before_script:
+  #Create Emulator
+  - echo no | android create avd --force --name test --target $ANDROID_TARGET --abi $ANDROID_ABI
+
+  #Start Emulator
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+
+#Test
 script:
-  - gradle build connectedCheck
+    - gradle build connectedCheck
+
+#Build Matrix
+env:
+  matrix:
+    - ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-22 ANDROID_ABI=armeabi-v7a

@@ -1,6 +1,14 @@
 <resources>
+    <!-- App -->
     <string name="app_name">Reflect</string>
-
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open_description">open drawer</string>
+    <string name="navigation_drawer_close_description">close drawer</string>
+
+    <!-- First Time Setup Fragment -->
+    <string name="fragment_first_time_setup_sms_prompt">Use Reflect as your default SMS app?</string>
+    <string name="fragment_first_time_setup_sms_yes">Yes</string>
+    <string name="fragment_first_time_setup_sms_no">No</string>
 </resources>
